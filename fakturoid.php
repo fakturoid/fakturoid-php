@@ -10,9 +10,9 @@ if (!function_exists('json_decode')) {
 }
 
 class Fakturoid {
-  var $subdomain;
-  var $api_key;
-  var $user_agent;
+  private $subdomain;
+  private $api_key;
+  private $user_agent;
     
   public function __construct($subdomain, $api_key, $user_agent) {
     $this->subdomain  = $subdomain;
