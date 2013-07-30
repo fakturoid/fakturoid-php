@@ -164,7 +164,7 @@ class Fakturoid {
     
     curl_setopt($c, CURLOPT_URL, "https://$this->subdomain.fakturoid.cz/api/v1$path");
     curl_setopt($c, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($c, CURLOPT_FAILONERROR, TRUE);
+    curl_setopt($c, CURLOPT_FAILONERROR, FALSE); // to get error messages in response body
     curl_setopt($c, CURLOPT_USERPWD, "$this->subdomain:$this->api_key");
     curl_setopt($c, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
     curl_setopt($c, CURLOPT_SSL_VERIFYPEER, TRUE);
