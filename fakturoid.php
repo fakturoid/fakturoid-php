@@ -84,7 +84,7 @@ class Fakturoid {
   
   /* Generator */
   
-  public function get_generators($options) {
+  public function get_generators($options = NULL) {
     return $this->get('/generators.json' . $this->convert_options($options, array('subject_id', 'since')));
   }
   
