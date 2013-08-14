@@ -185,12 +185,11 @@ class Fakturoid {
     }    
     
     $response = curl_exec($c);
-	$info = curl_getinfo($c);
+    $info = curl_getinfo($c);
     
-	if ($info['http_code'] >= 400) {
+    if ($info['http_code'] >= 400) {
       throw new Exception($response, $info['http_code']); 
-    }
-	
+    }	
     curl_close($c);
     return json_decode($response);
   }
