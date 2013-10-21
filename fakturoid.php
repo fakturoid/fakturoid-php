@@ -46,6 +46,10 @@ class Fakturoid {
     return $this->get("/invoices/$id.json");
   }
   
+  public function search_invoices($options = NULL) {
+    return $this->get("/invoices/search.json" . $this->convert_options($options, array('query', 'page')));
+  }
+  
   public function update_invoice($id, $data) {
     return $this->patch("/invoices/$id.json", $data);
   }
