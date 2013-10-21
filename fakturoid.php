@@ -28,6 +28,16 @@ class Fakturoid {
     return $this->get('/account.json');
   }
   
+  /* User */
+  
+  public function get_user($id) {
+    return $this->get("/users/$id.json");
+  }
+  
+  public function get_users($options = NULL) {
+    return $this->get('/users.json'. $this->convert_options($options, array('page')));
+  }
+  
   /* Invoice */
   
   public function get_invoices($options = NULL) {
