@@ -12,10 +12,12 @@ if (!function_exists('json_decode')) {
 class Fakturoid {
   private $subdomain;
   private $api_key;
+  private $email;
   private $user_agent;
     
-  public function __construct($subdomain, $api_key, $user_agent) {
+  public function __construct($subdomain, $email, $api_key, $user_agent) {
     $this->subdomain  = $subdomain;
+    $this->email      = $email;    
     $this->api_key    = $api_key;
     $this->user_agent = $user_agent;
   }
@@ -170,10 +172,10 @@ class Fakturoid {
   private function run($path, $method, $data = NULL) {    
     $c = curl_init();
     
-    curl_setopt($c, CURLOPT_URL, "https://$this->subdomain.fakturoid.cz/api/v1$path");
+    curl_setopt($c, CURLOPT_URL, "https://app.fakturoid.cz/api/v2/accounts/$this->subdomain$path");
     curl_setopt($c, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($c, CURLOPT_FAILONERROR, FALSE); // to get error messages in response body
-    curl_setopt($c, CURLOPT_USERPWD, "$this->subdomain:$this->api_key");
+    curl_setopt($c, CURLOPT_USERPWD, "$this->email:$this->api_key");
     curl_setopt($c, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
     curl_setopt($c, CURLOPT_SSL_VERIFYPEER, TRUE);
     curl_setopt($c, CURLOPT_SSL_VERIFYHOST, 2);
