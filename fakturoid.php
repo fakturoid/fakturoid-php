@@ -47,7 +47,7 @@ class Fakturoid {
   }
   
   public function update_invoice($id, $data) {
-    return $this->put("/invoices/$id.json", $data);
+    return $this->patch("/invoices/$id.json", $data);
   }
   
   public function fire_invoice($id, $event, $options = NULL) {
@@ -77,7 +77,7 @@ class Fakturoid {
   }
   
   public function update_subject($id, $data) {
-    return $this->put("/subjects/$id.json", $data);
+    return $this->patch("/subjects/$id.json", $data);
   }
   
   public function delete_subject($id) {
@@ -107,7 +107,7 @@ class Fakturoid {
   }
   
   public function update_generator($id, $data) {
-    return $this->put("/generators/$id.json", $data);
+    return $this->patch("/generators/$id.json", $data);
   }
   
   public function delete_generator($id) {
@@ -150,6 +150,10 @@ class Fakturoid {
     return $this->run($path, 'put', $data);
   }
   
+  private function patch($path, $data) {    
+    return $this->run($path, 'patch', $data);
+  }
+  
   private function delete($path) {    
     return $this->run($path, 'delete');
   }
@@ -188,6 +192,10 @@ class Fakturoid {
     }
     if ($method == 'put') {
       curl_setopt($c, CURLOPT_CUSTOMREQUEST, "PUT");
+      curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($data));
+    }
+    if ($method == 'patch') {
+      curl_setopt($c, CURLOPT_CUSTOMREQUEST, "PATCH");
       curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($data));
     }
     if ($method == 'delete') {
