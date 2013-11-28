@@ -64,7 +64,7 @@ class Fakturoid {
     return $this->patch("/invoices/$id.json", $data);
   }
   
-  public function fire_invoice($id, $event, $options = NULL) {
+  public function fire_invoice($id, $event, $options = array()) {
     return $this->post("/invoices/$id/fire.json", array_merge(array('event' => $event), $options));
   }
 
