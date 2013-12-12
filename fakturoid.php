@@ -1,12 +1,14 @@
 <?php
 
+class FakturoidException extends Exception { }
+
 /* Safety */
 
 if (!function_exists('curl_init')) {
-  throw new Exception('Fakturoid lib needs the CURL PHP extension.');
+  throw new FakturoidException('Fakturoid lib needs the CURL PHP extension.');
 }
 if (!function_exists('json_decode')) {
-  throw new Exception('Fakturoid lib needs the JSON PHP extension.');
+  throw new FakturoidException('Fakturoid lib needs the JSON PHP extension.');
 }
 
 class Fakturoid {
@@ -219,7 +221,7 @@ class Fakturoid {
     $response = curl_exec($c);
     $info = curl_getinfo($c);
     if ($info['http_code'] >= 400) {
-      throw new Exception($response, $info['http_code']); 
+      throw new FakturoidException($response, $info['http_code']); 
     }
     curl_close($c);
     return json_decode($response);
