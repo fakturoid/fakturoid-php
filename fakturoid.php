@@ -178,9 +178,14 @@ class Fakturoid {
   
   private function convert_options($options, $allowed) {
     $safe_options = array();
+    
     foreach ($allowed as $key) {
-      $safe_options[$key] = $options[$key];
+      if( isset($options[$key]) )
+        $safe_options[$key] = $options[$key];
+      else
+        $safe_options[$key] = NULL;
     }
+
     if (!empty($safe_options)) {
       return "?" . http_build_query($safe_options);
     }
