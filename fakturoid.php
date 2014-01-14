@@ -180,7 +180,7 @@ class Fakturoid {
     $safe_options = array();
     
     foreach ($allowed as $key) {
-      if( isset($options[$key]) )
+      if (isset($options[$key]))
         $safe_options[$key] = $options[$key];
       else
         $safe_options[$key] = NULL;
