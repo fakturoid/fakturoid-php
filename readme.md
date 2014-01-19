@@ -24,3 +24,16 @@ try {
   $e->getMessage(); // '{"errors":{"name":["je povinná položka","je příliš krátký/á/é (min. 2 znaků)"]}}'
 }
 ```
+
+## FAQ:
+
+### cURL returns FALSE?
+- Set ```CURLOPT_SSL_VERIFYPEER``` to ```FALSE```
+- Or globally in php.ini:
+    ```curl.cainfo = "ABSOLUTE_PATH\cacert.pem"```
+
+    **Certificate is available to download here:**
+    http://curl.haxx.se/ca/cacert.pem 
+
+    **For more information about this problem:**
+    http://stackoverflow.com/questions/18971983/curl-requires-curlopt-ssl-verifypeer-false
