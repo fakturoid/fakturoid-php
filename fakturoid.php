@@ -188,9 +188,14 @@ class Fakturoid {
   
   /** 
    * Execute HTTP method on path with data
+   * @throws FakturoidException
    */
   private function run($path, $method, $data = NULL) {    
     $c = curl_init();
+
+    if ($c === FALSE) {
+      throw new FakturoidException('cURL failed to initialize.');
+    }
     
     curl_setopt($c, CURLOPT_URL, "https://app.fakturoid.cz/api/v2/accounts/$this->subdomain$path");
     curl_setopt($c, CURLOPT_RETURNTRANSFER, TRUE);
@@ -220,6 +225,10 @@ class Fakturoid {
     
     $response = curl_exec($c);
     $info = curl_getinfo($c);
+
+    if ($response === FALSE) {
+      throw new FakturoidException(sprintf("cURL failed with error #%d: %s", curl_errno($c), curl_error($c)), curl_errno($c));
+    }
     if ($info['http_code'] >= 400) {
       throw new FakturoidException($response, $info['http_code']); 
     }
