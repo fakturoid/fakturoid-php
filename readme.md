@@ -28,3 +28,4 @@ try {
 ### Common problems
 
 - ensure you have certificates for curl present - either globaly in `php.ini` or call `curl_setopt($ch, CURLOPT_CAINFO, "/path/to/cacert.pem")`
+- in case of problem please contact our invoicing robot on podpora@fakturoid.cz
