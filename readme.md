@@ -7,9 +7,16 @@ PHP library for [Fakturoid.cz](https://www.fakturoid.cz/). Please see [API](http
 ```php
 require_once 'fakturoid.php';
 $f = new Fakturoid('..subdomain..', '..user@email.cz..', '..api_key..', 'PHPlib <your@email.cz>');
+
+// create subject
 $subject = $f->create_subject(array('name' => 'Firma s.r.o.', 'email' => 'aloha@pokus.cz'));
+
+// create invoice with lines
 $lines   = array(array('name' => 'Big sale', 'quantity' => 1, 'unit_price' => 1000));
 $invoice = $f->create_invoice(array('subject_id' => $subject->id, 'lines' => $lines));
+
+// send created invoice
+$f->fire_invoice($invoice->id, 'deliver');
 ```
 
 ## Handling errors
