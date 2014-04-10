@@ -81,7 +81,7 @@ class Fakturoid {
   /* Subject */
   
   public function get_subjects($options = NULL) {
-    return $this->get('/subjects.json' . $this->convert_options($options, array('since', 'page')));
+    return $this->get('/subjects.json' . $this->convert_options($options, array('since', 'page', 'custom_id')));
   }
   
   public function get_subject($id) {
