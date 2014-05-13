@@ -17,6 +17,10 @@ $invoice = $f->create_invoice(array('subject_id' => $subject->id, 'lines' => $li
 
 // send created invoice
 $f->fire_invoice($invoice->id, 'deliver');
+
+// to mark invoice as paid
+$f->fire_invoice($invoice->id, 'pay'); // or 'pay_proforma' for paying proforma and 'pay_partial_proforma' for partial proforma
+
 ```
 
 ## Handling errors
