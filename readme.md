@@ -5,7 +5,7 @@ PHP library for [Fakturoid.cz](https://www.fakturoid.cz/). Please see [API](http
 ## Usage
 
 ```php
-require_once 'fakturoid.php';
+require_once '/path/to/lib/Fakturoid.php';
 $f = new Fakturoid('..subdomain..', '..user@email.cz..', '..api_key..', 'PHPlib <your@email.cz>');
 
 // create subject
