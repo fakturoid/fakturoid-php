@@ -1,6 +1,6 @@
 # Fakturoid PHP lib
 
-PHP library for [Fakturoid.cz](https://www.fakturoid.cz/). Please see [API](http://docs.fakturoid.apiary.io/).
+PHP library for [Fakturoid.cz](https://www.fakturoid.cz/). Please see [API](http://docs.fakturoid.apiary.io/) for more documentation. New account just for testing API and using separate user (created via "Nastavení > Uživatelé a oprávnění") for production usage is higly recommended.
 
 ## Usage
 
