@@ -1,0 +1,21 @@
+{
+  "name": "fakturoid/fakturoid-php",
+  "description": "Fakturoid PHP library",
+  "keywords": ["fakturoid", "api", "invoice"],
+  "homepage": "http://www.fakturoid.cz/api",
+  "type": "library",
+  "license": "MIT",
+  "authors": [{
+    "name": "Fakturoid and contributors",
+    "homepage": "http://www.fakturoid.cz"
+  }],
+  "support": {
+    "email": "podpora@fakturoid.cz"
+  }, 
+  "require": {
+    "php": ">=5.2.0",
+    "ext-curl": "*",
+    "ext-json": "*"
+  },
+  "classmap": ["lib/"]
+}
