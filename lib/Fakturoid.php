@@ -99,6 +99,10 @@ class Fakturoid {
   public function delete_subject($id) {
     return $this->delete("/subjects/$id.json");
   }
+ 
+  public function search_subjects($options = NULL) {
+    return $this->get('/subjects/search.json' . $this->convert_options($options, array('query')));
+  }
   
   /* Generator */
   
