@@ -143,17 +143,17 @@ class Fakturoid {
   /* Event */
   
   public function get_events($options = NULL) {
-    return $this->get('/events.json') . $this->convert_options($options, array('subject_id', 'since', 'page'));
+    return $this->get('/events.json' . $this->convert_options($options, array('subject_id', 'since', 'page')));
   }
   
   public function get_paid_events($options = NULL) {
-    return $this->get('/events/paid.json') . $this->convert_options($options, array('subject_id', 'since', 'page'));
+    return $this->get('/events/paid.json' . $this->convert_options($options, array('subject_id', 'since', 'page')));
   }
   
   /* Todo */
   
   public function get_todos($options = NULL) {
-    return $this->get('/todos.json') . $this->convert_options($options, array('subject_id', 'since', 'page'));
+    return $this->get('/todos.json' . $this->convert_options($options, array('subject_id', 'since', 'page')));
   }  
   
   /* Helper functions */
