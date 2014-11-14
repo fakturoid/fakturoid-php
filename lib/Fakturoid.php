@@ -43,15 +43,15 @@ class Fakturoid {
   /* Invoice */
   
   public function get_invoices($options = NULL) {
-    return $this->get("/invoices.json" . $this->convert_options($options, array('subject_id', 'since', 'page')));
+    return $this->get("/invoices.json" . $this->convert_options($options, array('subject_id', 'since', 'page', 'status')));
   }
   
   public function get_regular_invoices($options = NULL) {
-    return $this->get('/invoices/regular.json'. $this->convert_options($options, array('subject_id', 'since', 'page')));
+    return $this->get('/invoices/regular.json'. $this->convert_options($options, array('subject_id', 'since', 'page', 'status')));
   }
   
   public function get_proforma_invoices($options = NULL) {
-    return $this->get('/invoices/proforma.json'. $this->convert_options($options, array('subject_id', 'since', 'page')));
+    return $this->get('/invoices/proforma.json'. $this->convert_options($options, array('subject_id', 'since', 'page', 'status')));
   }
   
   public function get_invoice($id) {
