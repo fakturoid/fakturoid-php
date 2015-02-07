@@ -78,6 +78,36 @@ class Fakturoid {
     return $this->delete("/invoices/$id.json");
   }
   
+  /* Expense */
+  
+  public function get_expenses($options = NULL) {
+    return $this->get("/expenses.json" . $this->convert_options($options, array('subject_id', 'since', 'page', 'status')));
+  }
+  
+  public function get_expense($id) {
+    return $this->get("/expenses/$id.json");
+  }
+  
+  public function search_expenses($options = NULL) {
+    return $this->get("/expenses/search.json" . $this->convert_options($options, array('query', 'page')));
+  }
+  
+  public function update_expense($id, $data) {
+    return $this->patch("/expenses/$id.json", $data);
+  }
+  
+  public function fire_expense($id, $event, $options = array()) {
+    return $this->post("/expenses/$id/fire.json", array_merge(array('event' => $event), $options));
+  }
+
+  public function create_expense($data) {
+    return $this->post('/expenses.json', $data);
+  }
+  
+  public function delete_expense($id) {
+    return $this->delete("/expenses/$id.json");
+  }
+  
   /* Subject */
   
   public function get_subjects($options = NULL) {
