@@ -58,6 +58,10 @@ class Fakturoid {
     return $this->get("/invoices/$id.json");
   }
   
+  public function get_invoice_pdf($id){
+  	return $this->run("/invoices/$id/download.pdf", 'get', NULL, false);
+  }
+  
   public function search_invoices($options = NULL) {
     return $this->get("/invoices/search.json" . $this->convert_options($options, array('query', 'page')));
   }
@@ -77,7 +81,7 @@ class Fakturoid {
   public function delete_invoice($id) {
     return $this->delete("/invoices/$id.json");
   }
-  
+    
   /* Expense */
   
   public function get_expenses($options = NULL) {
@@ -227,7 +231,7 @@ class Fakturoid {
   /** 
    * Execute HTTP method on path with data
    */
-  private function run($path, $method, $data = NULL) {    
+  private function run($path, $method, $data = NULL, $json_decode_return = true) {    
     $c = curl_init();
     
     if ($c === FALSE) {
@@ -271,7 +275,7 @@ class Fakturoid {
       throw new FakturoidException($response, $info['http_code']); 
     }
     curl_close($c);
-    return json_decode($response);
+    return $json_decode_return ? json_decode($response) : $response;
   }
 
 }
