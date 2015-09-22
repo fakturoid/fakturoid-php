@@ -43,15 +43,15 @@ class Fakturoid {
   /* Invoice */
   
   public function get_invoices($options = NULL) {
-    return $this->get("/invoices.json" . $this->convert_options($options, array('subject_id', 'since', 'page', 'status')));
+    return $this->get("/invoices.json" . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status')));
   }
   
   public function get_regular_invoices($options = NULL) {
-    return $this->get('/invoices/regular.json'. $this->convert_options($options, array('subject_id', 'since', 'page', 'status')));
+    return $this->get('/invoices/regular.json'. $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status')));
   }
   
   public function get_proforma_invoices($options = NULL) {
-    return $this->get('/invoices/proforma.json'. $this->convert_options($options, array('subject_id', 'since', 'page', 'status')));
+    return $this->get('/invoices/proforma.json'. $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status')));
   }
   
   public function get_invoice($id) {
@@ -85,7 +85,7 @@ class Fakturoid {
   /* Expense */
   
   public function get_expenses($options = NULL) {
-    return $this->get("/expenses.json" . $this->convert_options($options, array('subject_id', 'since', 'page', 'status')));
+    return $this->get("/expenses.json" . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status')));
   }
   
   public function get_expense($id) {
@@ -115,7 +115,7 @@ class Fakturoid {
   /* Subject */
   
   public function get_subjects($options = NULL) {
-    return $this->get('/subjects.json' . $this->convert_options($options, array('since', 'page', 'custom_id')));
+    return $this->get('/subjects.json' . $this->convert_options($options, array('since', 'updated_since', 'page', 'custom_id')));
   }
   
   public function get_subject($id) {
@@ -141,15 +141,15 @@ class Fakturoid {
   /* Generator */
   
   public function get_generators($options = NULL) {
-    return $this->get('/generators.json' . $this->convert_options($options, array('subject_id', 'since')));
+    return $this->get('/generators.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since')));
   }
   
   public function get_recurring_generators($options = NULL) {
-    return $this->get('/generators/recurring.json' . $this->convert_options($options, array('subject_id', 'since')));
+    return $this->get('/generators/recurring.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since')));
   }
   
   public function get_template_generators($options = NULL) {
-    return $this->get('/generators/template.json' . $this->convert_options($options, array('subject_id', 'since')));
+    return $this->get('/generators/template.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since')));
   }
   
   public function get_generator($id) {
