@@ -141,15 +141,15 @@ class Fakturoid {
   /* Generator */
   
   public function get_generators($options = NULL) {
-    return $this->get('/generators.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since')));
-  }
-  
-  public function get_recurring_generators($options = NULL) {
-    return $this->get('/generators/recurring.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since')));
+    return $this->get('/generators.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page')));
   }
   
   public function get_template_generators($options = NULL) {
-    return $this->get('/generators/template.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since')));
+    return $this->get('/generators/template.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page')));
+  }
+  
+  public function get_recurring_generators($options = NULL) {
+    return $this->get('/generators/recurring.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page')));
   }
   
   public function get_generator($id) {
