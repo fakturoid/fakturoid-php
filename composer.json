@@ -11,7 +11,7 @@
   }],
   "support": {
     "email": "podpora@fakturoid.cz"
-  }, 
+  },
   "require": {
     "php": ">=5.2.0",
     "ext-curl": "*",
