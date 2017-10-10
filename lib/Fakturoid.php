@@ -12,13 +12,13 @@ if (!function_exists('json_decode')) {
 }
 
 class Fakturoid {
-  private $subdomain;
+  private $slug;
   private $api_key;
   private $email;
   private $user_agent;
 
-  public function __construct($subdomain, $email, $api_key, $user_agent) {
-    $this->subdomain  = $subdomain;
+  public function __construct($slug, $email, $api_key, $user_agent) {
+    $this->slug       = $slug;
     $this->email      = $email;
     $this->api_key    = $api_key;
     $this->user_agent = $user_agent;
@@ -238,7 +238,7 @@ class Fakturoid {
       throw new FakturoidException('cURL failed to initialize.');
     }
 
-    curl_setopt($c, CURLOPT_URL, "https://app.fakturoid.cz/api/v2/accounts/$this->subdomain$path");
+    curl_setopt($c, CURLOPT_URL, "https://app.fakturoid.cz/api/v2/accounts/$this->slug$path");
     curl_setopt($c, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($c, CURLOPT_FAILONERROR, FALSE); // to get error messages in response body
     curl_setopt($c, CURLOPT_USERPWD, "$this->email:$this->api_key");
