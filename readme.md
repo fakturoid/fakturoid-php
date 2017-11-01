@@ -2,6 +2,15 @@
 
 PHP library for [Fakturoid.cz](https://www.fakturoid.cz/). Please see [API](http://docs.fakturoid.apiary.io/) for more documentation. New account just for testing API and using separate user (created via "Nastavení > Uživatelé a oprávnění") for production usage is higly recommended.
 
+## Install
+The recommended way to install is through Composer:
+
+```
+composer require fakturoid/fakturoid-php
+```
+
+Library requires PHP 5.2.0 and PHP extension: `curl` and `json`.
+
 ## Usage
 
 ```php
