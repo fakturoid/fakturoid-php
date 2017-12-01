@@ -59,7 +59,7 @@ class Fakturoid {
   }
 
   public function get_invoice_pdf($id){
-  	return $this->run("/invoices/$id/download.pdf", 'get', NULL, false);
+  	return $this->run("/invoices/$id/download.pdf", 'get', NULL, FALSE);
   }
 
   public function search_invoices($options = NULL) {
@@ -231,7 +231,7 @@ class Fakturoid {
   /**
    * Execute HTTP method on path with data
    */
-  private function run($path, $method, $data = NULL, $json_decode_return = true) {
+  private function run($path, $method, $data = NULL, $json_decode_return = TRUE) {
     $c = curl_init();
 
     if ($c === FALSE) {
