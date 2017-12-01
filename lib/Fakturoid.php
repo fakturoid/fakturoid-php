@@ -37,7 +37,7 @@ class Fakturoid {
   }
 
   public function get_users($options = NULL) {
-    return $this->get('/users.json'. $this->convert_options($options, array('page')));
+    return $this->get('/users.json' . $this->convert_options($options, array('page')));
   }
 
   /* Invoice */
@@ -47,11 +47,11 @@ class Fakturoid {
   }
 
   public function get_regular_invoices($options = NULL) {
-    return $this->get('/invoices/regular.json'. $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
+    return $this->get('/invoices/regular.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
   }
 
   public function get_proforma_invoices($options = NULL) {
-    return $this->get('/invoices/proforma.json'. $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
+    return $this->get('/invoices/proforma.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
   }
 
   public function get_invoice($id) {
