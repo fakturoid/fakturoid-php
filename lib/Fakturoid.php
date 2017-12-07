@@ -36,21 +36,21 @@ class Fakturoid {
     return $this->get("/users/$id.json");
   }
 
-  public function get_users($options = NULL) {
+  public function get_users($options = null) {
     return $this->get('/users.json'. $this->convert_options($options, array('page')));
   }
 
   /* Invoice */
 
-  public function get_invoices($options = NULL) {
+  public function get_invoices($options = null) {
     return $this->get("/invoices.json" . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
   }
 
-  public function get_regular_invoices($options = NULL) {
+  public function get_regular_invoices($options = null) {
     return $this->get('/invoices/regular.json'. $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
   }
 
-  public function get_proforma_invoices($options = NULL) {
+  public function get_proforma_invoices($options = null) {
     return $this->get('/invoices/proforma.json'. $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
   }
 
@@ -59,10 +59,10 @@ class Fakturoid {
   }
 
   public function get_invoice_pdf($id){
-  	return $this->run("/invoices/$id/download.pdf", 'get', NULL, false);
+  	return $this->run("/invoices/$id/download.pdf", 'get', null, false);
   }
 
-  public function search_invoices($options = NULL) {
+  public function search_invoices($options = null) {
     return $this->get("/invoices/search.json" . $this->convert_options($options, array('query', 'page')));
   }
 
@@ -84,7 +84,7 @@ class Fakturoid {
 
   /* Expense */
 
-  public function get_expenses($options = NULL) {
+  public function get_expenses($options = null) {
     return $this->get("/expenses.json" . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status')));
   }
 
@@ -92,7 +92,7 @@ class Fakturoid {
     return $this->get("/expenses/$id.json");
   }
 
-  public function search_expenses($options = NULL) {
+  public function search_expenses($options = null) {
     return $this->get("/expenses/search.json" . $this->convert_options($options, array('query', 'page')));
   }
 
@@ -114,7 +114,7 @@ class Fakturoid {
 
   /* Subject */
 
-  public function get_subjects($options = NULL) {
+  public function get_subjects($options = null) {
     return $this->get('/subjects.json' . $this->convert_options($options, array('since', 'updated_since', 'page', 'custom_id')));
   }
 
@@ -134,21 +134,21 @@ class Fakturoid {
     return $this->delete("/subjects/$id.json");
   }
 
-  public function search_subjects($options = NULL) {
+  public function search_subjects($options = null) {
     return $this->get('/subjects/search.json' . $this->convert_options($options, array('query')));
   }
 
   /* Generator */
 
-  public function get_generators($options = NULL) {
+  public function get_generators($options = null) {
     return $this->get('/generators.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page')));
   }
 
-  public function get_template_generators($options = NULL) {
+  public function get_template_generators($options = null) {
     return $this->get('/generators/template.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page')));
   }
 
-  public function get_recurring_generators($options = NULL) {
+  public function get_recurring_generators($options = null) {
     return $this->get('/generators/recurring.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page')));
   }
 
@@ -176,17 +176,17 @@ class Fakturoid {
 
   /* Event */
 
-  public function get_events($options = NULL) {
+  public function get_events($options = null) {
     return $this->get('/events.json' . $this->convert_options($options, array('subject_id', 'since', 'page')));
   }
 
-  public function get_paid_events($options = NULL) {
+  public function get_paid_events($options = null) {
     return $this->get('/events/paid.json' . $this->convert_options($options, array('subject_id', 'since', 'page')));
   }
 
   /* Todo */
 
-  public function get_todos($options = NULL) {
+  public function get_todos($options = null) {
     return $this->get('/todos.json' . $this->convert_options($options, array('subject_id', 'since', 'page')));
   }
 
@@ -220,7 +220,7 @@ class Fakturoid {
       if (isset($options[$key])) {
         $safe_options[$key] = $options[$key];
       } else {
-        $safe_options[$key] = NULL;
+        $safe_options[$key] = null;
       }
     }
     if (!empty($safe_options)) {
@@ -231,25 +231,25 @@ class Fakturoid {
   /**
    * Execute HTTP method on path with data
    */
-  private function run($path, $method, $data = NULL, $json_decode_return = true) {
+  private function run($path, $method, $data = null, $json_decode_return = true) {
     $c = curl_init();
 
-    if ($c === FALSE) {
+    if ($c === false) {
       throw new FakturoidException('cURL failed to initialize.');
     }
 
     curl_setopt($c, CURLOPT_URL, "https://app.fakturoid.cz/api/v2/accounts/$this->slug$path");
-    curl_setopt($c, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($c, CURLOPT_FAILONERROR, FALSE); // to get error messages in response body
+    curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($c, CURLOPT_FAILONERROR, false); // to get error messages in response body
     curl_setopt($c, CURLOPT_USERPWD, "$this->email:$this->api_key");
     curl_setopt($c, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-    curl_setopt($c, CURLOPT_SSL_VERIFYPEER, TRUE);
+    curl_setopt($c, CURLOPT_SSL_VERIFYPEER, true);
     curl_setopt($c, CURLOPT_SSL_VERIFYHOST, 2);
     curl_setopt($c, CURLOPT_USERAGENT, $this->user_agent);
     curl_setopt($c, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 
     if ($method == 'post') {
-      curl_setopt($c, CURLOPT_POST, TRUE);
+      curl_setopt($c, CURLOPT_POST, true);
       curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($data));
     }
     if ($method == 'put') {
@@ -267,7 +267,7 @@ class Fakturoid {
     $response = curl_exec($c);
     $info = curl_getinfo($c);
 
-    if ($response === FALSE) {
+    if ($response === false) {
       throw new FakturoidException(sprintf("cURL failed with error #%d: %s", curl_errno($c), curl_error($c)), curl_errno($c));
     }
 
