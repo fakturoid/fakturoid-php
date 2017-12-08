@@ -49,17 +49,20 @@ class Fakturoid
 
     public function get_invoices($options = null)
     {
-        return $this->get('/invoices.json' . $this->convertOptions($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
+        $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id');
+        return $this->get('/invoices.json' . $this->convertOptions($options, $allowed));
     }
 
     public function get_regular_invoices($options = null)
     {
-        return $this->get('/invoices/regular.json' . $this->convertOptions($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
+        $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id');
+        return $this->get('/invoices/regular.json' . $this->convertOptions($options, $allowed));
     }
 
     public function get_proforma_invoices($options = null)
     {
-        return $this->get('/invoices/proforma.json' . $this->convertOptions($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
+        $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id');
+        return $this->get('/invoices/proforma.json' . $this->convertOptions($options, $allowed));
     }
 
     public function get_invoice($id)
@@ -101,7 +104,8 @@ class Fakturoid
 
     public function get_expenses($options = null)
     {
-        return $this->get('/expenses.json' . $this->convertOptions($options, array('subject_id', 'since', 'updated_since', 'page', 'status')));
+        $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status');
+        return $this->get('/expenses.json' . $this->convertOptions($options, $allowed));
     }
 
     public function get_expense($id)
@@ -138,7 +142,8 @@ class Fakturoid
 
     public function get_subjects($options = null)
     {
-        return $this->get('/subjects.json' . $this->convertOptions($options, array('since', 'updated_since', 'page', 'custom_id')));
+        $allowed = array('since', 'updated_since', 'page', 'custom_id');
+        return $this->get('/subjects.json' . $this->convertOptions($options, $allowed));
     }
 
     public function get_subject($id)
@@ -170,17 +175,20 @@ class Fakturoid
 
     public function get_generators($options = null)
     {
-        return $this->get('/generators.json' . $this->convertOptions($options, array('subject_id', 'since', 'updated_since', 'page')));
+        $allowed = array('subject_id', 'since', 'updated_since', 'page');
+        return $this->get('/generators.json' . $this->convertOptions($options, $allowed));
     }
 
     public function get_template_generators($options = null)
     {
-        return $this->get('/generators/template.json' . $this->convertOptions($options, array('subject_id', 'since', 'updated_since', 'page')));
+        $allowed = array('subject_id', 'since', 'updated_since', 'page');
+        return $this->get('/generators/template.json' . $this->convertOptions($options, $allowed));
     }
 
     public function get_recurring_generators($options = null)
     {
-        return $this->get('/generators/recurring.json' . $this->convertOptions($options, array('subject_id', 'since', 'updated_since', 'page')));
+        $allowed = array('subject_id', 'since', 'updated_since', 'page');
+        return $this->get('/generators/recurring.json' . $this->convertOptions($options, $allowed));
     }
 
     public function get_generator($id)
@@ -314,7 +322,8 @@ class Fakturoid
         $info = curl_getinfo($c);
 
         if ($response === false) {
-            throw new FakturoidException(sprintf('cURL failed with error #%d: %s', curl_errno($c), curl_error($c)), curl_errno($c));
+            $message = sprintf('cURL failed with error #%d: %s', curl_errno($c), curl_error($c));
+            throw new FakturoidException($message, curl_errno($c));
         }
 
         if ($info['http_code'] >= 400) {
