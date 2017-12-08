@@ -302,19 +302,19 @@ class Fakturoid
         curl_setopt($c, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($c, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 
-        if ($method == 'post') {
+        if ($method === 'post') {
             curl_setopt($c, CURLOPT_POST, true);
             curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($data));
         }
-        if ($method == 'put') {
+        if ($method === 'put') {
             curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'PUT');
             curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($data));
         }
-        if ($method == 'patch') {
+        if ($method === 'patch') {
             curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'PATCH');
             curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($data));
         }
-        if ($method == 'delete') {
+        if ($method === 'delete') {
             curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'DELETE');
         }
 
@@ -332,5 +332,4 @@ class Fakturoid
         curl_close($c);
         return $jsonDecodeReturn ? json_decode($response) : $response;
     }
-
 }
