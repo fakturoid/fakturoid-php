@@ -49,7 +49,7 @@ class Fakturoid
 
     public function get_invoices($options = null)
     {
-        return $this->get("/invoices.json" . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
+        return $this->get('/invoices.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
     }
 
     public function get_regular_invoices($options = null)
@@ -74,7 +74,7 @@ class Fakturoid
 
     public function search_invoices($options = null)
     {
-        return $this->get("/invoices/search.json" . $this->convert_options($options, array('query', 'page')));
+        return $this->get('/invoices/search.json' . $this->convert_options($options, array('query', 'page')));
     }
 
     public function update_invoice($id, $data)
@@ -101,7 +101,7 @@ class Fakturoid
 
     public function get_expenses($options = null)
     {
-        return $this->get("/expenses.json" . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status')));
+        return $this->get('/expenses.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status')));
     }
 
     public function get_expense($id)
@@ -111,7 +111,7 @@ class Fakturoid
 
     public function search_expenses($options = null)
     {
-        return $this->get("/expenses/search.json" . $this->convert_options($options, array('query', 'page')));
+        return $this->get('/expenses/search.json' . $this->convert_options($options, array('query', 'page')));
     }
 
     public function update_expense($id, $data)
@@ -269,7 +269,7 @@ class Fakturoid
             }
         }
         if (!empty($safe_options)) {
-            return "?" . http_build_query($safe_options);
+            return '?' . http_build_query($safe_options);
         }
     }
 
@@ -299,22 +299,22 @@ class Fakturoid
             curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($data));
         }
         if ($method == 'put') {
-            curl_setopt($c, CURLOPT_CUSTOMREQUEST, "PUT");
+            curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'PUT');
             curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($data));
         }
         if ($method == 'patch') {
-            curl_setopt($c, CURLOPT_CUSTOMREQUEST, "PATCH");
+            curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'PATCH');
             curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($data));
         }
         if ($method == 'delete') {
-            curl_setopt($c, CURLOPT_CUSTOMREQUEST, "DELETE");
+            curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'DELETE');
         }
 
         $response = curl_exec($c);
         $info = curl_getinfo($c);
 
         if ($response === false) {
-            throw new FakturoidException(sprintf("cURL failed with error #%d: %s", curl_errno($c), curl_error($c)), curl_errno($c));
+            throw new FakturoidException(sprintf('cURL failed with error #%d: %s', curl_errno($c), curl_error($c)), curl_errno($c));
         }
 
         if ($info['http_code'] >= 400) {
