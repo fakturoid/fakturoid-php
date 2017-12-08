@@ -14,16 +14,16 @@ if (!function_exists('json_decode')) {
 class Fakturoid
 {
     private $slug;
-    private $api_key;
+    private $apiKey;
     private $email;
-    private $user_agent;
+    private $userAgent;
 
-    public function __construct($slug, $email, $api_key, $user_agent)
+    public function __construct($slug, $email, $apiKey, $userAgent)
     {
-        $this->slug       = $slug;
-        $this->email      = $email;
-        $this->api_key    = $api_key;
-        $this->user_agent = $user_agent;
+        $this->slug      = $slug;
+        $this->email     = $email;
+        $this->apiKey    = $apiKey;
+        $this->userAgent = $userAgent;
     }
 
     /* Account */
@@ -287,11 +287,11 @@ class Fakturoid
         curl_setopt($c, CURLOPT_URL, "https://app.fakturoid.cz/api/v2/accounts/$this->slug$path");
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($c, CURLOPT_FAILONERROR, false); // to get error messages in response body
-        curl_setopt($c, CURLOPT_USERPWD, "$this->email:$this->api_key");
+        curl_setopt($c, CURLOPT_USERPWD, "$this->email:$this->apiKey");
         curl_setopt($c, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($c, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($c, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($c, CURLOPT_USERAGENT, $this->user_agent);
+        curl_setopt($c, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($c, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 
         if ($method == 'post') {
