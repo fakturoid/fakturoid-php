@@ -42,24 +42,24 @@ class Fakturoid
 
     public function get_users($options = null)
     {
-        return $this->get('/users.json' . $this->convert_options($options, array('page')));
+        return $this->get('/users.json' . $this->convertOptions($options, array('page')));
     }
 
     /* Invoice */
 
     public function get_invoices($options = null)
     {
-        return $this->get('/invoices.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
+        return $this->get('/invoices.json' . $this->convertOptions($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
     }
 
     public function get_regular_invoices($options = null)
     {
-        return $this->get('/invoices/regular.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
+        return $this->get('/invoices/regular.json' . $this->convertOptions($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
     }
 
     public function get_proforma_invoices($options = null)
     {
-        return $this->get('/invoices/proforma.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
+        return $this->get('/invoices/proforma.json' . $this->convertOptions($options, array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id')));
     }
 
     public function get_invoice($id)
@@ -74,7 +74,7 @@ class Fakturoid
 
     public function search_invoices($options = null)
     {
-        return $this->get('/invoices/search.json' . $this->convert_options($options, array('query', 'page')));
+        return $this->get('/invoices/search.json' . $this->convertOptions($options, array('query', 'page')));
     }
 
     public function update_invoice($id, $data)
@@ -101,7 +101,7 @@ class Fakturoid
 
     public function get_expenses($options = null)
     {
-        return $this->get('/expenses.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page', 'status')));
+        return $this->get('/expenses.json' . $this->convertOptions($options, array('subject_id', 'since', 'updated_since', 'page', 'status')));
     }
 
     public function get_expense($id)
@@ -111,7 +111,7 @@ class Fakturoid
 
     public function search_expenses($options = null)
     {
-        return $this->get('/expenses/search.json' . $this->convert_options($options, array('query', 'page')));
+        return $this->get('/expenses/search.json' . $this->convertOptions($options, array('query', 'page')));
     }
 
     public function update_expense($id, $data)
@@ -138,7 +138,7 @@ class Fakturoid
 
     public function get_subjects($options = null)
     {
-        return $this->get('/subjects.json' . $this->convert_options($options, array('since', 'updated_since', 'page', 'custom_id')));
+        return $this->get('/subjects.json' . $this->convertOptions($options, array('since', 'updated_since', 'page', 'custom_id')));
     }
 
     public function get_subject($id)
@@ -163,24 +163,24 @@ class Fakturoid
 
     public function search_subjects($options = null)
     {
-        return $this->get('/subjects/search.json' . $this->convert_options($options, array('query')));
+        return $this->get('/subjects/search.json' . $this->convertOptions($options, array('query')));
     }
 
     /* Generator */
 
     public function get_generators($options = null)
     {
-        return $this->get('/generators.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page')));
+        return $this->get('/generators.json' . $this->convertOptions($options, array('subject_id', 'since', 'updated_since', 'page')));
     }
 
     public function get_template_generators($options = null)
     {
-        return $this->get('/generators/template.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page')));
+        return $this->get('/generators/template.json' . $this->convertOptions($options, array('subject_id', 'since', 'updated_since', 'page')));
     }
 
     public function get_recurring_generators($options = null)
     {
-        return $this->get('/generators/recurring.json' . $this->convert_options($options, array('subject_id', 'since', 'updated_since', 'page')));
+        return $this->get('/generators/recurring.json' . $this->convertOptions($options, array('subject_id', 'since', 'updated_since', 'page')));
     }
 
     public function get_generator($id)
@@ -214,19 +214,19 @@ class Fakturoid
 
     public function get_events($options = null)
     {
-        return $this->get('/events.json' . $this->convert_options($options, array('subject_id', 'since', 'page')));
+        return $this->get('/events.json' . $this->convertOptions($options, array('subject_id', 'since', 'page')));
     }
 
     public function get_paid_events($options = null)
     {
-        return $this->get('/events/paid.json' . $this->convert_options($options, array('subject_id', 'since', 'page')));
+        return $this->get('/events/paid.json' . $this->convertOptions($options, array('subject_id', 'since', 'page')));
     }
 
     /* Todo */
 
     public function get_todos($options = null)
     {
-        return $this->get('/todos.json' . $this->convert_options($options, array('subject_id', 'since', 'page')));
+        return $this->get('/todos.json' . $this->convertOptions($options, array('subject_id', 'since', 'page')));
     }
 
     /* Helper functions */
@@ -258,25 +258,25 @@ class Fakturoid
 
     /* Query building */
 
-    private function convert_options($options, $allowed)
+    private function convertOptions($options, $allowed)
     {
-        $safe_options = array();
+        $safeOptions = array();
         foreach ($allowed as $key) {
             if (isset($options[$key])) {
-                $safe_options[$key] = $options[$key];
+                $safeOptions[$key] = $options[$key];
             } else {
-                $safe_options[$key] = null;
+                $safeOptions[$key] = null;
             }
         }
-        if (!empty($safe_options)) {
-            return '?' . http_build_query($safe_options);
+        if (!empty($safeOptions)) {
+            return '?' . http_build_query($safeOptions);
         }
     }
 
     /**
      * Execute HTTP method on path with data
      */
-    private function run($path, $method, $data = null, $json_decode_return = true)
+    private function run($path, $method, $data = null, $jsonDecodeReturn = true)
     {
         $c = curl_init();
 
@@ -321,7 +321,7 @@ class Fakturoid
             throw new FakturoidException($response, $info['http_code']);
         }
         curl_close($c);
-        return $json_decode_return ? json_decode($response) : $response;
+        return $jsonDecodeReturn ? json_decode($response) : $response;
     }
 
 }
