@@ -1,0 +1,14 @@
+[
+    {
+        "id": 8,
+        "full_name": "Martin Hejsek",
+        "email": "blank@test.cz",
+        "avatar_url": "/images/company-contact.png"
+    },
+    {
+        "id": 10,
+        "full_name": "Bořivoj Hejsek",
+        "email": "big@test.cz",
+        "avatar_url": "/images/company-contact.png"
+    }
+]

@@ -13,17 +13,23 @@ if (!function_exists('json_decode')) {
 
 class Fakturoid
 {
+    const URL = 'https://app.fakturoid.cz/api/v2/accounts/';
+
     private $slug;
     private $apiKey;
     private $email;
     private $userAgent;
 
-    public function __construct($slug, $email, $apiKey, $userAgent)
+    private $requester; // For testing purposes
+
+    public function __construct($slug, $email, $apiKey, $userAgent, $options = array())
     {
         $this->slug      = $slug;
         $this->email     = $email;
         $this->apiKey    = $apiKey;
         $this->userAgent = $userAgent;
+
+        $this->requester = isset($options['requester']) ? $options['requester'] : new FakturoidRequester;
     }
 
     /* Account */
@@ -42,7 +48,7 @@ class Fakturoid
 
     public function get_users($options = null)
     {
-        return $this->get('/users.json' . $this->convertOptions($options, array('page')));
+        return $this->get('/users.json', $this->filterOptions($options, array('page')));
     }
 
     /* Invoice */
@@ -50,19 +56,19 @@ class Fakturoid
     public function get_invoices($options = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id');
-        return $this->get('/invoices.json' . $this->convertOptions($options, $allowed));
+        return $this->get('/invoices.json', $this->filterOptions($options, $allowed));
     }
 
     public function get_regular_invoices($options = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id');
-        return $this->get('/invoices/regular.json' . $this->convertOptions($options, $allowed));
+        return $this->get('/invoices/regular.json', $this->filterOptions($options, $allowed));
     }
 
     public function get_proforma_invoices($options = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id');
-        return $this->get('/invoices/proforma.json' . $this->convertOptions($options, $allowed));
+        return $this->get('/invoices/proforma.json', $this->filterOptions($options, $allowed));
     }
 
     public function get_invoice($id)
@@ -72,12 +78,12 @@ class Fakturoid
 
     public function get_invoice_pdf($id)
     {
-        return $this->run("/invoices/$id/download.pdf", 'get', null, false);
+        return $this->run("/invoices/$id/download.pdf", array('method' => 'get', 'jsonDecodeReturn' => false));
     }
 
     public function search_invoices($options = null)
     {
-        return $this->get('/invoices/search.json' . $this->convertOptions($options, array('query', 'page')));
+        return $this->get('/invoices/search.json', $this->filterOptions($options, array('query', 'page')));
     }
 
     public function update_invoice($id, $data)
@@ -105,7 +111,7 @@ class Fakturoid
     public function get_expenses($options = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status');
-        return $this->get('/expenses.json' . $this->convertOptions($options, $allowed));
+        return $this->get('/expenses.json', $this->filterOptions($options, $allowed));
     }
 
     public function get_expense($id)
@@ -115,7 +121,7 @@ class Fakturoid
 
     public function search_expenses($options = null)
     {
-        return $this->get('/expenses/search.json' . $this->convertOptions($options, array('query', 'page')));
+        return $this->get('/expenses/search.json', $this->filterOptions($options, array('query', 'page')));
     }
 
     public function update_expense($id, $data)
@@ -143,7 +149,7 @@ class Fakturoid
     public function get_subjects($options = null)
     {
         $allowed = array('since', 'updated_since', 'page', 'custom_id');
-        return $this->get('/subjects.json' . $this->convertOptions($options, $allowed));
+        return $this->get('/subjects.json', $this->filterOptions($options, $allowed));
     }
 
     public function get_subject($id)
@@ -168,7 +174,7 @@ class Fakturoid
 
     public function search_subjects($options = null)
     {
-        return $this->get('/subjects/search.json' . $this->convertOptions($options, array('query')));
+        return $this->get('/subjects/search.json', $this->filterOptions($options, array('query')));
     }
 
     /* Generator */
@@ -176,19 +182,19 @@ class Fakturoid
     public function get_generators($options = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page');
-        return $this->get('/generators.json' . $this->convertOptions($options, $allowed));
+        return $this->get('/generators.json', $this->filterOptions($options, $allowed));
     }
 
     public function get_template_generators($options = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page');
-        return $this->get('/generators/template.json' . $this->convertOptions($options, $allowed));
+        return $this->get('/generators/template.json', $this->filterOptions($options, $allowed));
     }
 
     public function get_recurring_generators($options = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page');
-        return $this->get('/generators/recurring.json' . $this->convertOptions($options, $allowed));
+        return $this->get('/generators/recurring.json', $this->filterOptions($options, $allowed));
     }
 
     public function get_generator($id)
@@ -222,69 +228,133 @@ class Fakturoid
 
     public function get_events($options = null)
     {
-        return $this->get('/events.json' . $this->convertOptions($options, array('subject_id', 'since', 'page')));
+        return $this->get('/events.json', $this->filterOptions($options, array('subject_id', 'since', 'page')));
     }
 
     public function get_paid_events($options = null)
     {
-        return $this->get('/events/paid.json' . $this->convertOptions($options, array('subject_id', 'since', 'page')));
+        return $this->get('/events/paid.json', $this->filterOptions($options, array('subject_id', 'since', 'page')));
     }
 
     /* Todo */
 
     public function get_todos($options = null)
     {
-        return $this->get('/todos.json' . $this->convertOptions($options, array('subject_id', 'since', 'page')));
+        return $this->get('/todos.json', $this->filterOptions($options, array('subject_id', 'since', 'page')));
     }
 
     /* Helper functions */
 
-    private function get($path)
+    private function get($path, $params = null)
     {
-        return $this->run($path, 'get');
+        return $this->run($path, array('method' => 'get', 'params' => $params));
     }
 
     private function post($path, $data)
     {
-        return $this->run($path, 'post', $data);
+        return $this->run($path, array('method' => 'post', 'data' => $data));
     }
 
     private function put($path, $data)
     {
-        return $this->run($path, 'put', $data);
+        return $this->run($path, array('method' => 'put', 'data' => $data));
     }
 
     private function patch($path, $data)
     {
-        return $this->run($path, 'patch', $data);
+        return $this->run($path, array('method' => 'patch', 'data' => $data));
     }
 
     private function delete($path)
     {
-        return $this->run($path, 'delete');
+        return $this->run($path, array('method' => 'delete'));
     }
 
-    /* Query building */
-
-    private function convertOptions($options, $allowed)
+    private function filterOptions($options, $allowedOptions)
     {
         $safeOptions = array();
-        foreach ($allowed as $key) {
+
+        foreach ($allowedOptions as $key) {
             if (isset($options[$key])) {
                 $safeOptions[$key] = $options[$key];
             } else {
                 $safeOptions[$key] = null;
             }
         }
-        if (!empty($safeOptions)) {
-            return '?' . http_build_query($safeOptions);
-        }
+
+        return $safeOptions;
     }
 
     /**
      * Execute HTTP method on path with data
      */
-    private function run($path, $method, $data = null, $jsonDecodeReturn = true)
+    private function run($path, $options)
+    {
+        $method           = $options['method'];
+        $data             = isset($options['data'])             ? $options['data']             : null;
+        $params           = isset($options['params'])           ? $options['params']           : null;
+        $jsonDecodeReturn = isset($options['jsonDecodeReturn']) ? $options['jsonDecodeReturn'] : true;
+
+        $response = $this->requester->run(array(
+            'url'     => self::URL . $this->slug . $path,
+            'method'  => $method,
+            'params'  => $params,
+            'body'    => $data,
+            'userpwd' => "$this->email:$this->apiKey",
+            'headers' => array(
+                'User-Agent' => $this->userAgent
+            )
+        ));
+
+        if ($jsonDecodeReturn) {
+            $response = json_decode($response);
+        }
+
+        return $response;
+    }
+}
+
+class FakturoidRequester
+{
+    public function run($options)
+    {
+        $request  = new FakturoidRequest($options);
+        $response = $request->run();
+
+        return $response;
+    }
+}
+
+class FakturoidRequest
+{
+    private $url;
+    private $method;
+    private $body;
+    private $userpwd;
+    private $headers;
+
+    public function __construct($options)
+    {
+        $this->url    = $options['url'];
+        $this->method = $options['method'];
+
+        if (!empty($options['params'])) {
+            $serializedParams = http_build_query($options['params']);
+
+            if (!empty($serializedParams)) {
+                $this->url .= '?' . http_build_query($options['params']);
+            }
+        }
+
+        if (array_key_exists('body', $options)) {
+            $this->body = json_encode($options['body']);
+        }
+
+        $this->userpwd = $options['userpwd'];
+        $this->headers = $options['headers'];
+    }
+
+    public function run()
     {
         $c = curl_init();
 
@@ -292,34 +362,31 @@ class Fakturoid
             throw new FakturoidException('cURL failed to initialize.');
         }
 
-        curl_setopt($c, CURLOPT_URL, "https://app.fakturoid.cz/api/v2/accounts/$this->slug$path");
+        curl_setopt($c, CURLOPT_URL, $this->getUrl());
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($c, CURLOPT_FAILONERROR, false); // to get error messages in response body
-        curl_setopt($c, CURLOPT_USERPWD, "$this->email:$this->apiKey");
+        curl_setopt($c, CURLOPT_USERPWD, $this->getUserpwd());
         curl_setopt($c, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($c, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($c, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($c, CURLOPT_USERAGENT, $this->userAgent);
-        curl_setopt($c, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($c, CURLOPT_USERAGENT, $this->getHeader('User-Agent'));
+        curl_setopt($c, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
 
-        if ($method === 'post') {
+        if ($this->getMethod() === 'post') {
             curl_setopt($c, CURLOPT_POST, true);
-            curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($data));
-        }
-        if ($method === 'put') {
+            curl_setopt($c, CURLOPT_POSTFIELDS, $this->getBody());
+        } elseif ($this->getMethod() === 'put') {
             curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'PUT');
-            curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($data));
-        }
-        if ($method === 'patch') {
+            curl_setopt($c, CURLOPT_POSTFIELDS, $this->getBody());
+        } elseif ($this->getMethod() === 'patch') {
             curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'PATCH');
-            curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($data));
-        }
-        if ($method === 'delete') {
+            curl_setopt($c, CURLOPT_POSTFIELDS, $this->getBody());
+        } elseif ($this->getMethod() === 'delete') {
             curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'DELETE');
         }
 
         $response = curl_exec($c);
-        $info = curl_getinfo($c);
+        $info     = curl_getinfo($c);
 
         if ($response === false) {
             $message = sprintf('cURL failed with error #%d: %s', curl_errno($c), curl_error($c));
@@ -329,7 +396,36 @@ class Fakturoid
         if ($info['http_code'] >= 400) {
             throw new FakturoidException($response, $info['http_code']);
         }
+
         curl_close($c);
-        return $jsonDecodeReturn ? json_decode($response) : $response;
+
+        return $response;
+    }
+
+    // For testing purposes
+
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    public function getMethod()
+    {
+        return $this->method;
+    }
+
+    public function getBody()
+    {
+        return $this->body;
+    }
+
+    public function getUserpwd()
+    {
+        return $this->userpwd;
+    }
+
+    public function getHeader($name)
+    {
+        return $this->headers[$name];
     }
 }
