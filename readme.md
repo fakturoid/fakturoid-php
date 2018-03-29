@@ -1,6 +1,7 @@
 # Fakturoid PHP lib
 
-PHP library for [Fakturoid.cz](https://www.fakturoid.cz/). Please see [API](http://docs.fakturoid.apiary.io/) for more documentation. New account just for testing API and using separate user (created via "Nastavení > Uživatelé a oprávnění") for production usage is highly recommended.
+PHP library for [Fakturoid.cz](https://www.fakturoid.cz/). Please see [API](http://docs.fakturoid.apiary.io/) for more documentation.
+New account just for testing API and using separate user (created via "Nastavení > Uživatelé a oprávnění") for production usage is highly recommended.
 
 ## Install
 The recommended way to install is through Composer:
@@ -9,7 +10,7 @@ The recommended way to install is through Composer:
 composer require fakturoid/fakturoid-php
 ```
 
-Library requires PHP 5.2.0 and PHP extension: `curl` and `json`.
+Library requires PHP 5.3.0 (or later) and `ext-curl` and `ext-json` extensions.
 
 ## Usage
 
@@ -38,20 +39,55 @@ Library raises `FakturoidException` if server returns code `4xx` or `5xx`. You c
 
 ```php
 try {
-  $subject = $f->create_subject(array('name' => '', 'email' => 'aloha@pokus.cz'));
+    $subject = $f->create_subject(array('name' => '', 'email' => 'aloha@pokus.cz'));
 } catch (FakturoidException $e) {
-  $e->getCode(); // 422
-  $e->getMessage(); // '{"errors":{"name":["je povinná položka","je příliš krátký/á/é (min. 2 znaků)"]}}'
+    $e->getCode(); // 422
+    $e->getMessage(); // '{"errors":{"name":["je povinná položka","je příliš krátký/á/é (min. 2 znaků)"]}}'
 }
 ```
 
 ### Common problems
 
-- ensure you have certificates for curl present - either globaly in `php.ini` or call `curl_setopt($ch, CURLOPT_CAINFO, "/path/to/cacert.pem")`
-- in case of problem please contact our invoicing robot on podpora@fakturoid.cz
+- Ensure you have certificates for curl present - either globaly in `php.ini` or call `curl_setopt($ch, CURLOPT_CAINFO, "/path/to/cacert.pem")`.
+- In case of problem please contact our invoicing robot on podpora@fakturoid.cz.
 
-## Testing
+## Development
+
+- To run tests, PHPUnit requires `ext-dom` extension (typically a `php-xml` package on Debian) and `ext-mbstring` extension (`php-mbstring` package).
+- If you wish to generate code coverage (and have more intelligent stack traces), you will need [Xdebug](https://xdebug.org/)
+  (`php-xdebug` package), it will hook itself into PHPUnit automatically.
+
+### macOS
+
+```sh
+$ brew tap homebrew/php
+$ brew install composer
+$ brew install php72-xdebug # This will also install Homebrew's PHP 7.2
+# Reload terminal
+$ composer install
+```
+
+### Debian
+
+```sh
+$ sudo aptitude install php php-curl php-xml php-mbstring php-xdebug composer
+$ composer install
+```
+
+### Testing
+
+Both commands do the same but the second version is a bit faster.
 
 ```sh
 $ composer test
+$ vendor/bin/phpunit
+```
+
+### Code-Style Check
+
+Both commands do the same but the second version seems to have a more intelliget output.
+
+```sh
+$ composer lint
+$ vendor/bin/phpcs --standard=PSR2 lib
 ```
