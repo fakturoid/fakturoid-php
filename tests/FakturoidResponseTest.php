@@ -21,6 +21,7 @@ class FakturoidResponseTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($headers, $response->getHeaders());
+        $this->assertEquals('Fri, 23 Mar 2018 14:57:17 GMT', $response->getHeader('Last-Modified'));
         $this->assertEquals((object) array('name' => 'Test'), $response->getBody());
     }
 
@@ -40,6 +41,7 @@ class FakturoidResponseTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($headers, $response->getHeaders());
+        $this->assertNull($response->getHeader('Content-Type'));
         $this->assertEquals('Test', $response->getBody());
     }
 }

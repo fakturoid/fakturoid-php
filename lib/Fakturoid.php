@@ -339,7 +339,7 @@ class FakturoidRequester
         $request  = new FakturoidRequest($options);
         $response = $request->run();
 
-        return $response->getBody();
+        return $response;
     }
 }
 
@@ -504,6 +504,13 @@ class FakturoidResponse
         return $this->statusCode;
     }
 
+    public function getHeader($name)
+    {
+        if (isset($this->headers[$name])) {
+            return $this->headers[$name];
+        }
+    }
+
     public function getHeaders()
     {
         return $this->headers;
@@ -511,6 +518,11 @@ class FakturoidResponse
 
     public function getBody()
     {
+        // Typically in 304 Not Modified.
+        if ($this->body === '') {
+            return null;
+        }
+
         return $this->body;
     }
 
