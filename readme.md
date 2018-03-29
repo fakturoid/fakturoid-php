@@ -19,28 +19,28 @@ require_once '/path/to/lib/Fakturoid.php';
 $f = new Fakturoid('..slug..', '..user@email.cz..', '..api_key..', 'PHPlib <your@email.cz>');
 
 // create subject
-$response = $f->create_subject(array('name' => 'Firma s.r.o.', 'email' => 'aloha@pokus.cz'));
+$response = $f->createSubject(array('name' => 'Firma s.r.o.', 'email' => 'aloha@pokus.cz'));
 $subject  = $response->getBody();
 
 // create invoice with lines
 $lines    = array(array('name' => 'Big sale', 'quantity' => 1, 'unit_price' => 1000));
-$response = $f->create_invoice(array('subject_id' => $subject->id, 'lines' => $lines));
+$response = $f->createInvoice(array('subject_id' => $subject->id, 'lines' => $lines));
 $invoice  = $response->getBody();
 
 // send created invoice
-$f->fire_invoice($invoice->id, 'deliver');
+$f->fireInvoice($invoice->id, 'deliver');
 
 // to mark invoice as paid
-$f->fire_invoice($invoice->id, 'pay'); // or 'pay_proforma' for paying proforma and 'pay_partial_proforma' for partial proforma
+$f->fireInvoice($invoice->id, 'pay'); // or 'pay_proforma' for paying proforma and 'pay_partial_proforma' for partial proforma
 
 // you can also take advantage of caching (via ETag and Last-Modified headers).
-$response     = $f->get_invoice(123);
+$response     = $f->getInvoice(123);
 $status       = $response->getStatusCode();            // 200
 $invoice      = $response->getBody();                  // stdClass Object
 $etag         = $response->getHeader('ETag');          // 'W/"6e0d839fb2edb9eadcd9ecda2d227c96"'
 $lastModified = $response->getHeader('Last-Modified'); // "Wed, 28 Mar 2018 03:11:14 GMT"
 
-$response     = $f->get_invoice(123, array('If-None-Match' => $etag, 'If-Modified-Since' => $lastModified));
+$response     = $f->getInvoice(123, array('If-None-Match' => $etag, 'If-Modified-Since' => $lastModified));
 $status       = $response->getStatusCode();            // 304 Not Modified
 $invoice      = $response->getBody();                  // null
 ```
@@ -51,7 +51,7 @@ Library raises `FakturoidException` if server returns code `4xx` or `5xx`. You c
 
 ```php
 try {
-    $subject = $f->create_subject(array('name' => '', 'email' => 'aloha@pokus.cz'));
+    $subject = $f->createSubject(array('name' => '', 'email' => 'aloha@pokus.cz'));
 } catch (FakturoidException $e) {
     $e->getCode(); // 422
     $e->getMessage(); // '{"errors":{"name":["je povinná položka","je příliš krátký/á/é (min. 2 znaků)"]}}'

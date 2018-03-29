@@ -12,7 +12,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $account = $f->get_account();
+        $account = $f->getAccount();
     }
 
     public function testGetAccountWithHeaders()
@@ -21,7 +21,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $account = $f->get_account(array(
+        $account = $f->getAccount(array(
             'If-None-Match'     => 'W/"e79a1fdf3cf010530b6d6827549915ce"',
             'If-Modified-Since' => 'Tue, 27 Mar 2018 12:40:03 GMT'
         ));
@@ -33,7 +33,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $account = $f->get_account(array(
+        $account = $f->getAccount(array(
             'If-Modified-Since' => new DateTime
         ));
     }
@@ -47,7 +47,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $account = $f->get_account(array('Unknown' => 'Hello'));
+        $account = $f->getAccount(array('Unknown' => 'Hello'));
     }
 
     /* User */
@@ -58,7 +58,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $user = $f->get_user(10);
+        $user = $f->getUser(10);
     }
 
     public function testGetUsers()
@@ -67,7 +67,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $users = $f->get_users();
+        $users = $f->getUsers();
     }
 
     /* Invoice */
@@ -78,7 +78,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoices = $f->get_invoices();
+        $invoices = $f->getInvoices();
     }
 
     public function testGetInvoicesSecondPage()
@@ -87,7 +87,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoices = $f->get_invoices(array('page' => 2));
+        $invoices = $f->getInvoices(array('page' => 2));
     }
 
     public function testGetRegularInvoices()
@@ -96,7 +96,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoices = $f->get_regular_invoices();
+        $invoices = $f->getRegularInvoices();
     }
 
     public function testGetProformaInvoices()
@@ -105,7 +105,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoices = $f->get_proforma_invoices();
+        $invoices = $f->getProformaInvoices();
     }
 
     public function testGetInvoice()
@@ -114,7 +114,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoice = $f->get_invoice(86);
+        $invoice = $f->getInvoice(86);
     }
 
     public function testGetInvoicePdf()
@@ -123,7 +123,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $pdf = $f->get_invoice_pdf(86);
+        $pdf = $f->getInvoicePdf(86);
     }
 
     public function testSearchInvoices()
@@ -132,7 +132,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoices = $f->search_invoices(array('query' => 'Test'));
+        $invoices = $f->searchInvoices(array('query' => 'Test'));
     }
 
     public function testUpdateInvoice()
@@ -141,7 +141,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoice = $f->update_invoice(86, array('due' => 5));
+        $invoice = $f->updateInvoice(86, array('due' => 5));
     }
 
     public function testFireInvoice()
@@ -150,7 +150,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $response = $f->fire_invoice(86, 'pay', array('paid_at' => '2018-03-21T00:00:00+01:00'));
+        $response = $f->fireInvoice(86, 'pay', array('paid_at' => '2018-03-21T00:00:00+01:00'));
     }
 
     public function testCreateInvoice()
@@ -159,7 +159,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoice = $f->create_invoice(array(
+        $invoice = $f->createInvoice(array(
             'subject_id' => 36,
             'lines' => array(
                 array(
@@ -179,7 +179,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $response = $f->delete_invoice(86);
+        $response = $f->deleteInvoice(86);
     }
 
     /* Expense */
@@ -190,7 +190,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $expenses = $f->get_expenses();
+        $expenses = $f->getExpenses();
     }
 
     public function testGetExpense()
@@ -199,7 +199,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $expense = $f->get_expense(201);
+        $expense = $f->getExpense(201);
     }
 
     public function testSearchExpenses()
@@ -208,7 +208,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $expenses = $f->search_expenses(array('query' => 'Test'));
+        $expenses = $f->searchExpenses(array('query' => 'Test'));
     }
 
     public function testUpdateExpense()
@@ -217,7 +217,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $expense = $f->update_expense(201, array('due' => 5));
+        $expense = $f->updateExpense(201, array('due' => 5));
     }
 
     public function testFireExpense()
@@ -226,7 +226,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $response = $f->fire_expense(201, 'pay', array('paid_at' => '2018-03-21T00:00:00+01:00'));
+        $response = $f->fireExpense(201, 'pay', array('paid_at' => '2018-03-21T00:00:00+01:00'));
     }
 
     public function testCreateExpense()
@@ -235,7 +235,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $expense = $f->create_expense(array(
+        $expense = $f->createExpense(array(
             'subject_id' => 36,
             'lines' => array(
                 array(
@@ -255,7 +255,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $response = $f->delete_expense(201);
+        $response = $f->deleteExpense(201);
     }
 
     /* Subject */
@@ -266,7 +266,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $subjects = $f->get_subjects();
+        $subjects = $f->getSubjects();
     }
 
     public function testGetSubject()
@@ -275,7 +275,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $subject = $f->get_subject(36);
+        $subject = $f->getSubject(36);
     }
 
     public function testCreateSubject()
@@ -284,7 +284,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $subject = $f->create_subject(array('name' => 'Apple Czech s.r.o.'));
+        $subject = $f->createSubject(array('name' => 'Apple Czech s.r.o.'));
     }
 
     public function testUpdateSubject()
@@ -293,7 +293,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $subject = $f->update_subject(36, array('street' => 'Tetst'));
+        $subject = $f->updateSubject(36, array('street' => 'Tetst'));
     }
 
     public function testDeleteSubject()
@@ -302,7 +302,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $response = $f->delete_subject(36);
+        $response = $f->deleteSubject(36);
     }
 
     public function testSearchSubjects()
@@ -311,7 +311,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $subjects = $f->search_subjects(array('query' => 'Apple'));
+        $subjects = $f->searchSubjects(array('query' => 'Apple'));
     }
 
     /* Generator */
@@ -322,7 +322,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $generators = $f->get_generators();
+        $generators = $f->getGenerators();
     }
 
     public function testGetTemplateGenerators()
@@ -331,7 +331,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $generators = $f->get_template_generators();
+        $generators = $f->getTemplateGenerators();
     }
 
     public function testGetRecurringGenerators()
@@ -340,7 +340,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $generators = $f->get_recurring_generators();
+        $generators = $f->getRecurringGenerators();
     }
 
     public function testGetGenerator()
@@ -349,7 +349,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $generator = $f->get_generator(10);
+        $generator = $f->getGenerator(10);
     }
 
     public function testCreateGenerator()
@@ -358,7 +358,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $generator = $f->create_generator(array(
+        $generator = $f->createGenerator(array(
             'name' => 'Test',
             'subject_id' => 36,
             'payment_method' => 'bank',
@@ -381,7 +381,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $generator = $f->update_generator(10, array('due' => 5));
+        $generator = $f->updateGenerator(10, array('due' => 5));
     }
 
     public function testDeleteGenerator()
@@ -390,7 +390,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $response = $f->delete_generator(10);
+        $response = $f->deleteGenerator(10);
     }
 
     /* Message */
@@ -401,7 +401,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $message = $f->create_message(86, array(
+        $message = $f->createMessage(86, array(
             'email' => 'test@example.org',
             'subject' => 'Hello',
             'message' => "Hello,\n\nI have invoice for you.\n#link#\n\n   John Doe"
@@ -416,7 +416,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $events = $f->get_events();
+        $events = $f->getEvents();
     }
 
     public function testGetPaidEvents()
@@ -425,7 +425,7 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $events = $f->get_paid_events();
+        $events = $f->getPaidEvents();
     }
 
     /* Todo */
@@ -436,6 +436,6 @@ class FakturoidTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $todos = $f->get_todos();
+        $todos = $f->getTodos();
     }
 }

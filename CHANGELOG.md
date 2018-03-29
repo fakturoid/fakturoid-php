@@ -1,5 +1,15 @@
 ## Soon-to-be-1.0.0
 
+- Method names changed from `underscored_names` to `camelCase`.
+
+  ```php
+  // Before
+  $f->create_subject(array('name' => 'Firma s.r.o.', 'email' => 'aloha@pokus.cz'));
+
+  // After
+  $f->createSubject(array('name' => 'Firma s.r.o.', 'email' => 'aloha@pokus.cz'));
+  ```
+
 - Methods now return a `FakturoidResponse` object instead of an array.
 
   ```php

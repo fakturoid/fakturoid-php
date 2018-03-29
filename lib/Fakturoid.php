@@ -34,212 +34,212 @@ class Fakturoid
 
     /* Account */
 
-    public function get_account($headers = null)
+    public function getAccount($headers = null)
     {
         return $this->get('/account.json', null, $headers);
     }
 
     /* User */
 
-    public function get_user($id, $headers = null)
+    public function getUser($id, $headers = null)
     {
         return $this->get("/users/$id.json", null, $headers);
     }
 
-    public function get_users($params = null, $headers = null)
+    public function getUsers($params = null, $headers = null)
     {
         return $this->get('/users.json', $this->filterOptions($params, array('page')), $headers);
     }
 
     /* Invoice */
 
-    public function get_invoices($params = null, $headers = null)
+    public function getInvoices($params = null, $headers = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id');
         return $this->get('/invoices.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_regular_invoices($params = null, $headers = null)
+    public function getRegularInvoices($params = null, $headers = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id');
         return $this->get('/invoices/regular.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_proforma_invoices($params = null, $headers = null)
+    public function getProformaInvoices($params = null, $headers = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id');
         return $this->get('/invoices/proforma.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_invoice($id, $headers = null)
+    public function getInvoice($id, $headers = null)
     {
         return $this->get("/invoices/$id.json", null, $headers);
     }
 
-    public function get_invoice_pdf($id, $headers = null)
+    public function getInvoicePdf($id, $headers = null)
     {
         // TODO: Use ->get?
         return $this->run("/invoices/$id/download.pdf", array('method' => 'get', 'headers' => $headers));
     }
 
-    public function search_invoices($params = null, $headers = null)
+    public function searchInvoices($params = null, $headers = null)
     {
         return $this->get('/invoices/search.json', $this->filterOptions($params, array('query', 'page')), $headers);
     }
 
-    public function update_invoice($id, $data)
+    public function updateInvoice($id, $data)
     {
         return $this->patch("/invoices/$id.json", $data);
     }
 
-    public function fire_invoice($id, $event, $params = array())
+    public function fireInvoice($id, $event, $params = array())
     {
         return $this->post("/invoices/$id/fire.json", array_merge(array('event' => $event), $params));
     }
 
-    public function create_invoice($data)
+    public function createInvoice($data)
     {
         return $this->post('/invoices.json', $data);
     }
 
-    public function delete_invoice($id)
+    public function deleteInvoice($id)
     {
         return $this->delete("/invoices/$id.json");
     }
 
     /* Expense */
 
-    public function get_expenses($params = null, $headers = null)
+    public function getExpenses($params = null, $headers = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status');
         return $this->get('/expenses.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_expense($id, $headers = null)
+    public function getExpense($id, $headers = null)
     {
         return $this->get("/expenses/$id.json", null, $headers);
     }
 
-    public function search_expenses($params = null, $headers = null)
+    public function searchExpenses($params = null, $headers = null)
     {
         return $this->get('/expenses/search.json', $this->filterOptions($params, array('query', 'page')), $headers);
     }
 
-    public function update_expense($id, $data)
+    public function updateExpense($id, $data)
     {
         return $this->patch("/expenses/$id.json", $data);
     }
 
-    public function fire_expense($id, $event, $params = array())
+    public function fireExpense($id, $event, $params = array())
     {
         return $this->post("/expenses/$id/fire.json", array_merge(array('event' => $event), $params));
     }
 
-    public function create_expense($data)
+    public function createExpense($data)
     {
         return $this->post('/expenses.json', $data);
     }
 
-    public function delete_expense($id)
+    public function deleteExpense($id)
     {
         return $this->delete("/expenses/$id.json");
     }
 
     /* Subject */
 
-    public function get_subjects($params = null, $headers = null)
+    public function getSubjects($params = null, $headers = null)
     {
         $allowed = array('since', 'updated_since', 'page', 'custom_id');
         return $this->get('/subjects.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_subject($id, $headers = null)
+    public function getSubject($id, $headers = null)
     {
         return $this->get("/subjects/$id.json", null, $headers);
     }
 
-    public function create_subject($data)
+    public function createSubject($data)
     {
         return $this->post('/subjects.json', $data);
     }
 
-    public function update_subject($id, $data)
+    public function updateSubject($id, $data)
     {
         return $this->patch("/subjects/$id.json", $data);
     }
 
-    public function delete_subject($id)
+    public function deleteSubject($id)
     {
         return $this->delete("/subjects/$id.json");
     }
 
-    public function search_subjects($params = null, $headers = null)
+    public function searchSubjects($params = null, $headers = null)
     {
         return $this->get('/subjects/search.json', $this->filterOptions($params, array('query')), $headers);
     }
 
     /* Generator */
 
-    public function get_generators($params = null, $headers = null)
+    public function getGenerators($params = null, $headers = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page');
         return $this->get('/generators.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_template_generators($params = null, $headers = null)
+    public function getTemplateGenerators($params = null, $headers = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page');
         return $this->get('/generators/template.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_recurring_generators($params = null, $headers = null)
+    public function getRecurringGenerators($params = null, $headers = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page');
         return $this->get('/generators/recurring.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_generator($id, $headers = null)
+    public function getGenerator($id, $headers = null)
     {
         return $this->get("/generators/$id.json", null, $headers);
     }
 
-    public function create_generator($data)
+    public function createGenerator($data)
     {
         return $this->post('/generators.json', $data);
     }
 
-    public function update_generator($id, $data)
+    public function updateGenerator($id, $data)
     {
         return $this->patch("/generators/$id.json", $data);
     }
 
-    public function delete_generator($id)
+    public function deleteGenerator($id)
     {
         return $this->delete("/generators/$id.json");
     }
 
     /* Message */
 
-    public function create_message($id, $data)
+    public function createMessage($id, $data)
     {
         return $this->post("/invoices/$id/message.json", $data);
     }
 
     /* Event */
 
-    public function get_events($params = null, $headers = null)
+    public function getEvents($params = null, $headers = null)
     {
         return $this->get('/events.json', $this->filterOptions($params, array('subject_id', 'since', 'page')), $headers);
     }
 
-    public function get_paid_events($params = null, $headers = null)
+    public function getPaidEvents($params = null, $headers = null)
     {
         return $this->get('/events/paid.json', $this->filterOptions($params, array('subject_id', 'since', 'page')), $headers);
     }
 
     /* Todo */
 
-    public function get_todos($params = null, $headers = null)
+    public function getTodos($params = null, $headers = null)
     {
         return $this->get('/todos.json', $this->filterOptions($params, array('subject_id', 'since', 'page')), $headers);
     }
