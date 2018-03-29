@@ -1,12 +1,13 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use Fakturoid\Request as Request;
 
-class FakturoidRequestTest extends TestCase
+class RequestTest extends TestCase
 {
     public function testFullConstructor()
     {
-        $request = new FakturoidRequest(array(
+        $request = new Request(array(
             'url'     => 'https://app.fakturoid.cz/api/v2/accounts/invoices.json',
             'method'  => 'get',
             'params'  => array('page' => 2),
@@ -26,7 +27,7 @@ class FakturoidRequestTest extends TestCase
 
     public function testMediumConstructor()
     {
-        $request = new FakturoidRequest(array(
+        $request = new Request(array(
             'url'     => 'https://app.fakturoid.cz/api/v2/accounts/invoices.json',
             'method'  => 'get',
             'params'  => array('page' => null),
@@ -45,7 +46,7 @@ class FakturoidRequestTest extends TestCase
 
     public function testMinimalConstructor()
     {
-        $request = new FakturoidRequest(array(
+        $request = new Request(array(
             'url'     => 'https://app.fakturoid.cz/api/v2/accounts/invoices.json',
             'method'  => 'get',
             'userpwd' => 'test:123456',

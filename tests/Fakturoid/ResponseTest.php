@@ -1,8 +1,9 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use Fakturoid\Response as Response;
 
-class FakturoidResponseTest extends TestCase
+class ResponseTest extends TestCase
 {
     public function testJson()
     {
@@ -11,7 +12,7 @@ class FakturoidResponseTest extends TestCase
             'Last-Modified' => 'Fri, 23 Mar 2018 14:57:17 GMT',
             'Content-Type'  => 'application/json; charset=utf-8'
         );
-        $response = new FakturoidResponse(
+        $response = new Response(
             array(
                 'http_code' => 200,
                 'headers'   => $headers
@@ -31,7 +32,7 @@ class FakturoidResponseTest extends TestCase
             'ETag'          => 'W/"e79a1fdf3cf010530b6d6827549915ce"',
             'Last-Modified' => 'Fri, 23 Mar 2018 14:57:17 GMT'
         );
-        $response = new FakturoidResponse(
+        $response = new Response(
             array(
                 'http_code' => 200,
                 'headers'   => $headers

@@ -16,7 +16,7 @@ Library requires PHP 5.3.0 (or later) and `ext-curl` and `ext-json` extensions.
 
 ```php
 require_once '/path/to/lib/Fakturoid.php';
-$f = new Fakturoid('..slug..', '..user@email.cz..', '..api_key..', 'PHPlib <your@email.cz>');
+$f = new Fakturoid\Client('..slug..', '..user@email.cz..', '..api_key..', 'PHPlib <your@email.cz>');
 
 // create subject
 $response = $f->createSubject(array('name' => 'Firma s.r.o.', 'email' => 'aloha@pokus.cz'));
@@ -47,12 +47,12 @@ $invoice      = $response->getBody();                  // null
 
 ## Handling errors
 
-Library raises `FakturoidException` if server returns code `4xx` or `5xx`. You can get response code and response body by calling `getCode()` or `getMessage()`.
+Library raises `Fakturoid\Exception` if server returns code `4xx` or `5xx`. You can get response code and response body by calling `getCode()` or `getMessage()`.
 
 ```php
 try {
     $subject = $f->createSubject(array('name' => '', 'email' => 'aloha@pokus.cz'));
-} catch (FakturoidException $e) {
+} catch (Fakturoid\Exception $e) {
     $e->getCode(); // 422
     $e->getMessage(); // '{"errors":{"name":["je povinná položka","je příliš krátký/á/é (min. 2 znaků)"]}}'
 }
