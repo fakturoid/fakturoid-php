@@ -15,6 +15,41 @@ class FakturoidTest extends TestCase
         $account = $f->get_account();
     }
 
+    public function testGetAccountWithHeaders()
+    {
+        $requester = $this->createMock('FakturoidRequester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $account = $f->get_account(array(
+            'If-None-Match'     => 'W/"e79a1fdf3cf010530b6d6827549915ce"',
+            'If-Modified-Since' => 'Tue, 27 Mar 2018 12:40:03 GMT'
+        ));
+    }
+
+    public function testGetAccountWithDateTimeHeader()
+    {
+        $requester = $this->createMock('FakturoidRequester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $account = $f->get_account(array(
+            'If-Modified-Since' => new DateTime
+        ));
+    }
+
+    /**
+     * @expectedException PHPUnit\Framework\Error\Notice
+     */
+    public function testGetAccountWithInvalidHeaders()
+    {
+        $requester = $this->createMock('FakturoidRequester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Fakturoid('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $account = $f->get_account(array('Unknown' => 'Hello'));
+    }
+
     /* User */
 
     public function testGetUser()

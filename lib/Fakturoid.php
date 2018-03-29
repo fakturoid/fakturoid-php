@@ -34,56 +34,57 @@ class Fakturoid
 
     /* Account */
 
-    public function get_account()
+    public function get_account($headers = null)
     {
-        return $this->get('/account.json');
+        return $this->get('/account.json', null, $headers);
     }
 
     /* User */
 
-    public function get_user($id)
+    public function get_user($id, $headers = null)
     {
-        return $this->get("/users/$id.json");
+        return $this->get("/users/$id.json", null, $headers);
     }
 
-    public function get_users($options = null)
+    public function get_users($params = null, $headers = null)
     {
-        return $this->get('/users.json', $this->filterOptions($options, array('page')));
+        return $this->get('/users.json', $this->filterOptions($params, array('page')), $headers);
     }
 
     /* Invoice */
 
-    public function get_invoices($options = null)
+    public function get_invoices($params = null, $headers = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id');
-        return $this->get('/invoices.json', $this->filterOptions($options, $allowed));
+        return $this->get('/invoices.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_regular_invoices($options = null)
+    public function get_regular_invoices($params = null, $headers = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id');
-        return $this->get('/invoices/regular.json', $this->filterOptions($options, $allowed));
+        return $this->get('/invoices/regular.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_proforma_invoices($options = null)
+    public function get_proforma_invoices($params = null, $headers = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status', 'custom_id');
-        return $this->get('/invoices/proforma.json', $this->filterOptions($options, $allowed));
+        return $this->get('/invoices/proforma.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_invoice($id)
+    public function get_invoice($id, $headers = null)
     {
-        return $this->get("/invoices/$id.json");
+        return $this->get("/invoices/$id.json", null, $headers);
     }
 
-    public function get_invoice_pdf($id)
+    public function get_invoice_pdf($id, $headers = null)
     {
-        return $this->run("/invoices/$id/download.pdf", array('method' => 'get', 'jsonDecodeReturn' => false));
+        // TODO: Use ->get?
+        return $this->run("/invoices/$id/download.pdf", array('method' => 'get', 'headers' => $headers));
     }
 
-    public function search_invoices($options = null)
+    public function search_invoices($params = null, $headers = null)
     {
-        return $this->get('/invoices/search.json', $this->filterOptions($options, array('query', 'page')));
+        return $this->get('/invoices/search.json', $this->filterOptions($params, array('query', 'page')), $headers);
     }
 
     public function update_invoice($id, $data)
@@ -91,9 +92,9 @@ class Fakturoid
         return $this->patch("/invoices/$id.json", $data);
     }
 
-    public function fire_invoice($id, $event, $options = array())
+    public function fire_invoice($id, $event, $params = array())
     {
-        return $this->post("/invoices/$id/fire.json", array_merge(array('event' => $event), $options));
+        return $this->post("/invoices/$id/fire.json", array_merge(array('event' => $event), $params));
     }
 
     public function create_invoice($data)
@@ -108,20 +109,20 @@ class Fakturoid
 
     /* Expense */
 
-    public function get_expenses($options = null)
+    public function get_expenses($params = null, $headers = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page', 'status');
-        return $this->get('/expenses.json', $this->filterOptions($options, $allowed));
+        return $this->get('/expenses.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_expense($id)
+    public function get_expense($id, $headers = null)
     {
-        return $this->get("/expenses/$id.json");
+        return $this->get("/expenses/$id.json", null, $headers);
     }
 
-    public function search_expenses($options = null)
+    public function search_expenses($params = null, $headers = null)
     {
-        return $this->get('/expenses/search.json', $this->filterOptions($options, array('query', 'page')));
+        return $this->get('/expenses/search.json', $this->filterOptions($params, array('query', 'page')), $headers);
     }
 
     public function update_expense($id, $data)
@@ -129,9 +130,9 @@ class Fakturoid
         return $this->patch("/expenses/$id.json", $data);
     }
 
-    public function fire_expense($id, $event, $options = array())
+    public function fire_expense($id, $event, $params = array())
     {
-        return $this->post("/expenses/$id/fire.json", array_merge(array('event' => $event), $options));
+        return $this->post("/expenses/$id/fire.json", array_merge(array('event' => $event), $params));
     }
 
     public function create_expense($data)
@@ -146,15 +147,15 @@ class Fakturoid
 
     /* Subject */
 
-    public function get_subjects($options = null)
+    public function get_subjects($params = null, $headers = null)
     {
         $allowed = array('since', 'updated_since', 'page', 'custom_id');
-        return $this->get('/subjects.json', $this->filterOptions($options, $allowed));
+        return $this->get('/subjects.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_subject($id)
+    public function get_subject($id, $headers = null)
     {
-        return $this->get("/subjects/$id.json");
+        return $this->get("/subjects/$id.json", null, $headers);
     }
 
     public function create_subject($data)
@@ -172,34 +173,34 @@ class Fakturoid
         return $this->delete("/subjects/$id.json");
     }
 
-    public function search_subjects($options = null)
+    public function search_subjects($params = null, $headers = null)
     {
-        return $this->get('/subjects/search.json', $this->filterOptions($options, array('query')));
+        return $this->get('/subjects/search.json', $this->filterOptions($params, array('query')), $headers);
     }
 
     /* Generator */
 
-    public function get_generators($options = null)
+    public function get_generators($params = null, $headers = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page');
-        return $this->get('/generators.json', $this->filterOptions($options, $allowed));
+        return $this->get('/generators.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_template_generators($options = null)
+    public function get_template_generators($params = null, $headers = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page');
-        return $this->get('/generators/template.json', $this->filterOptions($options, $allowed));
+        return $this->get('/generators/template.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_recurring_generators($options = null)
+    public function get_recurring_generators($params = null, $headers = null)
     {
         $allowed = array('subject_id', 'since', 'updated_since', 'page');
-        return $this->get('/generators/recurring.json', $this->filterOptions($options, $allowed));
+        return $this->get('/generators/recurring.json', $this->filterOptions($params, $allowed), $headers);
     }
 
-    public function get_generator($id)
+    public function get_generator($id, $headers = null)
     {
-        return $this->get("/generators/$id.json");
+        return $this->get("/generators/$id.json", null, $headers);
     }
 
     public function create_generator($data)
@@ -226,28 +227,28 @@ class Fakturoid
 
     /* Event */
 
-    public function get_events($options = null)
+    public function get_events($params = null, $headers = null)
     {
-        return $this->get('/events.json', $this->filterOptions($options, array('subject_id', 'since', 'page')));
+        return $this->get('/events.json', $this->filterOptions($params, array('subject_id', 'since', 'page')), $headers);
     }
 
-    public function get_paid_events($options = null)
+    public function get_paid_events($params = null, $headers = null)
     {
-        return $this->get('/events/paid.json', $this->filterOptions($options, array('subject_id', 'since', 'page')));
+        return $this->get('/events/paid.json', $this->filterOptions($params, array('subject_id', 'since', 'page')), $headers);
     }
 
     /* Todo */
 
-    public function get_todos($options = null)
+    public function get_todos($params = null, $headers = null)
     {
-        return $this->get('/todos.json', $this->filterOptions($options, array('subject_id', 'since', 'page')));
+        return $this->get('/todos.json', $this->filterOptions($params, array('subject_id', 'since', 'page')), $headers);
     }
 
     /* Helper functions */
 
-    private function get($path, $params = null)
+    private function get($path, $params = null, $headers = null)
     {
-        return $this->run($path, array('method' => 'get', 'params' => $params));
+        return $this->run($path, array('method' => 'get', 'params' => $params, 'headers' => $headers));
     }
 
     private function post($path, $data)
@@ -270,19 +271,26 @@ class Fakturoid
         return $this->run($path, array('method' => 'delete'));
     }
 
-    private function filterOptions($options, $allowedOptions)
+    private function filterOptions($options, $allowedKeys)
     {
-        $safeOptions = array();
+        if (!$options) {
+            return;
+        }
 
-        foreach ($allowedOptions as $key) {
-            if (isset($options[$key])) {
-                $safeOptions[$key] = $options[$key];
-            } else {
-                $safeOptions[$key] = null;
+        $unknownKeys = array();
+
+        foreach ($options as $key => $value) {
+            if (!in_array($key, $allowedKeys)) {
+                unset($options[$key]);
+                $unknownKeys[] = $key;
             }
         }
 
-        return $safeOptions;
+        if (!empty($unknownKeys)) {
+            trigger_error("Unknown option keys: " . implode(', ', $unknownKeys));
+        }
+
+        return $options;
     }
 
     /**
@@ -290,30 +298,40 @@ class Fakturoid
      */
     private function run($path, $options)
     {
-        $method           = $options['method'];
-        $data             = isset($options['data'])             ? $options['data']             : null;
-        $params           = isset($options['params'])           ? $options['params']           : null;
-        $jsonDecodeReturn = isset($options['jsonDecodeReturn']) ? $options['jsonDecodeReturn'] : true;
+        $method  = $options['method'];
+        $data    = isset($options['data'])    ? $options['data']    : null;
+        $params  = isset($options['params'])  ? $options['params']  : null;
+        $headers = isset($options['headers']) ? $options['headers'] : array();
+        $body    = !empty($data)              ? json_encode($data)  : null;
+
+        // Arrays in constants are in PHP 5.6+
+        $allowedHeaders = array(
+            'If-None-Match',    // Pairs with `ETag` response header.
+            'If-Modified-Since' // Pairs with `Last-Modified` response header.
+        );
+
+        $headers = $this->filterOptions($headers, $allowedHeaders);
+        $headers['User-Agent']   = $this->userAgent;
+        $headers['Content-Type'] = 'application/json';
+
+        if (!empty($headers['If-Modified-Since']) && $headers['If-Modified-Since'] instanceof DateTime) {
+            $headers['If-Modified-Since'] = gmdate('D, d M Y H:i:s \G\M\T', $headers['If-Modified-Since']->getTimestamp());
+        }
 
         $response = $this->requester->run(array(
             'url'     => self::URL . $this->slug . $path,
             'method'  => $method,
             'params'  => $params,
-            'body'    => $data,
+            'body'    => $body,
             'userpwd' => "$this->email:$this->apiKey",
-            'headers' => array(
-                'User-Agent' => $this->userAgent
-            )
+            'headers' => $headers
         ));
-
-        if ($jsonDecodeReturn) {
-            $response = json_decode($response);
-        }
 
         return $response;
     }
 }
 
+// For testing purposes.
 class FakturoidRequester
 {
     public function run($options)
@@ -321,7 +339,7 @@ class FakturoidRequester
         $request  = new FakturoidRequest($options);
         $response = $request->run();
 
-        return $response;
+        return $response->getBody();
     }
 }
 
@@ -347,7 +365,7 @@ class FakturoidRequest
         }
 
         if (array_key_exists('body', $options)) {
-            $this->body = json_encode($options['body']);
+            $this->body = $options['body'];
         }
 
         $this->userpwd = $options['userpwd'];
@@ -370,7 +388,25 @@ class FakturoidRequest
         curl_setopt($c, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($c, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($c, CURLOPT_USERAGENT, $this->getHeader('User-Agent'));
-        curl_setopt($c, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+        curl_setopt($c, CURLOPT_HTTPHEADER, $this->filterHeaders());
+
+        $headers = array();
+
+        // PHP 5.3+
+        curl_setopt($c, CURLOPT_HEADERFUNCTION, function ($_curl, $header) use (&$headers) {
+            $length = strlen($header);
+            $header = explode(':', $header, 2);
+
+            if (count($header) < 2) { // Ignore non-key-value headers
+                return $length;
+            }
+
+            $name  = trim($header[0]);
+            $value = trim($header[1]);
+            $headers[$name] = $value;
+
+            return $length;
+        });
 
         if ($this->getMethod() === 'post') {
             curl_setopt($c, CURLOPT_POST, true);
@@ -385,8 +421,9 @@ class FakturoidRequest
             curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'DELETE');
         }
 
-        $response = curl_exec($c);
-        $info     = curl_getinfo($c);
+        $response        = curl_exec($c);
+        $info            = curl_getinfo($c);
+        $info['headers'] = $headers;
 
         if ($response === false) {
             $message = sprintf('cURL failed with error #%d: %s', curl_errno($c), curl_error($c));
@@ -399,7 +436,7 @@ class FakturoidRequest
 
         curl_close($c);
 
-        return $response;
+        return new FakturoidResponse($info, $response);
     }
 
     // For testing purposes
@@ -427,5 +464,63 @@ class FakturoidRequest
     public function getHeader($name)
     {
         return $this->headers[$name];
+    }
+
+    // User-Agent header is sent differently.
+    private function filterHeaders()
+    {
+        $headers = array();
+
+        foreach ($this->headers as $name => $value) {
+            if ($name != 'User-Agent') {
+                $headers[] = "$name: $value";
+            }
+        }
+
+        return $headers;
+    }
+}
+
+class FakturoidResponse
+{
+    private $statusCode;
+    private $headers;
+    private $body;
+
+    public function __construct($info, $response)
+    {
+        $this->statusCode = $info['http_code'];
+        $this->headers    = $info['headers'];
+
+        if ($this->isJson()) {
+            $this->body = json_decode($response);
+        } else {
+            $this->body = $response;
+        }
+    }
+
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
+
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    public function getBody()
+    {
+        return $this->body;
+    }
+
+    private function isJson()
+    {
+        if (empty($this->headers['Content-Type'])) {
+            return false;
+        }
+
+        $contentType = $this->headers['Content-Type'];
+        return strpos($contentType, 'application/json') !== false;
     }
 }

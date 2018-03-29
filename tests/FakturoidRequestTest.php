@@ -10,7 +10,7 @@ class FakturoidRequestTest extends TestCase
             'url'     => 'https://app.fakturoid.cz/api/v2/accounts/invoices.json',
             'method'  => 'get',
             'params'  => array('page' => 2),
-            'body'    => array('name' => 'Test'),
+            'body'    => json_encode(array('name' => 'Test')),
             'userpwd' => 'test:123456',
             'headers' => array(
                 'User-Agent' => 'Test <test@example.org>'
