@@ -25,7 +25,7 @@
   $f->createSubject(array('name' => 'Firma s.r.o.', 'email' => 'aloha@pokus.cz'));
   ```
 
-- Methods were changed to return a `FakturoidResponse` object instead of an array.
+- Methods were changed to return a `Fakturoid\Response` object instead of an array.
   This allows for more info to be available, (e.g. headers).
 
   ```php
