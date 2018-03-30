@@ -69,8 +69,7 @@ class Client
 
     public function getInvoicePdf($id, $headers = null)
     {
-        // TODO: Use ->get?
-        return $this->run("/invoices/$id/download.pdf", array('method' => 'get', 'headers' => $headers));
+        return $this->get("/invoices/$id/download.pdf", null, $headers);
     }
 
     public function searchInvoices($params = null, $headers = null)
