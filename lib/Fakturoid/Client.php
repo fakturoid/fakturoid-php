@@ -246,11 +246,6 @@ class Client
         return $this->run($path, array('method' => 'post', 'data' => $data));
     }
 
-    private function put($path, $data)
-    {
-        return $this->run($path, array('method' => 'put', 'data' => $data));
-    }
-
     private function patch($path, $data)
     {
         return $this->run($path, array('method' => 'patch', 'data' => $data));
