@@ -3,7 +3,7 @@
 PHP library for [Fakturoid.cz](https://www.fakturoid.cz/). Please see [API](http://docs.fakturoid.apiary.io/) for more documentation.
 New account just for testing API and using separate user (created via "Nastavení > Uživatelé a oprávnění") for production usage is highly recommended.
 
-## Install
+## Installation
 The recommended way to install is through Composer:
 
 ```
@@ -72,9 +72,7 @@ try {
 ### macOS
 
 ```sh
-$ brew tap homebrew/php
 $ brew install composer
-$ brew install php72-xdebug # This will also install Homebrew's PHP 7.2
 # Reload terminal
 $ composer install
 ```
@@ -103,3 +101,7 @@ Both commands do the same but the second version seems to have a more intelliget
 $ composer lint
 $ vendor/bin/phpcs --standard=PSR2 lib
 ```
+
+## TODO
+
+- PHPDoc?
