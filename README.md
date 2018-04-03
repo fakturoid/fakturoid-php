@@ -101,7 +101,3 @@ Both commands do the same but the second version seems to have a more intelliget
 $ composer lint
 $ vendor/bin/phpcs --standard=PSR2 lib
 ```
-
-## TODO
-
-- PHPDoc?
