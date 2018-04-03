@@ -1,4 +1,4 @@
-## Soon-to-be-1.0.0
+## 1.0.0
 
 - Minimum PHP version was raised from 5.2 to 5.3 due to the need of anonymous
   functions and namespaces.
