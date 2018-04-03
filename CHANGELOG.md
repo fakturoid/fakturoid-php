@@ -30,14 +30,14 @@
 
   ```php
   // Before
+  $subject = $f->create_subject(array('name' => 'Firma s.r.o.', 'email' => 'aloha@pokus.cz'));
+
+  // After
   $response     = $f->createSubject(array('name' => 'Firma s.r.o.', 'email' => 'aloha@pokus.cz'));
   $subject      = $response->getBody();
   $lastModified = $response->getHeader('Last-Modified');
   $headers      = $response->getHeaders();
   $status       = $response->getStatusCode();
-
-  // After
-  $subject = $f->create_subject(array('name' => 'Firma s.r.o.', 'email' => 'aloha@pokus.cz'));
   ```
 
 ## 0.1.0 (Initial version)
