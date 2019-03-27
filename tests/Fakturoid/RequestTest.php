@@ -60,5 +60,7 @@ class RequestTest extends TestCase
         $this->assertEquals(null, $request->getBody());
         $this->assertEquals('test:123456', $request->getUserpwd());
         $this->assertEquals('Test <test@example.org>', $request->getHeader('User-Agent'));
+        $this->assertEquals('Test <test@example.org>', $request->getHeader('user-agent'));
+        $this->assertEquals('Test <test@example.org>', $request->getHeader('uSeR-aGeNt'));
     }
 }

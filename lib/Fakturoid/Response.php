@@ -27,8 +27,10 @@ class Response
 
     public function getHeader($name)
     {
-        if (isset($this->headers[$name])) {
-            return $this->headers[$name];
+        foreach ($this->headers as $headerName => $value) {
+            if (strtolower($headerName) == strtolower($name)) {
+                return $value;
+            }
         }
     }
 
@@ -49,11 +51,11 @@ class Response
 
     private function isJson()
     {
-        if (empty($this->headers['Content-Type'])) {
+        if (empty($this->getHeader('Content-Type'))) {
             return false;
         }
 
-        $contentType = $this->headers['Content-Type'];
+        $contentType = $this->getHeader('Content-Type');
         return strpos($contentType, 'application/json') !== false;
     }
 }

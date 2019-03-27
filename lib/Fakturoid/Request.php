@@ -122,7 +122,11 @@ class Request
 
     public function getHeader($name)
     {
-        return $this->headers[$name];
+        foreach ($this->headers as $headerName => $value) {
+            if (strtolower($headerName) == strtolower($name)) {
+                return $value;
+            }
+        }
     }
 
     // User-Agent header is sent differently.
@@ -131,7 +135,7 @@ class Request
         $headers = array();
 
         foreach ($this->headers as $name => $value) {
-            if ($name != 'User-Agent') {
+            if (strtolower($name) != 'user-agent') {
                 $headers[] = "$name: $value";
             }
         }
