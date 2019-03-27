@@ -45,6 +45,24 @@ $status       = $response->getStatusCode();            // 304 Not Modified
 $invoice      = $response->getBody();                  // null
 ```
 
+## Using `custom_id`
+
+You can use `custom_id` attribute to store your application record ID into our record.
+Invoices and subjects can be filtered to find a particular record:
+
+```php
+$response = $f->getSubjects(array('custom_id' => '10'));
+$subjects = $response->getBody();
+$subject  = null;
+
+if (count($subjects) > 0) {
+  $subject = $subjects[0];
+}
+```
+
+As for subjects, Fakturoid won't let you create two records with the same `custom_id` so you don't have to worry about multiple results.
+Also note that the field always returns a string.
+
 ## Handling errors
 
 Library raises `Fakturoid\Exception` if server returns code `4xx` or `5xx`. You can get response code and response body by calling `getCode()` or `getMessage()`.
