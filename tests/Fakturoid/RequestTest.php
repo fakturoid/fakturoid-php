@@ -63,4 +63,20 @@ class RequestTest extends TestCase
         $this->assertEquals('Test <test@example.org>', $request->getHeader('user-agent'));
         $this->assertEquals('Test <test@example.org>', $request->getHeader('uSeR-aGeNt'));
     }
+
+    public function testGetHttpHeaders()
+    {
+        $request = new Request(array(
+            'url'     => 'https://app.fakturoid.cz/api/v2/accounts/invoices.json',
+            'method'  => 'get',
+            'userpwd' => 'test:123456',
+            'headers' => array(
+                'User-Agent' => 'Test <test@example.org>'
+            )
+        ));
+        $headers   = $request->getHttpHeaders();
+        $clientEnv = $headers[0];
+
+        $this->assertRegExp('/PHP \d+\.\d+\.\d+/', $clientEnv);
+    }
 }

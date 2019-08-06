@@ -47,7 +47,7 @@ class Request
         curl_setopt($c, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($c, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($c, CURLOPT_USERAGENT, $this->getHeader('User-Agent'));
-        curl_setopt($c, CURLOPT_HTTPHEADER, $this->filterHeaders());
+        curl_setopt($c, CURLOPT_HTTPHEADER, $this->getHttpHeaders());
 
         $headers = array();
 
@@ -130,9 +130,11 @@ class Request
     }
 
     // User-Agent header is sent differently.
-    private function filterHeaders()
+    public function getHttpHeaders()
     {
-        $headers = array();
+        $headers = array(
+            'X-Client-Env: PHP ' . PHP_VERSION
+        );
 
         foreach ($this->headers as $name => $value) {
             if (strtolower($name) != 'user-agent') {
