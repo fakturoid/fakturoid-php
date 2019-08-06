@@ -43,6 +43,12 @@ $lastModified = $response->getHeader('Last-Modified'); // "Wed, 28 Mar 2018 03:1
 $response     = $f->getInvoice(123, array('If-None-Match' => $etag, 'If-Modified-Since' => $lastModified));
 $status       = $response->getStatusCode();            // 304 Not Modified
 $invoice      = $response->getBody();                  // null
+
+// save invoice PDF
+$invoiceId = 123;
+$response = $f->getInvoicePdf($invoiceId);
+$data = $response->getBody();
+file_put_contents("{$invoiceId}.pdf", $data);
 ```
 
 ## Using `custom_id`
