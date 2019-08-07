@@ -1,0 +1,15 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/php:7.1
+        environment:
+          TZ: /usr/share/zoneinfo/Europe/Prague
+    steps:
+      - checkout
+      - run:
+          name: Install dependenices
+          command: composer install
+      - run:
+          name: Run tests
+          command: composer test
