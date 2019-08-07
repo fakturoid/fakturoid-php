@@ -23,6 +23,6 @@ jobs:
   test-5.6:
     <<: *test-template
     docker:
-      - image: circleci/php:5.3
+      - image: circleci/php:5.6
         environment:
           TZ: /usr/share/zoneinfo/Europe/Prague
