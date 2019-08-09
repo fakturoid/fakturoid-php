@@ -256,7 +256,7 @@ class Client
         return $this->run($path, array('method' => 'delete'));
     }
 
-    private function filterOptions($options, $allowedKeys)
+    private function filterOptions($options, $allowedKeys, $caseSensitive = true)
     {
         if (!$options) {
             return;
@@ -265,6 +265,10 @@ class Client
         $unknownKeys = array();
 
         foreach ($options as $key => $value) {
+            if (!$caseSensitive) {
+                $key = strtolower($key);
+            }
+
             if (!in_array($key, $allowedKeys)) {
                 unset($options[$key]);
                 $unknownKeys[] = $key;
@@ -291,17 +295,23 @@ class Client
 
         // Arrays in constants are in PHP 5.6+
         $allowedHeaders = array(
-            'If-None-Match',    // Pairs with `ETag` response header.
-            'If-Modified-Since' // Pairs with `Last-Modified` response header.
+            'if-none-match',    // Pairs with `ETag` response header.
+            'if-modified-since' // Pairs with `Last-Modified` response header.
         );
 
-        $headers = $this->filterOptions($headers, $allowedHeaders);
+        $headers = $this->filterOptions($headers, $allowedHeaders, false);
+
+        if ($headers) {
+            foreach ($headers as $name => $value) {
+                if (strtolower($name) == 'if-modified-since' && $value instanceof DateTime) {
+                    $headers[$name] = gmdate('D, d M Y H:i:s \G\M\T', $value->getTimestamp());
+                    break;
+                }
+            }
+        }
+
         $headers['User-Agent']   = $this->userAgent;
         $headers['Content-Type'] = 'application/json';
-
-        if (!empty($headers['If-Modified-Since']) && $headers['If-Modified-Since'] instanceof DateTime) {
-            $headers['If-Modified-Since'] = gmdate('D, d M Y H:i:s \G\M\T', $headers['If-Modified-Since']->getTimestamp());
-        }
 
         $response = $this->requester->run(array(
             'url'     => self::URL . $this->slug . $path,
