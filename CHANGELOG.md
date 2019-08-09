@@ -1,3 +1,10 @@
+## 1.0.2
+
+- Fixed request caching headers `If-None-Match` and `If-Modified-Since` being case-sensitive.
+- Send client PHP version in request custom header to help us know what should be
+  the minimal supported version of PHP so that we can safely use newer language features
+  without breaking your things.
+
 ## 1.0.1
 
 - Fixed headers being case-sensitive.
