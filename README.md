@@ -64,7 +64,7 @@ $subjects = $response->getBody();
 $subject  = null;
 
 if (count($subjects) > 0) {
-  $subject = $subjects[0];
+    $subject = $subjects[0];
 }
 ```
 
