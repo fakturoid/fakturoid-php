@@ -151,7 +151,9 @@ class ClientTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $response = $f->fireInvoice(86, 'pay');
         $response = $f->fireInvoice(86, 'pay', array('paid_at' => '2018-03-21T00:00:00+01:00'));
+        $response = $f->fireInvoice(86, 'pay', array('paid_at' => '2018-03-21T00:00:00+01:00', 'paid_amount' => '1000', 'variable_symbol' => '12345678', 'bank_account_id' => 23));
     }
 
     public function testCreateInvoice()
@@ -227,7 +229,8 @@ class ClientTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $response = $f->fireExpense(201, 'pay', array('paid_at' => '2018-03-21T00:00:00+01:00'));
+        $response = $f->fireExpense(201, 'pay');
+        $response = $f->fireExpense(201, 'pay', array('paid_on' => '2018-03-21', 'paid_amount' => '1000', 'variable_symbol' => '12345678', 'bank_account_id' => 23));
     }
 
     public function testCreateExpense()

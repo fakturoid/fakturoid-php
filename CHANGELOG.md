@@ -1,3 +1,12 @@
+## 1.0.3
+
+- Whitelist parameters for invoice and expense fire actions.
+
+  ```php
+  $f->fireInvoice(123, 'pay', array('paid_at' => '2019-08-14', 'paid_amount' => '1200', 'variable_symbol' => '12345678', 'bank_account_id' => 23));
+  $f->fireExpense(123, 'pay', array('paid_on' => '2019-08-14', 'paid_amount' => '1200', 'variable_symbol' => '12345678', 'bank_account_id' => 23));
+  ```
+
 ## 1.0.2
 
 - Fixed request caching headers `If-None-Match` and `If-Modified-Since` being case-sensitive.

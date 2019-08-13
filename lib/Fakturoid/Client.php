@@ -84,7 +84,10 @@ class Client
 
     public function fireInvoice($id, $event, $params = array())
     {
-        return $this->post("/invoices/$id/fire.json", array_merge(array('event' => $event), $params));
+        $requestParams = $this->filterOptions($params, array('paid_at', 'paid_amount', 'variable_symbol', 'bank_account_id'));
+        $requestParams['event'] = $event;
+
+        return $this->post("/invoices/$id/fire.json", $requestParams);
     }
 
     public function createInvoice($data)
@@ -122,7 +125,10 @@ class Client
 
     public function fireExpense($id, $event, $params = array())
     {
-        return $this->post("/expenses/$id/fire.json", array_merge(array('event' => $event), $params));
+        $requestParams = $this->filterOptions($params, array('paid_on', 'paid_amount', 'variable_symbol', 'bank_account_id'));
+        $requestParams['event'] = $event;
+
+        return $this->post("/expenses/$id/fire.json", $requestParams);
     }
 
     public function createExpense($data)
