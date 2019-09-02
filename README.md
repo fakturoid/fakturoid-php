@@ -1,6 +1,6 @@
 # Fakturoid PHP lib
 
-PHP library for [Fakturoid.cz](https://www.fakturoid.cz/). Please see [API](http://docs.fakturoid.apiary.io/) for more documentation.
+PHP library for [Fakturoid.cz](https://www.fakturoid.cz/). Please see [API](https://fakturoid.docs.apiary.io/) for more documentation.
 New account just for testing API and using separate user (created via "Nastavení > Uživatelé a oprávnění") for production usage is highly recommended.
 
 [![Circle CI](https://circleci.com/gh/fakturoid/fakturoid-php.svg?style=svg)](https://circleci.com/gh/fakturoid/fakturoid-php)
@@ -45,12 +45,38 @@ $lastModified = $response->getHeader('Last-Modified'); // "Wed, 28 Mar 2018 03:1
 $response     = $f->getInvoice(123, array('If-None-Match' => $etag, 'If-Modified-Since' => $lastModified));
 $status       = $response->getStatusCode();            // 304 Not Modified
 $invoice      = $response->getBody();                  // null
+```
 
-// save invoice PDF
+## Downloading an invoice PDF
+
+```php
 $invoiceId = 123;
 $response = $f->getInvoicePdf($invoiceId);
 $data = $response->getBody();
 file_put_contents("{$invoiceId}.pdf", $data);
+```
+
+If you call `$f->getInvoicePdf()` right after creating an invoice, you'll get
+a status code `204` (`No Content`) with empty body, this means the invoice PDF
+hasn't yet been generated and you should try again a second or two later.
+
+More info in [API docs](https://fakturoid.docs.apiary.io/#reference/invoices/invoice-pdf/stazeni-faktury-v-pdf).
+
+```php
+$invoiceId = 123;
+
+// This is just an example, you may want to do this in a background job and be more defensive.
+while (true) {
+  $response = $f->getInvoicePdf($invoiceId);
+
+  if ($response->getStatusCode() == 200) {
+    $data = $response->getBody();
+    file_put_contents("{$invoiceId}.pdf", $data);
+    break;
+  }
+
+  sleep(1);
+}
 ```
 
 ## Using `custom_id`
