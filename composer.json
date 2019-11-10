@@ -15,7 +15,8 @@
     "require": {
         "php": ">=5.3.0",
         "ext-curl": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "slevomat/coding-standard": "^5.0"
     },
     "require-dev": {
         "ext-dom": "*",
@@ -28,6 +29,7 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
-        "lint": "vendor/bin/phpcs --standard=PSR2 lib"
+        "lint": "vendor/bin/phpcs --standard=ruleset.xml lib",
+        "phpcbf": "vendor/bin/phpcbf --standard=ruleset.xml lib"
     }
 }

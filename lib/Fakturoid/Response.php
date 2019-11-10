@@ -14,7 +14,7 @@ class Response
         $this->headers    = $info['headers'];
 
         if ($this->isJson()) {
-            $this->body = json_decode($response);
+            $this->body = \json_decode($response);
         } else {
             $this->body = $response;
         }
@@ -28,7 +28,7 @@ class Response
     public function getHeader($name)
     {
         foreach ($this->headers as $headerName => $value) {
-            if (strtolower($headerName) == strtolower($name)) {
+            if (\strtolower($headerName) == \strtolower($name)) {
                 return $value;
             }
         }
@@ -56,6 +56,6 @@ class Response
         }
 
         $contentType = $this->getHeader('Content-Type');
-        return strpos($contentType, 'application/json') !== false;
+        return \strpos($contentType, 'application/json') !== false;
     }
 }

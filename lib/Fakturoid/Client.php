@@ -272,17 +272,17 @@ class Client
 
         foreach ($options as $key => $value) {
             if (!$caseSensitive) {
-                $key = strtolower($key);
+                $key = \strtolower($key);
             }
 
-            if (!in_array($key, $allowedKeys)) {
+            if (!\in_array($key, $allowedKeys)) {
                 unset($options[$key]);
                 $unknownKeys[] = $key;
             }
         }
 
         if (!empty($unknownKeys)) {
-            trigger_error("Unknown option keys: " . implode(', ', $unknownKeys));
+            \trigger_error("Unknown option keys: " . \implode(', ', $unknownKeys));
         }
 
         return $options;
@@ -297,7 +297,7 @@ class Client
         $data    = isset($options['data'])    ? $options['data']    : null;
         $params  = isset($options['params'])  ? $options['params']  : null;
         $headers = isset($options['headers']) ? $options['headers'] : array();
-        $body    = !empty($data)              ? json_encode($data)  : null;
+        $body    = !empty($data)              ? \json_encode($data)  : null;
 
         // Arrays in constants are in PHP 5.6+
         $allowedHeaders = array(
@@ -309,8 +309,8 @@ class Client
 
         if ($headers) {
             foreach ($headers as $name => $value) {
-                if (strtolower($name) == 'if-modified-since' && $value instanceof DateTime) {
-                    $headers[$name] = gmdate('D, d M Y H:i:s \G\M\T', $value->getTimestamp());
+                if (\strtolower($name) == 'if-modified-since' && $value instanceof DateTime) {
+                    $headers[$name] = \gmdate('D, d M Y H:i:s \G\M\T', $value->getTimestamp());
                     break;
                 }
             }
