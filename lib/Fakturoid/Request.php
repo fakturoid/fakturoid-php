@@ -1,6 +1,8 @@
 <?php
 
-namespace Fakturoid;
+declare(strict_types=1);
+
+namespace fakturoid\fakturoid_php;
 
 class Request
 {
@@ -12,23 +14,23 @@ class Request
 
     public function __construct($options)
     {
-        $this->url    = $options['url'];
-        $this->method = $options['method'];
+        $this->url = $options[ 'url' ];
+        $this->method = $options[ 'method' ];
 
-        if (!empty($options['params'])) {
-            $serializedParams = http_build_query($options['params']);
+        if (!empty($options[ 'params' ])) {
+            $serializedParams = http_build_query($options[ 'params' ]);
 
             if (!empty($serializedParams)) {
-                $this->url .= '?' . http_build_query($options['params']);
+                $this->url .= '?' . http_build_query($options[ 'params' ]);
             }
         }
 
         if (array_key_exists('body', $options)) {
-            $this->body = $options['body'];
+            $this->body = $options[ 'body' ];
         }
 
-        $this->userpwd = $options['userpwd'];
-        $this->headers = $options['headers'];
+        $this->userpwd = $options[ 'userpwd' ];
+        $this->headers = $options[ 'headers' ];
     }
 
     public function run()
@@ -52,20 +54,24 @@ class Request
         $headers = array();
 
         // PHP 5.3+
-        curl_setopt($c, CURLOPT_HEADERFUNCTION, function ($_curl, $header) use (&$headers) {
-            $length = strlen($header);
-            $header = explode(':', $header, 2);
+        curl_setopt(
+            $c,
+            CURLOPT_HEADERFUNCTION,
+            function ($_curl, $header) use (&$headers) {
+                $length = strlen($header);
+                $header = explode(':', $header, 2);
 
-            if (count($header) < 2) { // Ignore non-key-value headers
+                if (count($header) < 2) { // Ignore non-key-value headers
+                    return $length;
+                }
+
+                $name = trim($header[ 0 ]);
+                $value = trim($header[ 1 ]);
+                $headers[ $name ] = $value;
+
                 return $length;
             }
-
-            $name  = trim($header[0]);
-            $value = trim($header[1]);
-            $headers[$name] = $value;
-
-            return $length;
-        });
+        );
 
         if ($this->getMethod() === 'post') {
             curl_setopt($c, CURLOPT_POST, true);
@@ -80,17 +86,17 @@ class Request
             curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'DELETE');
         }
 
-        $response        = curl_exec($c);
-        $info            = curl_getinfo($c);
-        $info['headers'] = $headers;
+        $response = curl_exec($c);
+        $info = curl_getinfo($c);
+        $info[ 'headers' ] = $headers;
 
         if ($response === false) {
             $message = sprintf('cURL failed with error #%d: %s', curl_errno($c), curl_error($c));
             throw new Exception($message, curl_errno($c));
         }
 
-        if ($info['http_code'] >= 400) {
-            throw new Exception($response, $info['http_code']);
+        if ($info[ 'http_code' ] >= 400) {
+            throw new Exception($response, $info[ 'http_code' ]);
         }
 
         curl_close($c);
@@ -105,16 +111,6 @@ class Request
         return $this->url;
     }
 
-    public function getMethod()
-    {
-        return $this->method;
-    }
-
-    public function getBody()
-    {
-        return $this->body;
-    }
-
     public function getUserpwd()
     {
         return $this->userpwd;
@@ -123,13 +119,13 @@ class Request
     public function getHeader($name)
     {
         foreach ($this->headers as $headerName => $value) {
-            if (strtolower($headerName) == strtolower($name)) {
+            if (strtolower($headerName) === strtolower($name)) {
                 return $value;
             }
         }
+        // TODO missing return statement
     }
 
-    // User-Agent header is sent differently.
     public function getHttpHeaders()
     {
         $headers = array(
@@ -137,11 +133,23 @@ class Request
         );
 
         foreach ($this->headers as $name => $value) {
-            if (strtolower($name) != 'user-agent') {
+            if (strtolower($name) !== 'user-agent') {
                 $headers[] = "$name: $value";
             }
         }
 
         return $headers;
+    }
+
+    public function getMethod()
+    {
+        return $this->method;
+    }
+
+    // User-Agent header is sent differently.
+
+    public function getBody()
+    {
+        return $this->body;
     }
 }

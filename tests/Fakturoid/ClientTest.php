@@ -1,445 +1,702 @@
 <?php
 
+declare(strict_types=1);
+
+namespace fakturoid\fakturoid_php\Test;
+
+use Carbon\Carbon;
+use Exception;
+use fakturoid\fakturoid_php\Client as Client;
+use fakturoid\fakturoid_php\Requester;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Fakturoid\Client as Client;
+
 
 class ClientTest extends TestCase
 {
+    protected MockObject $requester;
+
     /* Account */
 
     public function testGetAccount()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $account = $f->getAccount();
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getAccount();
     }
 
     public function testGetAccountWithHeaders()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $account = $f->getAccount(array(
-            'If-None-Match'     => 'W/"e79a1fdf3cf010530b6d6827549915ce"',
-            'If-Modified-Since' => 'Tue, 27 Mar 2018 12:40:03 GMT'
-        ));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getAccount(
+            [
+                'If-None-Match'     => 'W/"e79a1fdf3cf010530b6d6827549915ce"',
+                'If-Modified-Since' => 'Tue, 27 Mar 2018 12:40:03 GMT'
+            ]
+        );
     }
 
     public function testGetAccountWithDateTimeHeader()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $account = $f->getAccount(array(
-            'If-Modified-Since' => new DateTime
-        ));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getAccount(
+            [
+                'If-Modified-Since' => Carbon::now()
+            ]
+        );
     }
 
     /**
-     * @expectedException PHPUnit\Framework\Error\Notice
+     * @expectedException \PHPUnit\Framework\Error\Notice
      */
     public function testGetAccountWithInvalidHeaders()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $account = $f->getAccount(array('Unknown' => 'Hello'));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+
+        try {
+            $f->getAccount(['Unknown' => 'Hello']);
+        } catch (Exception $e) {
+            self::assertStringContainsString('Unknown option keys: unknown', $e->getMessage());
+        }
+    }
+
+    public function testGetUser()
+    {
+        $this->requester->method('run')->willReturn(null);
+
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getUser(10);
     }
 
     /* User */
 
-    public function testGetUser()
-    {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
-
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $user = $f->getUser(10);
-    }
-
     public function testGetUsers()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $users = $f->getUsers();
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getUsers();
+    }
+
+    public function testGetInvoices()
+    {
+        $this->requester->method('run')->willReturn(null);
+
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getInvoices();
     }
 
     /* Invoice */
 
-    public function testGetInvoices()
-    {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
-
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoices = $f->getInvoices();
-    }
-
     public function testGetInvoicesSecondPage()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoices = $f->getInvoices(array('page' => 2));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getInvoices(['page' => 2]);
     }
 
     public function testGetRegularInvoices()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoices = $f->getRegularInvoices();
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getRegularInvoices();
     }
 
     public function testGetProformaInvoices()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoices = $f->getProformaInvoices();
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getProformaInvoices();
     }
 
     public function testGetInvoice()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoice = $f->getInvoice(86);
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getInvoice(86);
     }
 
     public function testGetInvoicePdf()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $pdf = $f->getInvoicePdf(86);
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getInvoicePdf(86);
     }
 
     public function testSearchInvoices()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoices = $f->searchInvoices(array('query' => 'Test'));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->searchInvoices(['query' => 'Test']);
     }
 
     public function testUpdateInvoice()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoice = $f->updateInvoice(86, array('due' => 5));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->updateInvoice(86, ['due' => 5]);
     }
 
     public function testFireInvoice()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $response = $f->fireInvoice(86, 'pay');
-        $response = $f->fireInvoice(86, 'pay', array('paid_at' => '2018-03-21T00:00:00+01:00'));
-        $response = $f->fireInvoice(86, 'pay', array('paid_at' => '2018-03-21T00:00:00+01:00', 'paid_amount' => '1000', 'variable_symbol' => '12345678', 'bank_account_id' => 23));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->fireInvoice(86, 'pay');
+        $f->fireInvoice(86, 'pay', ['paid_at' => '2018-03-21T00:00:00+01:00']);
+        $f->fireInvoice(
+            86,
+            'pay',
+            [
+                'paid_at'         => '2018-03-21T00:00:00+01:00',
+                'paid_amount'     => '1000',
+                'variable_symbol' => '12345678',
+                'bank_account_id' => 23
+            ]
+        );
     }
 
     public function testCreateInvoice()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $invoice = $f->createInvoice(array(
-            'subject_id' => 36,
-            'lines' => array(
-                array(
-                    'quantity'   => 5,
-                    'unit_name'  => 'kg',
-                    'name'       => 'Sand',
-                    'unit_price' => '100',
-                    'vat_rate'   => 21
-                )
-            )
-        ));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->createInvoice(
+            [
+                'subject_id' => 36,
+                'lines'      => [
+                    [
+                        'quantity'   => 5,
+                        'unit_name'  => 'kg',
+                        'name'       => 'Sand',
+                        'unit_price' => '100',
+                        'vat_rate'   => 21
+
+                    ]
+                ],
+            ]
+        );
     }
 
     public function testDeleteInvoice()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $response = $f->deleteInvoice(86);
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->deleteInvoice(86);
+    }
+
+    public function testGetExpenses()
+    {
+        $this->requester->method('run')->willReturn(null);
+
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getExpenses();
     }
 
     /* Expense */
 
-    public function testGetExpenses()
-    {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
-
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $expenses = $f->getExpenses();
-    }
-
     public function testGetExpense()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $expense = $f->getExpense(201);
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getExpense(201);
     }
 
     public function testSearchExpenses()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $expenses = $f->searchExpenses(array('query' => 'Test'));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->searchExpenses(['query' => 'Test']);
     }
 
     public function testUpdateExpense()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $expense = $f->updateExpense(201, array('due' => 5));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->updateExpense(201, ['due' => 5]);
     }
 
     public function testFireExpense()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $response = $f->fireExpense(201, 'pay');
-        $response = $f->fireExpense(201, 'pay', array('paid_on' => '2018-03-21', 'paid_amount' => '1000', 'variable_symbol' => '12345678', 'bank_account_id' => 23));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->fireExpense(201, 'pay');
+        $f->fireExpense(
+            201,
+            'pay',
+            [
+                'paid_on'         => '2018-03-21',
+                'paid_amount'     => '1000',
+                'variable_symbol' => '12345678',
+                'bank_account_id' => 23
+            ],
+        );
     }
 
     public function testCreateExpense()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $expense = $f->createExpense(array(
-            'subject_id' => 36,
-            'lines' => array(
-                array(
-                    'quantity'   => 5,
-                    'unit_name'  => 'kg',
-                    'name'       => 'Sand',
-                    'unit_price' => '100',
-                    'vat_rate'   => 21
-                )
-            )
-        ));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->createExpense(
+            [
+                'subject_id' => 36,
+                'lines'      => [
+                    [
+                        'quantity'   => 5,
+                        'unit_name'  => 'kg',
+                        'name'       => 'Sand',
+                        'unit_price' => '100',
+                        'vat_rate'   => 21
+                    ]
+                ]
+            ]
+
+        );
     }
 
     public function testDeleteExpense()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $response = $f->deleteExpense(201);
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->deleteExpense(201);
+    }
+
+    public function testGetSubjects()
+    {
+        $this->requester->method('run')->willReturn(null);
+
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getSubjects();
     }
 
     /* Subject */
 
-    public function testGetSubjects()
-    {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
-
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $subjects = $f->getSubjects();
-    }
-
     public function testGetSubject()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $subject = $f->getSubject(36);
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getSubject(36);
     }
 
     public function testCreateSubject()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $subject = $f->createSubject(array('name' => 'Apple Czech s.r.o.'));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->createSubject(['name' => 'Apple Czech s.r.o.']);
     }
 
     public function testUpdateSubject()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $subject = $f->updateSubject(36, array('street' => 'Tetst'));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->updateSubject(36, ['street' => 'Tetst']);
     }
 
     public function testDeleteSubject()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $response = $f->deleteSubject(36);
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->deleteSubject(36);
     }
 
     public function testSearchSubjects()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $subjects = $f->searchSubjects(array('query' => 'Apple'));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->searchSubjects(['query' => 'Apple']);
+    }
+
+    public function testGetGenerators()
+    {
+        $this->requester->method('run')->willReturn(null);
+
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getGenerators();
     }
 
     /* Generator */
 
-    public function testGetGenerators()
-    {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
-
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $generators = $f->getGenerators();
-    }
-
     public function testGetTemplateGenerators()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $generators = $f->getTemplateGenerators();
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getTemplateGenerators();
     }
 
     public function testGetRecurringGenerators()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $generators = $f->getRecurringGenerators();
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getRecurringGenerators();
     }
 
     public function testGetGenerator()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $generator = $f->getGenerator(10);
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getGenerator(10);
     }
 
     public function testCreateGenerator()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $generator = $f->createGenerator(array(
-            'name' => 'Test',
-            'subject_id' => 36,
-            'payment_method' => 'bank',
-            'currency' => 'CZK',
-            'lines' => array(
-                array(
-                    'quantity'   => 5,
-                    'unit_name'  => 'kg',
-                    'name'       => 'Sand',
-                    'unit_price' => '100',
-                    'vat_rate'   => 21
-                )
-            )
-        ));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->createGenerator(
+            [
+                'name'           => 'Test',
+                'subject_id'     => 36,
+                'payment_method' => 'bank',
+                'currency'       => 'CZK',
+                'lines'          => [
+                    [
+                        'quantity'   => 5,
+                        'unit_name'  => 'kg',
+                        'name'       => 'Sand',
+                        'unit_price' => '100',
+                        'vat_rate'   => 21
+                    ]
+                ]
+            ]
+        );
     }
 
     public function testUpdateGenerator()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $generator = $f->updateGenerator(10, array('due' => 5));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->updateGenerator(10, ['due' => 5]);
     }
 
     public function testDeleteGenerator()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $response = $f->deleteGenerator(10);
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->deleteGenerator(10);
+    }
+
+    public function testCreateMessage()
+    {
+        $this->requester->method('run')->willReturn(null);
+
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->createMessage(
+            86,
+            [
+                'email'   => 'test@example.org',
+                'subject' => 'Hello',
+                'message' => "Hello,\n\nI have invoice for you.\n#link#\n\n   John Doe"
+            ]
+        );
     }
 
     /* Message */
 
-    public function testCreateMessage()
+    public function testGetEvents()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $message = $f->createMessage(86, array(
-            'email' => 'test@example.org',
-            'subject' => 'Hello',
-            'message' => "Hello,\n\nI have invoice for you.\n#link#\n\n   John Doe"
-        ));
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getEvents();
     }
 
     /* Event */
 
-    public function testGetEvents()
-    {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
-
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $events = $f->getEvents();
-    }
-
     public function testGetPaidEvents()
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
+        $this->requester->method('run')->willReturn(null);
 
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $events = $f->getPaidEvents();
+        $f = new Client(
+            'test',
+            'test@example.org',
+            'api-key',
+            'Test <test@example.org>',
+            ['requester' => $this->requester]
+        );
+        $f->getPaidEvents();
+    }
+
+    public function testGetTodos()
+    {
+        $this->requester->method('run')->willReturn(null);
+
+        $f = new Client(
+            'test', 'test@example.org', 'api-key',
+            'Test <test@example.org>', ['requester' => $this->requester]
+        );
+        $f->getTodos();
     }
 
     /* Todo */
 
-    public function testGetTodos()
+    protected function setUp(): void
     {
-        $requester = $this->createMock('Fakturoid\Requester');
-        $requester->method('run')->willReturn(null);
-
-        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $todos = $f->getTodos();
+        parent::setUp();
+        $this->requester = $this->createMock(Requester::class);
     }
 }
