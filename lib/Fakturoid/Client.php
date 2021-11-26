@@ -2,6 +2,8 @@
 
 namespace Fakturoid;
 
+use DateTime;
+
 class Client
 {
     const URL = 'https://app.fakturoid.cz/api/v2/accounts/';
@@ -219,6 +221,23 @@ class Client
     public function createMessage($id, $data)
     {
         return $this->post("/invoices/$id/message.json", $data);
+    }
+
+    /* Reports */
+
+    public function getReports($year, $headers = null)
+    {
+        return $this->get("/reports/$year.json", null, $headers);
+    }
+
+    public function getPaidReports($year, $headers = null)
+    {
+        return $this->get("/reports/$year/paid.json", null, $headers);
+    }
+
+    public function getVatReports($year, $headers = null)
+    {
+        return $this->get("/reports/$year/vat.json", null, $headers);
     }
 
     /* Event */
