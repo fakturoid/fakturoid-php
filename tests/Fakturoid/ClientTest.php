@@ -438,7 +438,7 @@ class ClientTest extends TestCase
         $requester->method('run')->willReturn(null);
 
         $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
-        $reports = $f->getPaidReports(2021);
+        $reports = $f->getVatReports(2021);
     }
 
     /* Event */
