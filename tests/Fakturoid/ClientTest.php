@@ -412,6 +412,35 @@ class ClientTest extends TestCase
         ));
     }
 
+    /* Reports */
+
+    public function testGetReports()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $reports = $f->getReports(2021);
+    }
+
+    public function testGetPaidReports()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $reports = $f->getPaidReports(2021);
+    }
+
+    public function testGetVatReports()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $reports = $f->getVatReports(2021);
+    }
+
     /* Event */
 
     public function testGetEvents()
