@@ -2,8 +2,6 @@
 
 namespace Fakturoid;
 
-use DateTime;
-
 class Client
 {
     const URL = 'https://app.fakturoid.cz/api/v2/accounts/';
