@@ -30,6 +30,13 @@ class Client
         return $this->get('/account.json', null, $headers);
     }
 
+    /* Bank Account */
+
+    public function getBankAccounts($params = null, $headers = null)
+    {
+        return $this->get('/bank_accounts.json', $this->filterOptions($params, array('page')), $headers);
+    }
+
     /* User */
 
     public function getUser($id, $headers = null)
