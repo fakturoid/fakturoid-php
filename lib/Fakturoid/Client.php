@@ -32,9 +32,9 @@ class Client
 
     /* Bank Account */
 
-    public function getBankAccounts($params = null, $headers = null)
+    public function getBankAccounts($headers = null)
     {
-        return $this->get('/bank_accounts.json', $this->filterOptions($params, array('page')), $headers);
+        return $this->get('/bank_accounts.json', null, $headers);
     }
 
     /* User */
