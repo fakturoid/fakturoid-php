@@ -51,6 +51,17 @@ class ClientTest extends TestCase
         $account = $f->getAccount(array('Unknown' => 'Hello'));
     }
 
+    /* Bank Account */
+
+    public function testGetBankAccounts()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $users = $f->getBankAccounts();
+    }
+    
     /* User */
 
     public function testGetUser()
