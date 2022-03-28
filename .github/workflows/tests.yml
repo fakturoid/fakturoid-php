@@ -1,5 +1,5 @@
 # Based on https://github.com/actions/starter-workflows/blob/3be3c5deec708a2becaca71ec12dce81ae3d6080/ci/php.yml
-name: Verify
+name: Tests
 on:
   push:
   pull_request:

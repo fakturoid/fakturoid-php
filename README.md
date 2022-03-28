@@ -3,7 +3,7 @@
 PHP library for [Fakturoid.cz](https://www.fakturoid.cz/). Please see [API](https://fakturoid.docs.apiary.io/) for more documentation.
 New account just for testing API and using separate user (created via "Nastavení > Uživatelé a oprávnění") for production usage is highly recommended.
 
-[![Circle CI](https://circleci.com/gh/fakturoid/fakturoid-php.svg?style=svg)](https://circleci.com/gh/fakturoid/fakturoid-php)
+![Tests](https://github.com/fakturoid/fakturoid-php/actions/workflows/tests.yml/badge.svg)
 
 ## Installation
 The recommended way to install is through Composer:
