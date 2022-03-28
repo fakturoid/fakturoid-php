@@ -11,6 +11,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: install PHP
       run: |
+          sudo apt-add-repository ppa:ondrej/php
           sudo apt update
           sudo apt -y install php7.4
     - name: Validate composer.json and composer.lock
