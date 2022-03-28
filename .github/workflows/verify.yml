@@ -13,7 +13,7 @@ jobs:
       run: |
           sudo apt-add-repository ppa:ondrej/php
           sudo apt update
-          sudo apt -y install php7.4
+          sudo apt -y install php7.4 php7.4-cli
           php -v
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
