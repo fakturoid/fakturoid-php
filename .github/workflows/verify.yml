@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - nam: install PHP
+    - name: install PHP
       run: |
           sudo apt-get update
           sudo apt-get install php7.4
