@@ -1,3 +1,8 @@
+## 1.1.0
+
+- Added methods for fetching [reports](https://github.com/fakturoid/fakturoid-php/commit/28a750410093ae09173ae22ad7c5e7bf64cfede1) and [bank accounts](https://github.com/fakturoid/fakturoid-php/commit/458819d2d2ab6857622695903782c78adcf8edaa). (Thanks for your contributions @RiKap and @TakeruDavis!)
+
+
 ## 1.0.3
 
 - Whitelist parameters for invoice and expense fire actions.
