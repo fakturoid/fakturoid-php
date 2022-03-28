@@ -12,6 +12,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
+        # Required by phpunit.
         php-version: 7.4
         extensions: curl, json
     - name: Validate composer.json and composer.lock
