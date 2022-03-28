@@ -9,12 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: install PHP
-      run: |
-          sudo apt-add-repository ppa:ondrej/php
-          sudo apt update
-          sudo apt -y install php7.4 php7.4-cli
-          php -v
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.4
+        extensions: curl, json
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
     - name: Install dependencies
