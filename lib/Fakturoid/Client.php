@@ -228,6 +228,13 @@ class Client
         return $this->post("/invoices/$id/message.json", $data);
     }
 
+    /* Number formats */
+
+    public function getInvoiceNumberFormats($headers = null)
+    {
+        return $this->get('/number_formats/invoices.json', null, $headers);
+    }
+
     /* Reports */
 
     public function getReports($year, $headers = null)
