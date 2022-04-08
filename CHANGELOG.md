@@ -1,3 +1,11 @@
+## 1.2.0
+
+- Add method for fetching [invoice number formats](https://github.com/fakturoid/fakturoid-php/pull/28). (Thanks @tomas-kulhanek)
+
+  ```php
+  $response = $f->getInvoiceNumberFormats();
+  ```
+
 ## 1.1.0
 
 - Added methods for fetching [reports](https://github.com/fakturoid/fakturoid-php/commit/28a750410093ae09173ae22ad7c5e7bf64cfede1) and [bank accounts](https://github.com/fakturoid/fakturoid-php/commit/458819d2d2ab6857622695903782c78adcf8edaa). (Thanks for your contributions @RiKap and @TakeruDavis!)
