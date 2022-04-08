@@ -61,7 +61,7 @@ class ClientTest extends TestCase
         $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
         $users = $f->getBankAccounts();
     }
-    
+
     /* User */
 
     public function testGetUser()
@@ -450,6 +450,17 @@ class ClientTest extends TestCase
 
         $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
         $reports = $f->getVatReports(2021);
+    }
+
+    /* Number formats */
+
+    public function testGetInvoiceNumberFormats()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $users = $f->getInvoiceNumberFormats();
     }
 
     /* Event */
