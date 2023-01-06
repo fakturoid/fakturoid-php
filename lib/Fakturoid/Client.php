@@ -338,7 +338,7 @@ class Client
 
     public function deleteInventoryMove($inventory_item_id, $id)
     {
-      return $this->delete("/inventory_items/$inventory_item_id/inventory_moves/$id.json");
+        return $this->delete("/inventory_items/$inventory_item_id/inventory_moves/$id.json");
     }
 
     /* Todo */
