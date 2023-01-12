@@ -20,8 +20,8 @@
     "require-dev": {
         "ext-dom": "*",
         "ext-mbstring": "*",
-        "phpunit/phpunit": "^7.5",
-        "squizlabs/php_codesniffer": "^3.4"
+        "phpunit/phpunit": "^9.5",
+        "squizlabs/php_codesniffer": "^3.7"
     },
     "autoload": {
         "classmap": ["lib/"]

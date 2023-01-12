@@ -77,6 +77,6 @@ class RequestTest extends TestCase
         $headers   = $request->getHttpHeaders();
         $clientEnv = $headers[0];
 
-        $this->assertRegExp('/PHP \d+\.\d+\.\d+/', $clientEnv);
+        $this->assertMatchesRegularExpression('/PHP \d+\.\d+\.\d+/', $clientEnv);
     }
 }

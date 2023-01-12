@@ -124,7 +124,9 @@ try {
 ### macOS
 
 ```sh
+$ brew install php
 $ brew install composer
+$ arch -arm64 pecl install xdebug # For Apple M1 chips
 # Reload terminal
 $ composer install
 ```
@@ -143,6 +145,8 @@ Both commands do the same but the second version is a bit faster.
 ```sh
 $ composer test
 $ vendor/bin/phpunit
+$ XDEBUG_MODE=coverage composer test # Generates coverage
+$ XDEBUG_MODE=coverage vendor/bin/phpunit
 ```
 
 ### Code-Style Check

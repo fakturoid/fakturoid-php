@@ -39,15 +39,14 @@ class ClientTest extends TestCase
         ));
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\Error\Notice
-     */
     public function testGetAccountWithInvalidHeaders()
     {
         $requester = $this->createMock('Fakturoid\Requester');
         $requester->method('run')->willReturn(null);
 
         $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+
+        $this->expectNotice();
         $account = $f->getAccount(array('Unknown' => 'Hello'));
     }
 
