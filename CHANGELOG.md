@@ -1,3 +1,7 @@
+## Unreleased
+
+- Add support for inventory items and moves.
+
 ## 1.2.0
 
 - Add method for fetching [invoice number formats](https://github.com/fakturoid/fakturoid-php/pull/28). (Thanks @tomas-kulhanek)

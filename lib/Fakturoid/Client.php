@@ -290,12 +290,12 @@ class Client
 
     public function archiveInventoryItem($id, $headers = null)
     {
-        return $this->patch("/inventory_items/$id/archive.json", null, $headers);
+        return $this->post("/inventory_items/$id/archive.json", null, $headers);
     }
 
     public function unarchiveInventoryItem($id, $headers = null)
     {
-        return $this->patch("/inventory_items/$id/unarchive.json", null, $headers);
+        return $this->post("/inventory_items/$id/unarchive.json", null, $headers);
     }
 
     public function updateInventoryItem($id, $data)
