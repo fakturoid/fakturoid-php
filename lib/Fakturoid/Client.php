@@ -264,6 +264,83 @@ class Client
         return $this->get('/events/paid.json', $this->filterOptions($params, array('subject_id', 'since', 'page')), $headers);
     }
 
+    /* Inventory item */
+
+    public function getInventoryItems($params = null, $headers = null)
+    {
+        $allowed = array('since', 'updated_since', 'page', 'article_number', 'sku');
+        return $this->get('/inventory_items.json', $this->filterOptions($params, $allowed), $headers);
+    }
+
+    public function getArchivedInventoryItems($params = null, $headers = null)
+    {
+        $allowed = array('since', 'updated_since', 'page', 'article_number', 'sku');
+        return $this->get('/inventory_items/archived.json', $this->filterOptions($params, $allowed), $headers);
+    }
+
+    public function getInventoryItem($id, $headers = null)
+    {
+        return $this->get("/inventory_items/$id.json", null, $headers);
+    }
+
+    public function searchInventoryItems($params = null, $headers = null)
+    {
+        return $this->get('/inventory_items/search.json', $this->filterOptions($params, array('query', 'page')), $headers);
+    }
+
+    public function archiveInventoryItem($id, $headers = null)
+    {
+        return $this->post("/inventory_items/$id/archive.json", null, $headers);
+    }
+
+    public function unarchiveInventoryItem($id, $headers = null)
+    {
+        return $this->post("/inventory_items/$id/unarchive.json", null, $headers);
+    }
+
+    public function updateInventoryItem($id, $data)
+    {
+        return $this->patch("/inventory_items/$id.json", $data);
+    }
+
+    public function createInventoryItem($data)
+    {
+        return $this->post('/inventory_items.json', $data);
+    }
+
+    public function deleteInventoryItem($id)
+    {
+        return $this->delete("/inventory_items/$id.json");
+    }
+
+    /* Inventory move */
+
+    public function getInventoryMoves($params = null, $headers = null)
+    {
+        $allowed = array('since', 'updated_since', 'page', 'inventory_item_id');
+        return $this->get('/inventory_moves.json', $this->filterOptions($params, $allowed), $headers);
+    }
+
+    public function getInventoryMove($inventory_item_id, $id, $headers = null)
+    {
+        return $this->get("/inventory_items/$inventory_item_id/inventory_moves/$id.json", null, $headers);
+    }
+
+    public function updateInventoryMove($inventory_item_id, $id, $data)
+    {
+        return $this->patch("/inventory_items/$inventory_item_id/inventory_moves/$id.json", $data);
+    }
+
+    public function createInventoryMove($inventory_item_id, $data)
+    {
+        return $this->post("/inventory_items/$inventory_item_id/inventory_moves.json", $data);
+    }
+
+    public function deleteInventoryMove($inventory_item_id, $id)
+    {
+        return $this->delete("/inventory_items/$inventory_item_id/inventory_moves/$id.json");
+    }
+
     /* Todo */
 
     public function getTodos($params = null, $headers = null)

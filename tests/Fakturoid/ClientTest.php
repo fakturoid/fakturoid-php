@@ -492,4 +492,171 @@ class ClientTest extends TestCase
         $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
         $todos = $f->getTodos();
     }
+
+    /* Inventory items */
+
+    public function testGetInventoryItems()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryItems = $f->getInventoryItems();
+    }
+
+    public function testGetInventoryItemsBySku()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryItems = $f->getInventoryItems(array('sku' => 'SKU1234'));
+    }
+
+    public function testGetArchivedInventoryItems()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryItems = $f->getArchivedInventoryItems();
+    }
+
+    public function testGetInventoryItem()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryItem = $f->getInventoryItem(26);
+    }
+
+    public function testSearchInventoryItems()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryItems = $f->searchInventoryItems(array('query' => 'Item name'));
+    }
+
+    public function testArchiveInventoryItem()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryItem = $f->archiveInventoryItem(26);
+    }
+
+    public function testUnarchiveInventoryItem()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryItem = $f->unArchiveInventoryItem(26);
+    }
+
+    public function testUpdateInventoryItem()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryItem = $f->updateInventoryItem(26, array('name' => 'Another name'));
+    }
+
+    public function testCreateInventoryItem()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryItem = $f->createInventoryItem(
+            array(
+                'name' => 'Item name',
+                'sku' => 'SKU12345',
+                'track_quantity' => true,
+                'quantity' => 100,
+                'native_purchase_price' => 500,
+                'native_retail_price' => 1000
+            )
+        );
+    }
+
+    public function testDeleteInventoryItem()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $f->deleteInventoryItem(26);
+    }
+
+    /* Inventory moves */
+
+    public function testGetInventoryMoves()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryMoves = $f->getInventoryMoves();
+    }
+
+    public function testGetInventoryMovesForSingleItem()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryMoves = $f->getInventoryMoves(array('inventory_item_id' => 26));
+    }
+
+    public function testGetInventoryMove()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryMove = $f->getInventoryMove(26, 61);
+    }
+
+    public function testUpdateInventoryMove()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryMove = $f->updateInventoryMove(26, 61, array('moved_on' => '2023-01-11'));
+    }
+
+    public function testCreateInventoryMove()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryMove = $f->createInventoryMove(
+            26,
+            array(
+                'direction' => 'in',
+                'moved_on' => '2023-01-12',
+                'quantity_change' => 5,
+                'purchase_price' => '249.99',
+                'purchase_currency' => 'CZK',
+                'private_note' => 'Bought with discount'
+            )
+        );
+    }
+
+    public function testDeleteInventoryMove()
+    {
+        $requester = $this->createMock('Fakturoid\Requester');
+        $requester->method('run')->willReturn(null);
+
+        $f = new Client('test', 'test@example.org', 'api-key', 'Test <test@example.org>', array('requester' => $requester));
+        $inventoryMove = $f->deleteInventoryMove(26, 61);
+    }
 }

@@ -67,15 +67,15 @@ $invoiceId = 123;
 
 // This is just an example, you may want to do this in a background job and be more defensive.
 while (true) {
-  $response = $f->getInvoicePdf($invoiceId);
+    $response = $f->getInvoicePdf($invoiceId);
 
-  if ($response->getStatusCode() == 200) {
-    $data = $response->getBody();
-    file_put_contents("{$invoiceId}.pdf", $data);
-    break;
-  }
+    if ($response->getStatusCode() == 200) {
+        $data = $response->getBody();
+        file_put_contents("{$invoiceId}.pdf", $data);
+        break;
+    }
 
-  sleep(1);
+    sleep(1);
 }
 ```
 
@@ -97,6 +97,140 @@ if (count($subjects) > 0) {
 As for subjects, Fakturoid won't let you create two records with the same `custom_id` so you don't have to worry about multiple results.
 Also note that the field always returns a string.
 
+## InventoryItem resource
+
+To get all inventory items:
+
+```php
+$f->getInventoryItems();
+```
+
+To filter inventory items by certain SKU code or article number:
+
+```php
+$f->getInventoryItems(array('sku' => 'SKU1234'));
+$f->getInventoryItems(array('article_number' => 'IAN321'));
+```
+
+To search inventory items (searches in `name`, `article_number` and `sku`):
+
+```php
+$f->searchInventoryItems(array('query' => 'Item name'));
+```
+
+To get all archived inventory items:
+
+```php
+$f->getArchivedInventoryItems();
+```
+
+To get a single inventory item:
+
+```php
+$f->getInventoryItem($inventoryItemId);
+```
+
+To create an inventory item:
+
+```php
+$data = array(
+    'name' => 'Item name',
+    'sku' => 'SKU12345',
+    'track_quantity' => true,
+    'quantity' => 100,
+    'native_purchase_price' => 500,
+    'native_retail_price' => 1000
+);
+$f->createInventoryItem($data);
+```
+
+To update an inventory item:
+
+```php
+$f->updateInventoryItem($inventoryItemId, array('name' => 'Another name'));
+```
+
+To archive an inventory item:
+
+```php
+$f->archiveInventoryItem($inventoryItemId);
+```
+
+To unarchive an inventory item:
+
+```php
+$f->unarchiveInventoryItem($inventoryItemId);
+```
+
+To delete an inventory item:
+
+```php
+$f->deleteInventoryItem($inventoryItemId);
+```
+
+## InventoryMove resource
+
+To get get all inventory moves across all inventory items:
+
+```php
+$f->getInventoryMoves();
+```
+
+To get inventory moves for a single inventory item:
+
+```php
+$f->getInventoryMoves(array('inventory_item_id' => $inventoryItemId));
+```
+
+To get a single inventory move:
+
+```php
+$f->getInventoryMove($inventoryItemId, $inventoryMoveId);
+```
+
+To create a stock-in inventory move:
+
+```php
+$f->createInventoryMove(
+    $inventoryItemId,
+    array(
+        'direction' => 'in',
+        'moved_on' => '2023-01-12',
+        'quantity_change' => 5,
+        'purchase_price' => '249.99',
+        'purchase_currency' => 'CZK',
+        'private_note' => 'Bought with discount'
+    )
+)
+```
+
+To create a stock-out inventory move:
+
+```php
+$f->createInventoryMove(
+    $inventoryItemId,
+    array(
+        'direction' => 'out',
+        'moved_on' => '2023-01-12',
+        'quantity_change' => '1.5',
+        'retail_price' => 50,
+        'retail_currency' => 'EUR',
+        'native_retail_price' => '1250'
+    )
+);
+```
+
+To update an inventory move:
+
+```php
+$f->updateInventoryMove($inventoryItemId, $inventoryMoveId, array('moved_on' => '2023-01-11'));
+```
+
+To delete an inventory move:
+
+```php
+$f->deleteInventoryMove($inventoryItemId, $inventoryMoveId);
+``
 ## Handling errors
 
 Library raises `Fakturoid\Exception` if server returns code `4xx` or `5xx`. You can get response code and response body by calling `getCode()` or `getMessage()`.
