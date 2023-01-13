@@ -1,4 +1,4 @@
-## Unreleased
+## 1.3.0
 
 - Add support for inventory items and moves.
 
