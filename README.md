@@ -230,7 +230,8 @@ To delete an inventory move:
 
 ```php
 $f->deleteInventoryMove($inventoryItemId, $inventoryMoveId);
-``
+```
+
 ## Handling errors
 
 Library raises `Fakturoid\Exception` if server returns code `4xx` or `5xx`. You can get response code and response body by calling `getCode()` or `getMessage()`.
