@@ -9,7 +9,7 @@ use Fakturoid\Exception\ClientErrorException;
 use Fakturoid\Exception\ServerErrorException;
 use Psr\Http\Client\ClientInterface;
 
-class BadResponseTest extends TestCase
+class RequestExceptionTest extends TestCase
 {
     public function test404(): void
     {
@@ -31,7 +31,6 @@ class BadResponseTest extends TestCase
         $dispatcher = new Dispatcher('test', $authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
-        $this->expectExceptionMessage('Record not found');
         $this->expectExceptionCode(404);
         $dispatcher->patch('/accounts/{accountSlug}/invoices/1.json', ['name' => 'Test']);
     }
@@ -56,7 +55,6 @@ class BadResponseTest extends TestCase
         $dispatcher = new Dispatcher('test', $authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
-        $this->expectExceptionMessage('Page not found');
         $this->expectExceptionCode(400);
         $dispatcher->patch('/accounts/{accountSlug}/invoices/1.json', ['name' => 'Test']);
     }
@@ -81,7 +79,6 @@ class BadResponseTest extends TestCase
         $dispatcher = new Dispatcher('test', $authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
-        $this->expectExceptionMessage('Unauthorized');
         $this->expectExceptionCode(401);
         $dispatcher->patch('/accounts/{accountSlug}/invoices/1.json', ['name' => 'Test']);
     }
@@ -106,7 +103,6 @@ class BadResponseTest extends TestCase
         $dispatcher = new Dispatcher('test', $authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
-        $this->expectExceptionMessage('Payment required or account is blocked');
         $this->expectExceptionCode(402);
         $dispatcher->patch('/accounts/{accountSlug}/invoices/1.json', ['name' => 'Test']);
     }
@@ -131,7 +127,6 @@ class BadResponseTest extends TestCase
         $dispatcher = new Dispatcher('test', $authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
-        $this->expectExceptionMessage('Forbidden');
         $this->expectExceptionCode(403);
         $dispatcher->patch('/accounts/{accountSlug}/invoices/1.json', ['name' => 'Test']);
     }
@@ -156,7 +151,6 @@ class BadResponseTest extends TestCase
         $dispatcher = new Dispatcher('test', $authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
-        $this->expectExceptionMessage('Unsupported media type');
         $this->expectExceptionCode(415);
         $dispatcher->patch('/accounts/{accountSlug}/invoices/1.json', ['name' => 'Test']);
     }
@@ -181,7 +175,6 @@ class BadResponseTest extends TestCase
         $dispatcher = new Dispatcher('test', $authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
-        $this->expectExceptionMessage('Unprocessable entity');
         $this->expectExceptionCode(422);
         $dispatcher->patch('/accounts/{accountSlug}/invoices/1.json', ['name' => 'Test']);
     }
@@ -206,7 +199,6 @@ class BadResponseTest extends TestCase
         $dispatcher = new Dispatcher('test', $authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
-        $this->expectExceptionMessage('Too many requests');
         $this->expectExceptionCode(429);
         $dispatcher->patch('/accounts/{accountSlug}/invoices/1.json', ['name' => 'Test']);
     }
@@ -231,7 +223,6 @@ class BadResponseTest extends TestCase
         $dispatcher = new Dispatcher('test', $authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
-        $this->expectExceptionMessage('Client error');
         $this->expectExceptionCode(499);
         $dispatcher->patch('/accounts/{accountSlug}/invoices/1.json', ['name' => 'Test']);
     }
@@ -256,7 +247,6 @@ class BadResponseTest extends TestCase
         $dispatcher = new Dispatcher('test', $authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ServerErrorException::class);
-        $this->expectExceptionMessage('Server error');
         $this->expectExceptionCode(599);
         $dispatcher->patch('/accounts/{accountSlug}/invoices/1.json', ['name' => 'Test']);
     }
@@ -281,7 +271,6 @@ class BadResponseTest extends TestCase
         $dispatcher = new Dispatcher('test', $authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ServerErrorException::class);
-        $this->expectExceptionMessage('Fakturoid is in read only state');
         $this->expectExceptionCode(503);
         $dispatcher->patch('/accounts/{accountSlug}/invoices/1.json', ['name' => 'Test']);
     }

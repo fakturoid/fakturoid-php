@@ -11,19 +11,15 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         $responseInterface = $this->createMock(ResponseInterface::class);
         $responseInterface
-            ->expects($this->once())
             ->method('getStatusCode')
             ->willReturn($statusCode);
         $responseInterface
-            ->expects($this->once())
             ->method('getHeaders')
             ->willReturn(['content-type' => [$contentType]]);
         $responseInterface
-            ->expects($this->once())
             ->method('getHeaderLine')
             ->willReturn($contentType);
         $responseInterface
-            ->expects($this->once())
             ->method('getBody')
             ->willReturn($this->getStreamMock($body));
 

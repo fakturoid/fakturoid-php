@@ -114,7 +114,7 @@ final class InvoiceProvider extends Provider
     /**
      * @param array<string, mixed> $data
      */
-    public function createPayment(int $invoiceId, array $data): Response
+    public function createPayment(int $invoiceId, array $data = []): Response
     {
         return $this->dispatcher->post(
             sprintf(
@@ -154,7 +154,7 @@ final class InvoiceProvider extends Provider
     /**
      * @param array<string, mixed> $data
      */
-    public function createMessage(int $invoiceId, array $data): Response
+    public function createMessage(int $invoiceId, array $data = []): Response
     {
         return $this->dispatcher->post(
             sprintf(

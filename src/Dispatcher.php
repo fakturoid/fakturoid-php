@@ -4,11 +4,11 @@ namespace Fakturoid;
 
 use Fakturoid\Auth\AuthProvider;
 use Fakturoid\Exception\AuthorizationFailedException;
-use Fakturoid\Exception\BadResponseException;
 use Fakturoid\Exception\ClientErrorException;
 use Fakturoid\Exception\ConnectionFailedException;
 use Fakturoid\Exception\Exception;
 use Fakturoid\Exception\InvalidDataException;
+use Fakturoid\Exception\RequestException;
 use Fakturoid\Exception\ServerErrorException;
 use JsonException;
 use Nyholm\Psr7\Request;
@@ -63,7 +63,7 @@ class Dispatcher implements DispatcherInterface
 
     /**
      * @param array{'method': string, 'params'?: array<string, mixed>, 'data'?: array<string, mixed>} $options
-     * @throws ConnectionFailedException|InvalidDataException|AuthorizationFailedException|BadResponseException
+     * @throws ConnectionFailedException|InvalidDataException|AuthorizationFailedException|RequestException
      */
     private function dispatch(string $path, array $options): Response
     {
@@ -83,10 +83,16 @@ class Dispatcher implements DispatcherInterface
             }
         }
 
+        $url = str_replace('{accountSlug}', $this->accountSlug ?? '', sprintf('%s%s', self::BASE_URL, $path));
+
+        if (array_key_exists('params', $options) && is_array($options['params']) && $options['params'] !== []) {
+            $url .= '?' . http_build_query($options['params']);
+        }
+
         try {
             $request = new Request(
                 $options['method'],
-                str_replace('{accountSlug}', $this->accountSlug ?? '', sprintf('%s/%s', self::BASE_URL, $path)),
+                $url,
                 [
                     'User-Agent' => $this->userAgent,
                     'Content-Type' => 'application/json',
@@ -98,14 +104,13 @@ class Dispatcher implements DispatcherInterface
         } catch (ClientExceptionInterface $e) {
             throw new ConnectionFailedException($e->getMessage(), $e->getCode(), $e);
         }
-        $responseData = new Response($response);
-
-        if ($responseData->getStatusCode() >= 400 && $responseData->getStatusCode() < 500) {
-            throw ClientErrorException::createException($responseData);
+        $responseStatusCode = $response->getStatusCode();
+        if ($responseStatusCode >= 400 && $responseStatusCode < 500) {
+            throw new ClientErrorException($request, $response);
         }
-        if ($responseData->getStatusCode() >= 500 && $responseData->getStatusCode() < 600) {
-            throw ServerErrorException::createException($responseData);
+        if ($responseStatusCode >= 500 && $responseStatusCode < 600) {
+            throw new ServerErrorException($request, $response);
         }
-        return $responseData;
+        return new Response($response);
     }
 }

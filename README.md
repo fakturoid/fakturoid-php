@@ -121,7 +121,7 @@ $credentials = new \Fakturoid\Auth\Credentials(
     'refreshToken',
     'accessToken',
     (new DateTimeImmutable())->modify('-2 minutes'),
-    \Fakturoid\Auth\AuthTypeEnum::AUTHORIZATION_CODE_FLOW // or \Fakturoid\Auth\AuthTypeEnum:CLIENT_CREDENTIALS_CODE_FLOW
+    \Fakturoid\Enum\AuthTypeEnum::AUTHORIZATION_CODE_FLOW // or \Fakturoid\Enum\AuthTypeEnum:CLIENT_CREDENTIALS_CODE_FLOW
 );
     
 $fManager->getAuthProvider()->setCredentials($credentials);
@@ -162,9 +162,9 @@ $fManager = new \Fakturoid\FakturoidManager(
 );
 $fManager->authClientCredentials();
 
-// get current account
-$account = $fManager->getSettingProvider()->getCurrentUser();
-$fManager->setAccountSlug($account->getBody()->default_account);
+// get current user
+$user = $fManager->getSettingProvider()->getCurrentUser();
+$fManager->setAccountSlug($user->getBody()->accounts[0]->slug);
 // or you can set account slug manually
 $fManager->setAccountSlug('{fakturoid-account-slug}');
 
@@ -379,11 +379,12 @@ Library raises `Fakturoid\Exception\ClientErrorException` for `4xx` and `Fakturo
 
 ```php
 try {
-    $subject = $fManager->getSubjectProvider()->create(['name' => '', 'email' => 'aloha@pokus.cz']);
+    $response = $fManager->getSubjectProvider()->create(['name' => '', 'email' => 'aloha@pokus.cz']);
+    $subject  = $response->getBody();
 } catch (\Fakturoid\Exception\ClientErrorException $e) {
     $e->getCode(); // 422
     $e->getMessage(); // Unprocessable entity
-    $e->getResponse()->getBody(); // '{"errors":{"name":["je povinná položka","je příliš krátký/á/é (min. 2 znaků)"]}}'
+    $e->getResponse()->getBody()->getContents(); // '{"errors":{"name":["je povinná položka","je příliš krátký/á/é (min. 2 znaků)"]}}'
 } catch (\Fakturoid\Exception\ServerErrorException $e) {
     $e->getCode(); // 503
     $e->getMessage(); // Fakturoid is in read only state

@@ -92,7 +92,7 @@ final class ExpenseProvider extends Provider
     /**
      * @param array<string, mixed> $data
      */
-    public function createPayment(int $expenseId, array $data): Response
+    public function createPayment(int $expenseId, array $data = []): Response
     {
         return $this->dispatcher->post(sprintf('/accounts/{accountSlug}/expenses/%d/payments.json', $expenseId), $data);
     }
