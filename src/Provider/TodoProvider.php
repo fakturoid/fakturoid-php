@@ -23,9 +23,9 @@ final class TodoProvider extends Provider
         );
     }
 
-    public function getToggleCompletion(int $id): Response
+    public function toggleCompletion(int $id): Response
     {
-        return $this->dispatcher->get(
+        return $this->dispatcher->post(
             sprintf(
                 '/accounts/{accountSlug}/todos/%d/toggle_completion.json',
                 $id

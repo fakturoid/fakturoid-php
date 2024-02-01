@@ -35,19 +35,19 @@ class TodoProviderTest extends TestCase
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
 
-    public function testGetToggleCompletion(): void
+    public function testToggleCompletion(): void
     {
         $dispatcher = $this->createMock(Dispatcher::class);
 
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{}');
         $id = 6;
         $dispatcher->expects($this->once())
-            ->method('get')
-            ->with(sprintf('/accounts/{accountSlug}/todos/%d/toggle_completion.json', $id), [])
+            ->method('post')
+            ->with(sprintf('/accounts/{accountSlug}/todos/%d/toggle_completion.json', $id))
             ->willReturn(new Response($responseInterface));
 
         $provider = new TodoProvider($dispatcher);
-        $response = $provider->getToggleCompletion($id);
+        $response = $provider->toggleCompletion($id);
         $this->assertEquals([], $response->getBody(true));
     }
 }

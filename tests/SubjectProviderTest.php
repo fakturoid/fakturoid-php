@@ -82,7 +82,7 @@ class SubjectProviderTest extends TestCase
     {
         $dispatcher = $this->createMock(Dispatcher::class);
         $subjectData = ['name' => 'test'];
-        $responseInterface = $this->createPsrResponseMock(200, 'application/json', json_encode($subjectData));
+        $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"name": "test"}');
         $dispatcher->expects($this->once())
             ->method('post')
             ->with('/accounts/{accountSlug}/subjects.json', $subjectData)
@@ -120,7 +120,7 @@ class SubjectProviderTest extends TestCase
 
         $id = 6;
         $subjectData = ['name' => 'test'];
-        $responseInterface = $this->createPsrResponseMock(200, 'application/json', json_encode($subjectData));
+        $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"name": "test"}');
         $dispatcher->expects($this->once())
             ->method('patch')
             ->with(sprintf('/accounts/{accountSlug}/subjects/%d.json', $id), $subjectData)
@@ -141,7 +141,7 @@ class SubjectProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(
             200,
             'application/json',
-            json_encode(['data' => 'test@fakturoid.cz'])
+            '{"data": "test@fakturoid.cz"}'
         );
         $id = 6;
         $dispatcher->expects($this->once())

@@ -128,7 +128,7 @@ final class InvoiceProvider extends Provider
     /**
      * @param array<string, mixed> $data
      */
-    public function createTaxDocument(int $invoiceId, int $paymentId, array $data): Response
+    public function createTaxDocument(int $invoiceId, int $paymentId, array $data = []): Response
     {
         return $this->dispatcher->post(
             sprintf(

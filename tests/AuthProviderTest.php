@@ -326,7 +326,8 @@ class AuthProviderTest extends TestCase
 
     public function testAuthorizationInvalidResponse2(): void
     {
-        $exception = new class ('test') extends \Exception implements ClientExceptionInterface{
+        $exception = new class ('test') extends \Exception implements ClientExceptionInterface
+        {
         };
         $client = $this->createMock(ClientInterface::class);
         $client

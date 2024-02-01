@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class ResponseTest extends TestCase
 {
-    public function testJson()
+    public function testJson(): void
     {
         $responseInterface = $this->createMock(ResponseInterface::class);
         $responseInterface
@@ -32,7 +32,7 @@ class ResponseTest extends TestCase
         $this->assertEquals((object) ['name' => 'Test'], $response->getBody());
     }
 
-    public function testJsonWithMixedHeadersCase()
+    public function testJsonWithMixedHeadersCase(): void
     {
         $responseInterface = $this->createMock(ResponseInterface::class);
         $responseInterface
@@ -59,7 +59,7 @@ class ResponseTest extends TestCase
         $this->assertEquals((object) ['name' => 'Test'], $response->getBody());
     }
 
-    public function testOther()
+    public function testOther(): void
     {
         $responseInterface = $this->createMock(ResponseInterface::class);
         $responseInterface

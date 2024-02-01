@@ -46,6 +46,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
             public function detach()
             {
+                return null;
             }
 
             public function getSize(): ?int

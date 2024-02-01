@@ -163,7 +163,7 @@ $fManager = new \Fakturoid\FakturoidManager(
 $fManager->authClientCredentials();
 
 // get current user
-$user = $fManager->getSettingProvider()->getCurrentUser();
+$user = $fManager->getUserProvider()->getCurrentUser();
 $fManager->setAccountSlug($user->getBody()->accounts[0]->slug);
 // or you can set account slug manually
 $fManager->setAccountSlug('{fakturoid-account-slug}');
@@ -314,25 +314,25 @@ $fManager->getInventoryItemsProvider()->delete($inventoryItemId);
 To get get all inventory moves across all inventory items:
 
 ```php
-$fManager->getInventoryItemsProvider()->listMoves()
+$fManager->getInventoryMoveProvider()->list()
 ```
 
 To get inventory moves for a single inventory item:
 
 ```php
-$fManager->getInventoryItemsProvider()->listMoves(['inventory_item_id' => $inventoryItemId]);
+$fManager->getInventoryMoveProvider()->list(['inventory_item_id' => $inventoryItemId]);
 ```
 
 To get a single inventory move:
 
 ```php
-$fManager->getInventoryItemsProvider()->getMove($inventoryItemId, $inventoryMoveId);
+$fManager->getInventoryMoveProvider()->get($inventoryItemId, $inventoryMoveId);
 ```
 
 To create a stock-in inventory move:
 
 ```php
-$fManager->getInventoryItemsProvider()->createMove(
+$fManager->getInventoryMoveProvider()->create(
     $inventoryItemId,
     [
         'direction' => 'in',
@@ -348,7 +348,7 @@ $fManager->getInventoryItemsProvider()->createMove(
 To create a stock-out inventory move:
 
 ```php
-$fManager->getInventoryItemsProvider()->createMove(
+$fManager->getInventoryMoveProvider()->create(
     $inventoryItemId,
     [
         'direction' => 'out',
@@ -364,13 +364,13 @@ $fManager->getInventoryItemsProvider()->createMove(
 To update an inventory move:
 
 ```php
-$fManager->getInventoryItemsProvider()->updateMove($inventoryItemId, $inventoryMoveId, ['moved_on' => '2023-01-11']);
+$fManager->getInventoryMoveProvider()->update($inventoryItemId, $inventoryMoveId, ['moved_on' => '2023-01-11']);
 ```
 
 To delete an inventory move:
 
 ```php
-$fManager->getInventoryItemsProvider()->updateMove($inventoryItemId, $inventoryMoveId);
+$fManager->getInventoryMoveProvider()->update($inventoryItemId, $inventoryMoveId);
 ```
 
 ## Handling errors
