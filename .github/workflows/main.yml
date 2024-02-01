@@ -52,7 +52,7 @@ jobs:
 
       - uses: php-actions/composer@v6
         with:
-          php_version: 8.1
+          php_version: ${{ env.minimal-php-version }}
           args: "${{ env.composer-install-args }}"
       - run: composer check:cs
 
@@ -69,7 +69,7 @@ jobs:
 
       - uses: php-actions/composer@v6
         with:
-          php_version: 8.1
+          php_version: ${{ env.minimal-php-version }}
           args: "${{ env.composer-install-args }}"
       - run: composer check:rector
 
