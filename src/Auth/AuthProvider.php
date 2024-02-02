@@ -5,8 +5,11 @@ namespace Fakturoid\Auth;
 use Fakturoid\Dispatcher;
 use Fakturoid\Enum\AuthTypeEnum;
 use Fakturoid\Exception\AuthorizationFailedException;
+use Fakturoid\Exception\ClientErrorException;
 use Fakturoid\Exception\ConnectionFailedException;
 use Fakturoid\Exception\InvalidDataException;
+use Fakturoid\Exception\RequestException;
+use Fakturoid\Exception\ServerErrorException;
 use JsonException;
 use Nyholm\Psr7\Request;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -62,17 +65,15 @@ class AuthProvider
                 $exception->getCode(),
                 $exception
             );
-        }
-        if (!empty($json['error'])) {
+        } catch (RequestException $exception) {
             throw new AuthorizationFailedException(
-                sprintf('An error occurred while authorization code flow. Message: %s', $json['error'])
+                sprintf('Error occurred. Message: %s', $exception->getResponse()->getReasonPhrase()),
+                $exception->getCode(),
+                $exception
             );
         }
-        if (empty($json['access_token']) || empty($json['expires_in'])) {
-            throw new AuthorizationFailedException(
-                'An error occurred while authorization code flow. Message: invalid response'
-            );
-        }
+        $this->checkResponseWithAccessToken($json, AuthTypeEnum::AUTHORIZATION_CODE_FLOW);
+        /** @var array{'refresh_token': string, 'access_token': string, 'expires_in': int} $json */
         $this->credentials = new Credentials(
             $json['refresh_token'],
             $json['access_token'],
@@ -81,6 +82,25 @@ class AuthProvider
         );
         $this->callCredentialsCallback();
         return $this->credentials;
+    }
+
+    /**
+     * @param array<string, mixed> $json
+     * @return void
+     * @throws AuthorizationFailedException
+     */
+    private function checkResponseWithAccessToken(array $json, AuthTypeEnum $authType): void
+    {
+        if (!empty($json['error'])) {
+            throw new AuthorizationFailedException(
+                sprintf('An error occurred while %s flow. Message: %s', $authType->value, $json['error'])
+            );
+        }
+        if (empty($json['access_token']) || empty($json['expires_in'])) {
+            throw new AuthorizationFailedException(
+                sprintf('An error occurred while %s flow. Message: invalid response', $authType->value)
+            );
+        }
     }
 
     /**
@@ -103,28 +123,67 @@ class AuthProvider
                     $exception->getCode(),
                     $exception
                 );
-            }
-            if (!empty($json['error'])) {
+            } catch (RequestException $exception) {
                 throw new AuthorizationFailedException(
-                    sprintf('Error occurred while refreshing token. Message: %s', $json['error'])
+                    sprintf('Error occurred. Message: %s', $exception->getResponse()->getReasonPhrase()),
+                    $exception->getCode(),
+                    $exception
                 );
             }
-            if (empty($json['access_token']) || empty($json['expires_in'])) {
-                throw new AuthorizationFailedException(
-                    'Error occurred while refreshing token. Message: invalid response'
-                );
-            }
+
+            $authType = AuthTypeEnum::AUTHORIZATION_CODE_FLOW;
+            $this->checkResponseWithAccessToken($json, $authType);
+            /** @var array{'refresh_token'?: string|null, 'access_token': string, 'expires_in': int} $json */
             $this->credentials = new Credentials(
                 $json['refresh_token'] ?? null,
                 $json['access_token'],
                 (new \DateTimeImmutable())->modify('+ ' . ($json['expires_in'] - 10) . ' seconds'),
-                $this->credentials->getAuthType()
+                $authType
             );
-            $this->credentials->setAuthType(AuthTypeEnum::AUTHORIZATION_CODE_FLOW);
             $this->callCredentialsCallback();
             return $this->credentials;
         }
         return $this->credentials;
+    }
+
+    /**
+     * @throws AuthorizationFailedException
+     * @throws ClientErrorException
+     * @throws ClientExceptionInterface
+     * @throws ServerErrorException
+     */
+    public function revoke(): bool
+    {
+        if ($this->credentials === null) {
+            throw new AuthorizationFailedException('Load authentication screen first.');
+        }
+        if ($this->credentials->getAuthType()->value !== AuthTypeEnum::AUTHORIZATION_CODE_FLOW->value) {
+            throw new AuthorizationFailedException('Revoke is only available for authorization code flow');
+        }
+        try {
+            $request = new Request(
+                'POST',
+                sprintf('%s/oauth/revoke', Dispatcher::BASE_URL),
+                [
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Basic ' . base64_encode(sprintf('%s:%s', $this->clientId, $this->clientSecret))
+                ],
+                json_encode(['token' => $this->credentials->getRefreshToken()], JSON_THROW_ON_ERROR)
+            );
+            $response = $this->client->sendRequest($request);
+        } catch (ClientExceptionInterface $exception) {
+            throw $exception;
+        }
+        $responseStatusCode = $response->getStatusCode();
+        if ($responseStatusCode >= 400 && $responseStatusCode < 500) {
+            throw new ClientErrorException($request, $response);
+        }
+        if ($responseStatusCode >= 500 && $responseStatusCode < 600) {
+            throw new ServerErrorException($request, $response);
+        }
+
+        return $responseStatusCode === 200;
     }
 
     /**
@@ -165,24 +224,21 @@ class AuthProvider
                 $exception->getCode(),
                 $exception
             );
-        }
-        if (!empty($json['error'])) {
+        } catch (RequestException $exception) {
             throw new AuthorizationFailedException(
-                sprintf('An error occurred while client credentials flow. Message: %s', $json['error'])
+                sprintf('Error occurred. Message: %s', $exception->getResponse()->getReasonPhrase()),
+                $exception->getCode(),
+                $exception
             );
         }
-        if (empty($json['access_token']) || empty($json['expires_in'])) {
-            throw new AuthorizationFailedException(
-                'An error occurred while client credentials flow. Message: invalid response'
-            );
-        }
+        $this->checkResponseWithAccessToken($json, AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW);
+        /** @var array{'refresh_token'?: string|null, 'access_token': string, 'expires_in': int} $json */
         $this->credentials = new Credentials(
             $json['refresh_token'] ?? null,
             $json['access_token'],
             (new \DateTimeImmutable())->modify('+ ' . ($json['expires_in'] - 10) . ' seconds'),
             AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW
         );
-        $this->credentials->setAuthType(AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW);
         $this->callCredentialsCallback();
 
         return $this->credentials;
@@ -191,7 +247,7 @@ class AuthProvider
     /**
      * @param array<string, mixed> $body
      * @return array{'refresh_token'?: string|null, 'access_token': string, 'expires_in': int}|array{'error'?:string}
-     * @throws ConnectionFailedException|InvalidDataException
+     * @throws ConnectionFailedException|InvalidDataException|RequestException
      */
     private function makeRequest(array $body): array
     {
@@ -207,7 +263,6 @@ class AuthProvider
                 json_encode($body, JSON_THROW_ON_ERROR)
             );
             $response = $this->client->sendRequest($request);
-            return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         } catch (ClientExceptionInterface $exception) {
             throw new ConnectionFailedException(
                 sprintf('Error occurred. Message: %s', $exception->getMessage()),
@@ -221,6 +276,14 @@ class AuthProvider
                 $exception
             );
         }
+        $responseStatusCode = $response->getStatusCode();
+        if ($responseStatusCode >= 400 && $responseStatusCode < 500) {
+            throw new ClientErrorException($request, $response);
+        }
+        if ($responseStatusCode >= 500 && $responseStatusCode < 600) {
+            throw new ServerErrorException($request, $response);
+        }
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function getAuthenticationUrl(?string $state = null): string

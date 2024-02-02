@@ -2,13 +2,13 @@
 
 namespace Fakturoid\Tests;
 
-use DateTimeImmutable;
-use DateTimeInterface;
 use Fakturoid\Auth\AuthProvider;
 use Fakturoid\Auth\CredentialCallback;
 use Fakturoid\Auth\Credentials;
 use Fakturoid\Enum\AuthTypeEnum;
 use Fakturoid\Exception\AuthorizationFailedException;
+use Fakturoid\Exception\ClientErrorException;
+use Fakturoid\Exception\ServerErrorException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -177,7 +177,7 @@ class AuthProviderTest extends TestCase
 
         $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
         $this->expectException(AuthorizationFailedException::class);
-        $this->expectExceptionMessage('Error occurred while refreshing token. Message: invalid_grant');
+        $this->expectExceptionMessage('An error occurred while authorization_code flow. Message:');
         $authProvider->setCredentials($credentials);
         $authProvider->reAuth();
     }
@@ -213,7 +213,7 @@ class AuthProviderTest extends TestCase
 
         $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
         $this->expectException(AuthorizationFailedException::class);
-        $this->expectExceptionMessage('Error occurred while refreshing token. Message: invalid response');
+        $this->expectExceptionMessage('An error occurred while authorization_code flow. Message:');
         $authProvider->setCredentials($credentials);
         $authProvider->reAuth();
     }
@@ -258,7 +258,7 @@ class AuthProviderTest extends TestCase
         $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
 
         $this->expectException(AuthorizationFailedException::class);
-        $this->expectExceptionMessage('An error occurred while client credentials flow. Message: invalid response');
+        $this->expectExceptionMessage('An error occurred while client_credentials flow. Message: invalid response');
         $authProvider->auth(AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW);
     }
 
@@ -270,6 +270,121 @@ class AuthProviderTest extends TestCase
         $this->expectException(AuthorizationFailedException::class);
         $this->expectExceptionMessage('Load authentication screen first.');
         $authProvider->auth(AuthTypeEnum::AUTHORIZATION_CODE_FLOW);
+    }
+
+    public function testRevoke(): void
+    {
+        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface
+            ->method('getBody')
+            ->willReturn($this->getStreamMock('{}'));
+        $responseInterface
+            ->expects($this->once())
+            ->method('getStatusCode')
+            ->willReturn(200);
+
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects($this->once())
+            ->method('sendRequest')
+            ->willReturn($responseInterface);
+
+        $credentials = $this->createMock(Credentials::class);
+        $credentials->method('getAuthType')
+            ->willReturn(AuthTypeEnum::AUTHORIZATION_CODE_FLOW);
+        $credentials
+            ->expects($this->once())
+            ->method('getRefreshToken')
+            ->willReturn('refresh_token');
+
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+
+        $authProvider->setCredentials($credentials);
+        $this->assertTrue($authProvider->revoke());
+    }
+
+    public function testRevoke500(): void
+    {
+        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface
+            ->method('getBody')
+            ->willReturn($this->getStreamMock('{}'));
+        $responseInterface
+            ->method('getStatusCode')
+            ->willReturn(500);
+
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects($this->once())
+            ->method('sendRequest')
+            ->willReturn($responseInterface);
+
+        $credentials = $this->createMock(Credentials::class);
+        $credentials->method('getAuthType')
+            ->willReturn(AuthTypeEnum::AUTHORIZATION_CODE_FLOW);
+        $credentials
+            ->expects($this->once())
+            ->method('getRefreshToken')
+            ->willReturn('refresh_token');
+
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+
+        $authProvider->setCredentials($credentials);
+        $this->expectException(ServerErrorException::class);
+        $authProvider->revoke();
+    }
+
+    public function testRevoke400(): void
+    {
+        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface
+            ->method('getBody')
+            ->willReturn($this->getStreamMock('{}'));
+        $responseInterface
+            ->method('getStatusCode')
+            ->willReturn(400);
+
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects($this->once())
+            ->method('sendRequest')
+            ->willReturn($responseInterface);
+
+        $credentials = $this->createMock(Credentials::class);
+        $credentials->method('getAuthType')
+            ->willReturn(AuthTypeEnum::AUTHORIZATION_CODE_FLOW);
+        $credentials
+            ->expects($this->once())
+            ->method('getRefreshToken')
+            ->willReturn('refresh_token');
+
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+
+        $authProvider->setCredentials($credentials);
+        $this->expectException(ClientErrorException::class);
+        $authProvider->revoke();
+    }
+
+    public function testRevokeClientCredentials(): void
+    {
+        $client = $this->createMock(ClientInterface::class);
+
+        $credentials = $this->createMock(Credentials::class);
+        $credentials->method('getAuthType')
+            ->willReturn(AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+
+        $authProvider->setCredentials($credentials);
+        $this->expectException(AuthorizationFailedException::class);
+        $this->expectExceptionMessage('Revoke is only available for authorization code flow');
+        $authProvider->revoke();
+    }
+
+    public function testRevokeWithoutCredentials(): void
+    {
+        $client = $this->createMock(ClientInterface::class);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+
+        $this->expectException(AuthorizationFailedException::class);
+        $this->expectExceptionMessage('Load authentication screen first.');
+        $authProvider->revoke();
     }
 
     public function testAuthorizationCodeSimple(): void
@@ -310,7 +425,7 @@ class AuthProviderTest extends TestCase
             ->expects($this->once())
             ->method('getBody')
             ->willReturn(
-                $this->getStreamMock('')
+                $this->getStreamMock('{}')
             );
 
         $client = $this->createMock(ClientInterface::class);
@@ -320,7 +435,7 @@ class AuthProviderTest extends TestCase
             ->willReturn($responseInterface);
         $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $client);
         $this->expectException(AuthorizationFailedException::class);
-        $this->expectExceptionMessage('An error occurred while authorization code flow. Message: ');
+        $this->expectExceptionMessage('An error occurred while authorization_code flow. Message:');
         $authProvider->requestCredentials('CODE');
     }
 
