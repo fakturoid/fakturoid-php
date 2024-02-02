@@ -178,7 +178,7 @@ $response = $fManager->getInvoicesProvider()->create(['subject_id' => $subject->
 $invoice  = $response->getBody();
 
 // send created invoice
-$fManager->getInvoicesProvider->fireAction($invoice->id, 'deliver');
+$fManager->getInvoicesProvider()->fireAction($invoice->id, 'deliver');
 
 // send by mail
 $fManager->getInvoicesProvider()->createMessage($invoice->id, ['email' => 'aloha@pokus.cz']);
