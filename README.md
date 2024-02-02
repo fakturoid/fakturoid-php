@@ -23,7 +23,7 @@ New account just for testing API and using separate user (created via "Settings 
   - [Client Credentials Flow](#client-credentials-flow)
 
 - [Usage](#usage)
-  - [Upload credentials to the Fakturoid manager](#upload-credentials-to-the-fakturoid-manager)
+  - [Set credentials to the Fakturoid manager](#set-credentials-to-the-fakturoid-manager)
   - [Switch account](#switch-account)
   - [Basic usage](#basic-usage)
   - [Downloading an invoice PDF](#downloading-an-invoice-pdf)
@@ -107,7 +107,7 @@ $fManager->setCredentialsCallback(new class implements \Fakturoid\Auth\Credentia
 
 ## Usage
 
-### Upload credentials to the Fakturoid manager
+### Set credentials to the Fakturoid manager
 If you run a multi-tenant application or an application that processes documents in parallel, you need to set Credentials correctly. Each time a new access token is obtained, the previous one is invalidated. For these needs there is `AuthProvider::setCredentials()` and also `CredentialCallback`.
 ```php
 $fManager = new \Fakturoid\FakturoidManager(
