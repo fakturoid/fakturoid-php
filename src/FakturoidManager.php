@@ -44,8 +44,8 @@ class FakturoidManager
 
     public function __construct(
         ClientInterface $client,
-        string $clientId,
-        string $clientSecret,
+        #[\SensitiveParameter] string $clientId,
+        #[\SensitiveParameter] string $clientSecret,
         string $userAgent,
         ?string $accountSlug = null,
         ?string $redirectUri = null

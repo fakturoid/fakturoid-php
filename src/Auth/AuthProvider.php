@@ -19,8 +19,8 @@ class AuthProvider
     private ?CredentialCallback $credentialsCallback = null;
 
     public function __construct(
-        private readonly string $clientId,
-        private readonly string $clientSecret,
+        #[\SensitiveParameter] private readonly string $clientId,
+        #[\SensitiveParameter] private readonly string $clientSecret,
         private readonly ?string $redirectUri,
         private readonly ClientInterface $client
     ) {

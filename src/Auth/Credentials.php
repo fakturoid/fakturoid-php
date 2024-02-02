@@ -11,8 +11,8 @@ use JsonException;
 class Credentials
 {
     public function __construct(
-        private readonly ?string $refresh_token,
-        private readonly ?string $access_token,
+        #[\SensitiveParameter] private readonly ?string $refreshToken,
+        #[\SensitiveParameter] private readonly ?string $accessToken,
         private readonly DateTimeImmutable $expireAt,
         private AuthTypeEnum $authType
     ) {
@@ -20,12 +20,12 @@ class Credentials
 
     public function getRefreshToken(): ?string
     {
-        return $this->refresh_token;
+        return $this->refreshToken;
     }
 
     public function getAccessToken(): ?string
     {
-        return $this->access_token;
+        return $this->accessToken;
     }
 
     public function isExpired(): bool
@@ -55,8 +55,8 @@ class Credentials
     {
         try {
             $json = json_encode([
-                'refresh_token' => $this->refresh_token,
-                'access_token' => $this->access_token,
+                'refreshToken' => $this->refreshToken,
+                'accessToken' => $this->accessToken,
                 'expireAt' => $this->expireAt->format(DateTimeInterface::ATOM),
                 'authType' => $this->authType,
             ], JSON_THROW_ON_ERROR);

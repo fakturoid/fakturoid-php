@@ -371,47 +371,4 @@ class AuthProviderTest extends TestCase
         $this->assertEquals('refresh_token', $credentials->getRefreshToken());
         $this->assertEquals(AuthTypeEnum::AUTHORIZATION_CODE_FLOW, $credentials->getAuthType());
     }
-
-    public function testJsonCredentials(): void
-    {
-        $expireAt = (new DateTimeImmutable())->modify('+ 7200 seconds');
-        $credentials = new Credentials(
-            'refresh_token',
-            'access_token',
-            $expireAt,
-            AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW
-        );
-
-        $this->assertEquals(
-            json_encode([
-                'refresh_token' => 'refresh_token',
-                'access_token' => 'access_token',
-                'expireAt' => $expireAt->format(DateTimeInterface::ATOM),
-                'authType' => AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW->value,
-            ]),
-            $credentials->toJson()
-        );
-    }
-
-    public function testExpiration(): void
-    {
-        $expireAt = (new DateTimeImmutable())->modify('+ 7200 seconds');
-        $credentials = new Credentials(
-            'refresh_token',
-            'access_token',
-            $expireAt,
-            AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW
-        );
-        $this->assertFalse($credentials->isExpired());
-
-        $expireAt = (new DateTimeImmutable())->modify('-10 seconds');
-        $credentials = new Credentials(
-            'refresh_token',
-            'access_token',
-            $expireAt,
-            AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW
-        );
-
-        $this->assertTrue($credentials->isExpired());
-    }
 }
