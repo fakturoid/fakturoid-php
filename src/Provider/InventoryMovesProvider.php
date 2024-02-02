@@ -5,7 +5,7 @@ namespace Fakturoid\Provider;
 use Fakturoid\DispatcherInterface;
 use Fakturoid\Response;
 
-final class InventoryMoveProvider extends Provider
+final class InventoryMovesProvider extends Provider
 {
     public function __construct(
         private readonly DispatcherInterface $dispatcher

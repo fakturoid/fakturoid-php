@@ -3,10 +3,10 @@
 namespace Fakturoid\Tests;
 
 use Fakturoid\Dispatcher;
-use Fakturoid\Provider\InboxFileProvider;
+use Fakturoid\Provider\InboxFilesProvider;
 use Fakturoid\Response;
 
-class InboxFileProviderTest extends TestCase
+class InboxFilesProviderTest extends TestCase
 {
     public function testList(): void
     {
@@ -18,7 +18,7 @@ class InboxFileProviderTest extends TestCase
             ->with('/accounts/{accountSlug}/inbox_files.json')
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InboxFileProvider($dispatcher);
+        $provider = new InboxFilesProvider($dispatcher);
         $response = $provider->list();
         $this->assertEquals([], $response->getBody(true));
     }
@@ -33,7 +33,7 @@ class InboxFileProviderTest extends TestCase
             ->with('/accounts/{accountSlug}/inbox_files.json')
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InboxFileProvider($dispatcher);
+        $provider = new InboxFilesProvider($dispatcher);
         $response = $provider->create(['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -49,7 +49,7 @@ class InboxFileProviderTest extends TestCase
             ->with(sprintf('/accounts/{accountSlug}/inbox_files/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InboxFileProvider($dispatcher);
+        $provider = new InboxFilesProvider($dispatcher);
         $response = $provider->delete($id);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -65,7 +65,7 @@ class InboxFileProviderTest extends TestCase
             ->with(sprintf('/accounts/{accountSlug}/inbox_files/%d/send_to_ocr.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InboxFileProvider($dispatcher);
+        $provider = new InboxFilesProvider($dispatcher);
         $response = $provider->sendToOCR($id);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -81,7 +81,7 @@ class InboxFileProviderTest extends TestCase
             ->with(sprintf('/accounts/{accountSlug}/inbox_files/%d/download', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InboxFileProvider($dispatcher);
+        $provider = new InboxFilesProvider($dispatcher);
         $response = $provider->download($id);
         $this->assertEquals('binary file', $response->getBody(true));
     }

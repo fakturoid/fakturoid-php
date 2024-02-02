@@ -144,11 +144,11 @@ $fManager = new \Fakturoid\FakturoidManager(
     'PHPlib <your@email.cz>'
 );
 $fManager->authClientCredentials();
-$fManager->getSettingProvider()->listBankAccounts();
+$fManager->getBankAccountsProvider()->list();
 
 // switch account and company    
 $fManager->setAccountSlug('{fakturoid-account-slug-another}');
-$fManager->getSettingProvider()->listBankAccounts();
+$fManager->getBankAccountsProvider()->list();
 ```
 
 ### Basic usage
@@ -163,28 +163,28 @@ $fManager = new \Fakturoid\FakturoidManager(
 $fManager->authClientCredentials();
 
 // get current user
-$user = $fManager->getUserProvider()->getCurrentUser();
+$user = $fManager->getUsersProvider()->getCurrentUser();
 $fManager->setAccountSlug($user->getBody()->accounts[0]->slug);
 // or you can set account slug manually
 $fManager->setAccountSlug('{fakturoid-account-slug}');
 
 // create subject
-$response = $fManager->getSubjectProvider()->create(['name' => 'Firma s.r.o.', 'email' => 'aloha@pokus.cz']);
+$response = $fManager->getSubjectsProvider()->create(['name' => 'Firma s.r.o.', 'email' => 'aloha@pokus.cz']);
 $subject  = $response->getBody();
 
 // create invoice with lines
 $lines    = [['name' => 'Big sale', 'quantity' => 1, 'unit_price' => 1000]];
-$response = $fManager->getInvoiceProvider()->create(['subject_id' => $subject->id, 'lines' => $lines]);
+$response = $fManager->getInvoicesProvider()->create(['subject_id' => $subject->id, 'lines' => $lines]);
 $invoice  = $response->getBody();
 
 // send created invoice
-$fManager->getInvoiceProvider->fireAction($invoice->id, 'deliver');
+$fManager->getInvoicesProvider->fireAction($invoice->id, 'deliver');
 
 // send by mail
-$fManager->getInvoiceProvider()->createMessage($invoice->id, ['email' => 'aloha@pokus.cz']);
+$fManager->getInvoicesProvider()->createMessage($invoice->id, ['email' => 'aloha@pokus.cz']);
 
 // to mark invoice as paid and send thank you email
-$fManager->getInvoiceProvider()->createPayment($invoice->id, ['paid_on' => (new \DateTime())->format('Y-m-d'), 'send_thank_you_email' => true]);
+$fManager->getInvoicesProvider()->createPayment($invoice->id, ['paid_on' => (new \DateTime())->format('Y-m-d'), 'send_thank_you_email' => true]);
 
 ```
 
@@ -192,12 +192,12 @@ $fManager->getInvoiceProvider()->createPayment($invoice->id, ['paid_on' => (new 
 
 ```php
 $invoiceId = 123;
-$response = $fManager->getInvoiceProvider()->getPdf($invoiceId);
+$response = $fManager->getInvoicesProvider()->getPdf($invoiceId);
 $data = $response->getBody();
 file_put_contents("{$invoiceId}.pdf", $data);
 ```
 
-If you call `$fManager->getInvoiceProvider()->getPdf()` right after creating an invoice, you'll get
+If you call `$fManager->getInvoicesProvider()->getPdf()` right after creating an invoice, you'll get
 a status code `204` (`No Content`) with empty body, this means the invoice PDF
 hasn't yet been generated and you should try again a second or two later.
 
@@ -208,7 +208,7 @@ $invoiceId = 123;
 
 // This is just an example, you may want to do this in a background job and be more defensive.
 while (true) {
-    $response = $fManager->getInvoiceProvider()->getPdf($invoiceId);
+    $response = $fManager->getInvoicesProvider()->getPdf($invoiceId);
 
     if ($response->getStatusCode() == 200) {
         $data = $response->getBody();
@@ -226,7 +226,7 @@ You can use `custom_id` attribute to store your application record ID into our r
 Invoices and subjects can be filtered to find a particular record:
 
 ```php
-$response = $fManager->getSubjectProvider()->list(['custom_id' => '10']);
+$response = $fManager->getSubjectsProvider()->list(['custom_id' => '10']);
 $subjects = $response->getBody();
 $subject  = null;
 
@@ -314,25 +314,25 @@ $fManager->getInventoryItemsProvider()->delete($inventoryItemId);
 To get get all inventory moves across all inventory items:
 
 ```php
-$fManager->getInventoryMoveProvider()->list()
+$fManager->getInventoryMovesProvider()->list()
 ```
 
 To get inventory moves for a single inventory item:
 
 ```php
-$fManager->getInventoryMoveProvider()->list(['inventory_item_id' => $inventoryItemId]);
+$fManager->getInventoryMovesProvider()->list(['inventory_item_id' => $inventoryItemId]);
 ```
 
 To get a single inventory move:
 
 ```php
-$fManager->getInventoryMoveProvider()->get($inventoryItemId, $inventoryMoveId);
+$fManager->getInventoryMovesProvider()->get($inventoryItemId, $inventoryMoveId);
 ```
 
 To create a stock-in inventory move:
 
 ```php
-$fManager->getInventoryMoveProvider()->create(
+$fManager->getInventoryMovesProvider()->create(
     $inventoryItemId,
     [
         'direction' => 'in',
@@ -348,7 +348,7 @@ $fManager->getInventoryMoveProvider()->create(
 To create a stock-out inventory move:
 
 ```php
-$fManager->getInventoryMoveProvider()->create(
+$fManager->getInventoryMovesProvider()->create(
     $inventoryItemId,
     [
         'direction' => 'out',
@@ -364,13 +364,13 @@ $fManager->getInventoryMoveProvider()->create(
 To update an inventory move:
 
 ```php
-$fManager->getInventoryMoveProvider()->update($inventoryItemId, $inventoryMoveId, ['moved_on' => '2023-01-11']);
+$fManager->getInventoryMovesProvider()->update($inventoryItemId, $inventoryMoveId, ['moved_on' => '2023-01-11']);
 ```
 
 To delete an inventory move:
 
 ```php
-$fManager->getInventoryMoveProvider()->update($inventoryItemId, $inventoryMoveId);
+$fManager->getInventoryMovesProvider()->update($inventoryItemId, $inventoryMoveId);
 ```
 
 ## Handling errors
@@ -379,7 +379,7 @@ Library raises `Fakturoid\Exception\ClientErrorException` for `4xx` and `Fakturo
 
 ```php
 try {
-    $response = $fManager->getSubjectProvider()->create(['name' => '', 'email' => 'aloha@pokus.cz']);
+    $response = $fManager->getSubjectsProvider()->create(['name' => '', 'email' => 'aloha@pokus.cz']);
     $subject  = $response->getBody();
 } catch (\Fakturoid\Exception\ClientErrorException $e) {
     $e->getCode(); // 422

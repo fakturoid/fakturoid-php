@@ -3,10 +3,10 @@
 namespace Fakturoid\Tests;
 
 use Fakturoid\Dispatcher;
-use Fakturoid\Provider\EventProvider;
+use Fakturoid\Provider\EventsProvider;
 use Fakturoid\Response;
 
-class EventProviderTest extends TestCase
+class EventsProviderTest extends TestCase
 {
     public function testList(): void
     {
@@ -18,7 +18,7 @@ class EventProviderTest extends TestCase
             ->with('/accounts/{accountSlug}/events.json', [])
             ->willReturn(new Response($responseInterface));
 
-        $provider = new EventProvider($dispatcher);
+        $provider = new EventsProvider($dispatcher);
         $response = $provider->list();
         $this->assertEquals([], $response->getBody(true));
     }
@@ -33,7 +33,7 @@ class EventProviderTest extends TestCase
             ->with('/accounts/{accountSlug}/events/paid.json', ['page' => 2])
             ->willReturn(new Response($responseInterface));
 
-        $provider = new EventProvider($dispatcher);
+        $provider = new EventsProvider($dispatcher);
         $response = $provider->listPaid(['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }

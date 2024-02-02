@@ -3,10 +3,10 @@
 namespace Fakturoid\Tests;
 
 use Fakturoid\Dispatcher;
-use Fakturoid\Provider\GeneratorProvider;
+use Fakturoid\Provider\RecurringGeneratorsProvider;
 use Fakturoid\Response;
 
-class GeneratorProviderTest extends TestCase
+class RecurringGeneratorsProviderTest extends \Fakturoid\Tests\TestCase
 {
     public function testList(): void
     {
@@ -15,10 +15,10 @@ class GeneratorProviderTest extends TestCase
 
         $dispatcher->expects($this->once())
             ->method('get')
-            ->with('/accounts/{accountSlug}/generators.json', ['page' => 1])
+            ->with('/accounts/{accountSlug}/recurring_generators.json', ['page' => 1])
             ->willReturn(new Response($responseInterface));
 
-        $provider = new GeneratorProvider($dispatcher);
+        $provider = new RecurringGeneratorsProvider($dispatcher);
         $response = $provider->list(['page' => 1]);
         $this->assertEquals([], $response->getBody(true));
     }
@@ -31,10 +31,10 @@ class GeneratorProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('get')
-            ->with(sprintf('/accounts/{accountSlug}/generators/%d.json', $id))
+            ->with(sprintf('/accounts/{accountSlug}/recurring_generators/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new GeneratorProvider($dispatcher);
+        $provider = new RecurringGeneratorsProvider($dispatcher);
         $response = $provider->get($id);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -47,10 +47,10 @@ class GeneratorProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('delete')
-            ->with(sprintf('/accounts/{accountSlug}/generators/%d.json', $id))
+            ->with(sprintf('/accounts/{accountSlug}/recurring_generators/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new GeneratorProvider($dispatcher);
+        $provider = new RecurringGeneratorsProvider($dispatcher);
         $response = $provider->delete($id);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -63,10 +63,10 @@ class GeneratorProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('patch')
-            ->with(sprintf('/accounts/{accountSlug}/generators/%d.json', $id))
+            ->with(sprintf('/accounts/{accountSlug}/recurring_generators/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new GeneratorProvider($dispatcher);
+        $provider = new RecurringGeneratorsProvider($dispatcher);
         $response = $provider->update($id, ['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -78,10 +78,10 @@ class GeneratorProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('post')
-            ->with('/accounts/{accountSlug}/generators.json')
+            ->with('/accounts/{accountSlug}/recurring_generators.json')
             ->willReturn(new Response($responseInterface));
 
-        $provider = new GeneratorProvider($dispatcher);
+        $provider = new RecurringGeneratorsProvider($dispatcher);
         $response = $provider->create(['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }

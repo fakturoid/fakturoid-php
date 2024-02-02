@@ -3,10 +3,10 @@
 namespace Fakturoid\Tests;
 
 use Fakturoid\Dispatcher;
-use Fakturoid\Provider\BankAccountProvider;
+use Fakturoid\Provider\BankAccountsProvider;
 use Fakturoid\Response;
 
-class BankAccountProviderTest extends \Fakturoid\Tests\TestCase
+class BankAccountsProviderTest extends \Fakturoid\Tests\TestCase
 {
     public function testListBankAccount(): void
     {
@@ -41,7 +41,7 @@ class BankAccountProviderTest extends \Fakturoid\Tests\TestCase
             ->with('/accounts/{accountSlug}/bank_accounts.json')
             ->willReturn(new Response($responseInterface));
 
-        $provider = new BankAccountProvider($dispatcher);
+        $provider = new BankAccountsProvider($dispatcher);
         $response = $provider->list();
         $this->assertEquals($data, $response->getBody());
         $this->assertEquals([(array) $data[0]], $response->getBody(true));

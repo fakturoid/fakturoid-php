@@ -5,7 +5,7 @@ namespace Fakturoid\Provider;
 use Fakturoid\DispatcherInterface;
 use Fakturoid\Response;
 
-final class SubjectProvider extends Provider
+final class SubjectsProvider extends Provider
 {
     public function __construct(
         private readonly DispatcherInterface $dispatcher

@@ -5,7 +5,7 @@ namespace Fakturoid\Provider;
 use Fakturoid\DispatcherInterface;
 use Fakturoid\Response;
 
-final class InboxFileProvider extends Provider
+final class InboxFilesProvider extends Provider
 {
     public function __construct(
         private readonly DispatcherInterface $dispatcher

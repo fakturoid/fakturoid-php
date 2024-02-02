@@ -3,10 +3,10 @@
 namespace Fakturoid\Tests;
 
 use Fakturoid\Dispatcher;
-use Fakturoid\Provider\NumberFormatProvider;
+use Fakturoid\Provider\NumberFormatsProvider;
 use Fakturoid\Response;
 
-class NumberFormatProviderTest extends \Fakturoid\Tests\TestCase
+class NumberFormatsProviderTest extends \Fakturoid\Tests\TestCase
 {
     public function testListNumberFormat(): void
     {
@@ -35,7 +35,7 @@ class NumberFormatProviderTest extends \Fakturoid\Tests\TestCase
             ->with('/accounts/{accountSlug}/number_formats/invoices.json')
             ->willReturn(new Response($responseInterface));
 
-        $provider = new NumberFormatProvider($dispatcher);
+        $provider = new NumberFormatsProvider($dispatcher);
         $response = $provider->list();
         $this->assertEquals($data, $response->getBody());
         $this->assertEquals([(array) $data[0]], $response->getBody(true));

@@ -3,10 +3,10 @@
 namespace Fakturoid\Tests;
 
 use Fakturoid\Dispatcher;
-use Fakturoid\Provider\TodoProvider;
+use Fakturoid\Provider\TodosProvider;
 use Fakturoid\Response;
 
-class TodoProviderTest extends TestCase
+class TodosProviderTest extends TestCase
 {
     public function testList(): void
     {
@@ -18,7 +18,7 @@ class TodoProviderTest extends TestCase
             ->with('/accounts/{accountSlug}/todos.json', [])
             ->willReturn(new Response($responseInterface));
 
-        $provider = new TodoProvider($dispatcher);
+        $provider = new TodosProvider($dispatcher);
         $response = $provider->list();
         $this->assertEquals([], $response->getBody(true));
 
@@ -30,7 +30,7 @@ class TodoProviderTest extends TestCase
             ->with('/accounts/{accountSlug}/todos.json', ['page' => 2])
             ->willReturn(new Response($responseInterface));
 
-        $provider = new TodoProvider($dispatcher);
+        $provider = new TodosProvider($dispatcher);
         $response = $provider->list(['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -46,7 +46,7 @@ class TodoProviderTest extends TestCase
             ->with(sprintf('/accounts/{accountSlug}/todos/%d/toggle_completion.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new TodoProvider($dispatcher);
+        $provider = new TodosProvider($dispatcher);
         $response = $provider->toggleCompletion($id);
         $this->assertEquals([], $response->getBody(true));
     }

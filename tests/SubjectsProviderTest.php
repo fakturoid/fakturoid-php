@@ -3,10 +3,10 @@
 namespace Fakturoid\Tests;
 
 use Fakturoid\Dispatcher;
-use Fakturoid\Provider\SubjectProvider;
+use Fakturoid\Provider\SubjectsProvider;
 use Fakturoid\Response;
 
-class SubjectProviderTest extends TestCase
+class SubjectsProviderTest extends TestCase
 {
     public function testList(): void
     {
@@ -20,7 +20,7 @@ class SubjectProviderTest extends TestCase
                 new Response($responseInterface)
             );
 
-        $provider = new SubjectProvider($dispatcher);
+        $provider = new SubjectsProvider($dispatcher);
         $response = $provider->list();
         $this->assertEquals([], $response->getBody(true));
 
@@ -34,7 +34,7 @@ class SubjectProviderTest extends TestCase
                 new Response($responseInterface)
             );
 
-        $provider = new SubjectProvider($dispatcher);
+        $provider = new SubjectsProvider($dispatcher);
         $response = $provider->list(['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -54,7 +54,7 @@ class SubjectProviderTest extends TestCase
                 new Response($responseInterface)
             );
 
-        $provider = new SubjectProvider($dispatcher);
+        $provider = new SubjectsProvider($dispatcher);
         $response = $provider->search($querySearch);
 
         $this->assertEquals(['data' => 'test@fakturoid.cz'], $response->getBody(true));
@@ -72,7 +72,7 @@ class SubjectProviderTest extends TestCase
                 new Response($responseInterface)
             );
 
-        $provider = new SubjectProvider($dispatcher);
+        $provider = new SubjectsProvider($dispatcher);
         $response = $provider->get($id);
 
         $this->assertEquals(['data' => 'test@fakturoid.cz'], $response->getBody(true));
@@ -90,7 +90,7 @@ class SubjectProviderTest extends TestCase
                 new Response($responseInterface)
             );
 
-        $provider = new SubjectProvider($dispatcher);
+        $provider = new SubjectsProvider($dispatcher);
         $response = $provider->create($subjectData);
 
         $this->assertEquals($subjectData, $response->getBody(true));
@@ -101,7 +101,7 @@ class SubjectProviderTest extends TestCase
         $dispatcher = $this->createMock(Dispatcher::class);
 
         $querySearch = ['query' => 'test@fakturoid.cz', 'page' => 2];
-        $provider = new SubjectProvider($dispatcher);
+        $provider = new SubjectsProvider($dispatcher);
 
         set_error_handler(static function (int $errno, string $errstr): never {
             throw new \Exception($errstr, $errno);
@@ -128,7 +128,7 @@ class SubjectProviderTest extends TestCase
                 new Response($responseInterface)
             );
 
-        $provider = new SubjectProvider($dispatcher);
+        $provider = new SubjectsProvider($dispatcher);
         $response = $provider->update($id, $subjectData);
 
         $this->assertEquals($subjectData, $response->getBody(true));
@@ -151,7 +151,7 @@ class SubjectProviderTest extends TestCase
                 new Response($responseInterface)
             );
 
-        $provider = new SubjectProvider($dispatcher);
+        $provider = new SubjectsProvider($dispatcher);
         $response = $provider->delete($id);
 
         $this->assertEquals(['data' => 'test@fakturoid.cz'], $response->getBody(true));

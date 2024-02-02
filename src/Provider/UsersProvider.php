@@ -5,15 +5,20 @@ namespace Fakturoid\Provider;
 use Fakturoid\DispatcherInterface;
 use Fakturoid\Response;
 
-final class BankAccountProvider extends Provider
+final class UsersProvider extends Provider
 {
     public function __construct(
         private readonly DispatcherInterface $dispatcher
     ) {
     }
 
+    public function getCurrentUser(): Response
+    {
+        return $this->dispatcher->get('/user.json');
+    }
+
     public function list(): Response
     {
-        return $this->dispatcher->get('/accounts/{accountSlug}/bank_accounts.json');
+        return $this->dispatcher->get('/accounts/{accountSlug}/users.json');
     }
 }

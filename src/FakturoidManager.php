@@ -8,19 +8,19 @@ use Fakturoid\Auth\Credentials;
 use Fakturoid\Enum\AuthTypeEnum;
 use Fakturoid\Exception\AuthorizationFailedException;
 use Fakturoid\Provider\AccountProvider;
-use Fakturoid\Provider\BankAccountProvider;
-use Fakturoid\Provider\EventProvider;
-use Fakturoid\Provider\ExpenseProvider;
-use Fakturoid\Provider\GeneratorProvider;
-use Fakturoid\Provider\InboxFileProvider;
-use Fakturoid\Provider\InventoryItemProvider;
-use Fakturoid\Provider\InventoryMoveProvider;
-use Fakturoid\Provider\InvoiceProvider;
-use Fakturoid\Provider\NumberFormatProvider;
-use Fakturoid\Provider\RecurringGeneratorProvider;
-use Fakturoid\Provider\SubjectProvider;
-use Fakturoid\Provider\TodoProvider;
-use Fakturoid\Provider\UserProvider;
+use Fakturoid\Provider\BankAccountsProvider;
+use Fakturoid\Provider\EventsProvider;
+use Fakturoid\Provider\ExpensesProvider;
+use Fakturoid\Provider\GeneratorsProvider;
+use Fakturoid\Provider\InboxFilesProvider;
+use Fakturoid\Provider\InventoryItemsProvider;
+use Fakturoid\Provider\InventoryMovesProvider;
+use Fakturoid\Provider\InvoicesProvider;
+use Fakturoid\Provider\NumberFormatsProvider;
+use Fakturoid\Provider\RecurringGeneratorsProvider;
+use Fakturoid\Provider\SubjectsProvider;
+use Fakturoid\Provider\TodosProvider;
+use Fakturoid\Provider\UsersProvider;
 use Psr\Http\Client\ClientInterface;
 
 class FakturoidManager
@@ -28,19 +28,19 @@ class FakturoidManager
     private readonly AuthProvider $authProvider;
     private readonly Dispatcher $dispatcher;
     private readonly AccountProvider $accountProvider;
-    private readonly BankAccountProvider $bankAccountProvider;
-    private readonly EventProvider $eventProvider;
-    private readonly ExpenseProvider $expenseProvider;
-    private readonly GeneratorProvider $generatorProvider;
-    private readonly InboxFileProvider $inboxFileProvider;
-    private readonly InventoryItemProvider $inventoryItemsProvider;
-    private readonly InventoryMoveProvider $inventoryMoveProvider;
-    private readonly InvoiceProvider $invoiceProvider;
-    private readonly NumberFormatProvider $numberFormatProvider;
-    private readonly RecurringGeneratorProvider $recurringGeneratorProvider;
-    private readonly SubjectProvider $subjectProvider;
-    private readonly TodoProvider $todoProvider;
-    private readonly UserProvider $userProvider;
+    private readonly BankAccountsProvider $bankAccountsProvider;
+    private readonly EventsProvider $eventsProvider;
+    private readonly ExpensesProvider $expensesProvider;
+    private readonly GeneratorsProvider $generatorsProvider;
+    private readonly InboxFilesProvider $inboxFilesProvider;
+    private readonly InventoryItemsProvider $inventoryItemsProvider;
+    private readonly InventoryMovesProvider $inventoryMovesProvider;
+    private readonly InvoicesProvider $invoicesProvider;
+    private readonly NumberFormatsProvider $numberFormatsProvider;
+    private readonly RecurringGeneratorsProvider $recurringGeneratorsProvider;
+    private readonly SubjectsProvider $subjectsProvider;
+    private readonly TodosProvider $todosProvider;
+    private readonly UsersProvider $usersProvider;
 
     public function __construct(
         ClientInterface $client,
@@ -54,19 +54,19 @@ class FakturoidManager
         $this->dispatcher = new Dispatcher($userAgent, $this->authProvider, $client, $accountSlug);
 
         $this->accountProvider = new AccountProvider($this->dispatcher);
-        $this->bankAccountProvider = new BankAccountProvider($this->dispatcher);
-        $this->eventProvider = new EventProvider($this->dispatcher);
-        $this->expenseProvider = new ExpenseProvider($this->dispatcher);
-        $this->generatorProvider = new GeneratorProvider($this->dispatcher);
-        $this->inboxFileProvider = new InboxFileProvider($this->dispatcher);
-        $this->inventoryItemsProvider = new InventoryItemProvider($this->dispatcher);
-        $this->inventoryMoveProvider = new InventoryMoveProvider($this->dispatcher);
-        $this->invoiceProvider = new InvoiceProvider($this->dispatcher);
-        $this->numberFormatProvider = new NumberFormatProvider($this->dispatcher);
-        $this->recurringGeneratorProvider = new RecurringGeneratorProvider($this->dispatcher);
-        $this->subjectProvider = new SubjectProvider($this->dispatcher);
-        $this->todoProvider = new TodoProvider($this->dispatcher);
-        $this->userProvider = new UserProvider($this->dispatcher);
+        $this->bankAccountsProvider = new BankAccountsProvider($this->dispatcher);
+        $this->eventsProvider = new EventsProvider($this->dispatcher);
+        $this->expensesProvider = new ExpensesProvider($this->dispatcher);
+        $this->generatorsProvider = new GeneratorsProvider($this->dispatcher);
+        $this->inboxFilesProvider = new InboxFilesProvider($this->dispatcher);
+        $this->inventoryItemsProvider = new InventoryItemsProvider($this->dispatcher);
+        $this->inventoryMovesProvider = new InventoryMovesProvider($this->dispatcher);
+        $this->invoicesProvider = new InvoicesProvider($this->dispatcher);
+        $this->numberFormatsProvider = new NumberFormatsProvider($this->dispatcher);
+        $this->recurringGeneratorsProvider = new RecurringGeneratorsProvider($this->dispatcher);
+        $this->subjectsProvider = new SubjectsProvider($this->dispatcher);
+        $this->todosProvider = new TodosProvider($this->dispatcher);
+        $this->usersProvider = new UsersProvider($this->dispatcher);
     }
 
     public function setAccountSlug(string $companySlug): void
@@ -126,68 +126,68 @@ class FakturoidManager
         return $this->accountProvider;
     }
 
-    public function getBankAccountProvider(): BankAccountProvider
+    public function getBankAccountsProvider(): BankAccountsProvider
     {
-        return $this->bankAccountProvider;
+        return $this->bankAccountsProvider;
     }
 
-    public function getEventProvider(): EventProvider
+    public function getEventsProvider(): EventsProvider
     {
-        return $this->eventProvider;
+        return $this->eventsProvider;
     }
 
-    public function getExpenseProvider(): ExpenseProvider
+    public function getExpensesProvider(): ExpensesProvider
     {
-        return $this->expenseProvider;
+        return $this->expensesProvider;
     }
 
-    public function getGeneratorProvider(): GeneratorProvider
+    public function getGeneratorsProvider(): GeneratorsProvider
     {
-        return $this->generatorProvider;
+        return $this->generatorsProvider;
     }
 
-    public function getInboxFileProvider(): InboxFileProvider
+    public function getInboxFilesProvider(): InboxFilesProvider
     {
-        return $this->inboxFileProvider;
+        return $this->inboxFilesProvider;
     }
 
-    public function getInventoryItemsProvider(): InventoryItemProvider
+    public function getInventoryItemsProvider(): InventoryItemsProvider
     {
         return $this->inventoryItemsProvider;
     }
 
-    public function getInventoryMoveProvider(): InventoryMoveProvider
+    public function getInventoryMovesProvider(): InventoryMovesProvider
     {
-        return $this->inventoryMoveProvider;
+        return $this->inventoryMovesProvider;
     }
 
-    public function getInvoiceProvider(): InvoiceProvider
+    public function getInvoicesProvider(): InvoicesProvider
     {
-        return $this->invoiceProvider;
+        return $this->invoicesProvider;
     }
 
-    public function getNumberFormatProvider(): NumberFormatProvider
+    public function getNumberFormatsProvider(): NumberFormatsProvider
     {
-        return $this->numberFormatProvider;
+        return $this->numberFormatsProvider;
     }
 
-    public function getRecurringGeneratorProvider(): RecurringGeneratorProvider
+    public function getRecurringGeneratorsProvider(): RecurringGeneratorsProvider
     {
-        return $this->recurringGeneratorProvider;
+        return $this->recurringGeneratorsProvider;
     }
 
-    public function getSubjectProvider(): SubjectProvider
+    public function getSubjectsProvider(): SubjectsProvider
     {
-        return $this->subjectProvider;
+        return $this->subjectsProvider;
     }
 
-    public function getTodoProvider(): TodoProvider
+    public function getTodosProvider(): TodosProvider
     {
-        return $this->todoProvider;
+        return $this->todosProvider;
     }
 
-    public function getUserProvider(): UserProvider
+    public function getUsersProvider(): UsersProvider
     {
-        return $this->userProvider;
+        return $this->usersProvider;
     }
 }

@@ -3,10 +3,10 @@
 namespace Fakturoid\Tests;
 
 use Fakturoid\Dispatcher;
-use Fakturoid\Provider\InvoiceProvider;
+use Fakturoid\Provider\InvoicesProvider;
 use Fakturoid\Response;
 
-class InvoiceProviderTest extends TestCase
+class InvoicesProviderTest extends TestCase
 {
     public function testList(): void
     {
@@ -18,7 +18,7 @@ class InvoiceProviderTest extends TestCase
             ->with('/accounts/{accountSlug}/invoices.json', ['page' => 1])
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InvoiceProvider($dispatcher);
+        $provider = new InvoicesProvider($dispatcher);
         $response = $provider->list(['page' => 1]);
         $this->assertEquals([], $response->getBody(true));
     }
@@ -33,7 +33,7 @@ class InvoiceProviderTest extends TestCase
             ->with('/accounts/{accountSlug}/invoices/search.json', ['page' => 2])
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InvoiceProvider($dispatcher);
+        $provider = new InvoicesProvider($dispatcher);
         $response = $provider->search(['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -49,7 +49,7 @@ class InvoiceProviderTest extends TestCase
             ->with(sprintf('/accounts/{accountSlug}/invoices/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InvoiceProvider($dispatcher);
+        $provider = new InvoicesProvider($dispatcher);
         $response = $provider->get($id);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -65,7 +65,7 @@ class InvoiceProviderTest extends TestCase
             ->with(sprintf('/accounts/{accountSlug}/invoices/%d/download.pdf', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InvoiceProvider($dispatcher);
+        $provider = new InvoicesProvider($dispatcher);
         $response = $provider->getPdf($id);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -81,7 +81,7 @@ class InvoiceProviderTest extends TestCase
             ->with(sprintf('/accounts/{accountSlug}/invoices/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InvoiceProvider($dispatcher);
+        $provider = new InvoicesProvider($dispatcher);
         $response = $provider->delete($id);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -97,7 +97,7 @@ class InvoiceProviderTest extends TestCase
             ->with(sprintf('/accounts/{accountSlug}/invoices/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InvoiceProvider($dispatcher);
+        $provider = new InvoicesProvider($dispatcher);
         $response = $provider->update($id, ['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -112,7 +112,7 @@ class InvoiceProviderTest extends TestCase
             ->with('/accounts/{accountSlug}/invoices.json')
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InvoiceProvider($dispatcher);
+        $provider = new InvoicesProvider($dispatcher);
         $response = $provider->create(['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -128,7 +128,7 @@ class InvoiceProviderTest extends TestCase
             ->with(sprintf('/accounts/{accountSlug}/invoices/%d/payments.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InvoiceProvider($dispatcher);
+        $provider = new InvoicesProvider($dispatcher);
         $response = $provider->createPayment($id, ['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -145,7 +145,7 @@ class InvoiceProviderTest extends TestCase
             ->with(sprintf('/accounts/{accountSlug}/invoices/%d/payments/%d.json', $id, $paymentId))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InvoiceProvider($dispatcher);
+        $provider = new InvoicesProvider($dispatcher);
         $response = $provider->deletePayment($id, $paymentId);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -162,7 +162,7 @@ class InvoiceProviderTest extends TestCase
             ->with(sprintf('/accounts/{accountSlug}/invoices/%d/attachments/%d/download', $id, $paymentId))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InvoiceProvider($dispatcher);
+        $provider = new InvoicesProvider($dispatcher);
         $response = $provider->getAttachment($id, $paymentId);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -178,7 +178,7 @@ class InvoiceProviderTest extends TestCase
             ->with(sprintf('/accounts/{accountSlug}/invoices/%d/fire.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InvoiceProvider($dispatcher);
+        $provider = new InvoicesProvider($dispatcher);
         $response = $provider->fireAction($id, 'pay');
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -194,7 +194,7 @@ class InvoiceProviderTest extends TestCase
             ->with(sprintf('/accounts/{accountSlug}/invoices/%d/message.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InvoiceProvider($dispatcher);
+        $provider = new InvoicesProvider($dispatcher);
         $response = $provider->createMessage($id, [
             'email' => 'test@example.org',
             'subject' => 'Hello',
@@ -215,7 +215,7 @@ class InvoiceProviderTest extends TestCase
             ->with(sprintf('/accounts/{accountSlug}/invoices/%d/payments/%d/create_tax_document.json', $id, $paymentId))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InvoiceProvider($dispatcher);
+        $provider = new InvoicesProvider($dispatcher);
         $response = $provider->createTaxDocument($id, $paymentId, ['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }

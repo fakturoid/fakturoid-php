@@ -3,10 +3,10 @@
 namespace Fakturoid\Tests;
 
 use Fakturoid\Dispatcher;
-use Fakturoid\Provider\UserProvider;
+use Fakturoid\Provider\UsersProvider;
 use Fakturoid\Response;
 
-class UserProviderTest extends \Fakturoid\Tests\TestCase
+class UsersProviderTest extends \Fakturoid\Tests\TestCase
 {
     public function testGetCurrentUser(): void
     {
@@ -26,7 +26,7 @@ class UserProviderTest extends \Fakturoid\Tests\TestCase
             'full_name' => 'Fakturoid'
         ];
 
-        $provider = new UserProvider($dispatcher);
+        $provider = new UsersProvider($dispatcher);
         $response = $provider->getCurrentUser();
         $this->assertEquals($data, $response->getBody());
         $this->assertEquals((array) $data, $response->getBody(true));
@@ -52,7 +52,7 @@ class UserProviderTest extends \Fakturoid\Tests\TestCase
                 'full_name' => 'Fakturoid'
             ]
         ];
-        $provider = new UserProvider($dispatcher);
+        $provider = new UsersProvider($dispatcher);
         $response = $provider->list();
         $this->assertEquals($data, $response->getBody());
         $this->assertEquals([(array) $data[0]], $response->getBody(true));
