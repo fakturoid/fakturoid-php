@@ -39,10 +39,10 @@ New account just for testing API and using separate user (created via "Settings 
 
 ## Versions
 
-| State  | Version | Branch | API | PHP       |
-|--------|---------|--------|-----|-----------|
-| stable | `^2.0`  | `v2`   | `3` | `>=8.1`   |
-| stable | `^1.0`  | `v1`   | `2` | `>=5.3.0` |
+| Lib. version | Fakturoid API | PHP       |
+|--------------|---------------|-----------|
+| `2.x`        | `v3`          | `>=8.1`   |
+| `1.x`        | `v2`          | `>=5.3.0` |
 
 ## Installation
 The recommended way to install is through Composer:
