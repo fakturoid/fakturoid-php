@@ -1,33 +1,69 @@
 {
-    "name": "fakturoid/fakturoid-php",
-    "description": "Fakturoid PHP library",
-    "keywords": ["fakturoid", "api", "invoice"],
-    "homepage": "https://www.fakturoid.cz/api",
-    "type": "library",
-    "license": "MIT",
-    "authors": [{
-        "name": "Fakturoid and contributors",
-        "homepage": "https://www.fakturoid.cz"
-    }],
-    "support": {
-        "email": "podpora@fakturoid.cz"
-    },
-    "require": {
-        "php": ">=5.3.0",
-        "ext-curl": "*",
-        "ext-json": "*"
-    },
-    "require-dev": {
-        "ext-dom": "*",
-        "ext-mbstring": "*",
-        "phpunit/phpunit": "^9.5",
-        "squizlabs/php_codesniffer": "^3.7"
-    },
-    "autoload": {
-        "classmap": ["lib/"]
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "lint": "vendor/bin/phpcs --standard=PSR2 lib"
+  "name": "fakturoid/fakturoid-php",
+  "description": "Fakturoid PHP library",
+  "keywords": [
+    "fakturoid",
+    "api",
+    "invoice"
+  ],
+  "homepage": "https://www.fakturoid.cz/api",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Fakturoid and contributors",
+      "homepage": "https://www.fakturoid.cz"
     }
+  ],
+  "support": {
+    "email": "podpora@fakturoid.cz"
+  },
+  "require": {
+    "php": ">=8.1",
+    "ext-json": "*",
+    "psr/http-client": "^1.0",
+    "nyholm/psr7": "^1.8"
+  },
+  "require-dev": {
+    "ext-dom": "*",
+    "ext-mbstring": "*",
+    "phpstan/phpstan": "^1.10",
+    "phpunit/phpunit": "^10.5",
+    "rector/rector": "^0.19.2",
+    "squizlabs/php_codesniffer": "^3.7",
+    "guzzlehttp/guzzle": "^7.8"
+  },
+  "suggest": {
+    "guzzlehttp/guzzle": "for usage with guzzle",
+    "symfony/http-client": "for usage with symfony"
+  },
+  "autoload": {
+    "psr-4": {
+      "Fakturoid\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Fakturoid\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test:phpunit": "php -d xdebug.mode=off vendor/phpunit/phpunit/phpunit",
+    "coverage:phpunit": "php -d xdebug.mode=coverage -d memory_limit=512M vendor/phpunit/phpunit/phpunit --coverage-html=coverage --path-coverage",
+    "check:phpstan": "php vendor/bin/phpstan analyse -c phpstan.neon",
+    "check:rector": "php vendor/bin/rector process src tests --dry-run",
+    "check:cs": "phpcs --standard=phpcs.xml",
+    "fix:cs": "phpcbf --standard=phpcs.xml",
+    "fix:rector": "php vendor/bin/rector process src tests",
+    "fix:all": [
+      "@fix:rector",
+      "@fix:cs"
+    ],
+    "check:all": [
+      "@check:phpstan",
+      "@check:rector",
+      "@check:cs",
+      "@test:phpunit"
+    ]
+  }
 }

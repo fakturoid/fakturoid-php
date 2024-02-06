@@ -1,0 +1,101 @@
+name: "main"
+
+on:
+  pull_request:
+    paths:
+      - src/**/*
+      - tests/**/*
+      - composer.json
+      - phpstan.neon
+      - phpunit.xml
+      - rector.php
+  push:
+    paths:
+      - src/**/*
+      - tests/**/*
+      - composer.json
+      - phpstan.neon
+      - phpunit.xml
+      - rector.php
+  schedule:
+    - cron: "0 7 * * *"
+
+env:
+  minimal-php-version: "8.1"
+  extensions: "curl json"
+  composer-install-args: "--no-progress --no-interaction --prefer-dist --no-scripts"
+
+jobs:
+  composer:
+    runs-on: ubuntu-latest
+    name: "Composer Check"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.minimal-php-version }}
+          coverage: none
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+  code-style:
+    runs-on: ubuntu-latest
+    needs: composer
+    name: "Code style"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.minimal-php-version }}
+          coverage: none
+
+      - uses: php-actions/composer@v6
+        with:
+          php_version: ${{ env.minimal-php-version }}
+          args: "${{ env.composer-install-args }}"
+      - run: composer check:cs
+
+  rector:
+    runs-on: ubuntu-latest
+    needs: composer
+    name: "Rector"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.minimal-php-version }}
+          coverage: none
+
+      - uses: php-actions/composer@v6
+        with:
+          php_version: ${{ env.minimal-php-version }}
+          args: "${{ env.composer-install-args }}"
+      - run: composer check:rector
+
+  check:
+    runs-on: ubuntu-latest
+    needs: composer
+    strategy:
+      matrix:
+        php-versions: [ '8.1', '8.2', '8.3' ]
+      fail-fast: false
+    name: "Check by PHP version"
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: none
+
+      - uses: php-actions/composer@v6
+        with:
+          php_version: ${{ matrix.php-versions }}
+          args: "${{ env.composer-install-args }}"
+
+      - name: PHPStan Static Analysis
+        run: composer check:phpstan
+
+      - name: PHPUnit
+        run: composer test:phpunit

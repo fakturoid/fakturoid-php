@@ -1,3 +1,10 @@
+## 2.0.0
+- Add support for OAuth 2.0 authentication.
+- Require PHP 8.1 or higher.
+- Explode Client to separate providers.
+- Add support for PSR-17 and PSR-18.
+- Updating the entire library to support [API v3](https://www.fakturoid.cz/api/v3).
+
 ## 1.3.0
 
 - Add support for inventory items and moves.

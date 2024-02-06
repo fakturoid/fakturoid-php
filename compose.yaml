@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  php:
+    working_dir: /srv
+    command: tail -f /dev/null
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - .:/srv

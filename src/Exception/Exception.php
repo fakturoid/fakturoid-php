@@ -1,6 +1,6 @@
 <?php
 
-namespace Fakturoid;
+namespace Fakturoid\Exception;
 
 class Exception extends \Exception
 {
