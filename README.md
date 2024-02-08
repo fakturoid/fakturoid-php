@@ -138,10 +138,10 @@ $fManager->setCredentialsCallback(new class implements \Fakturoid\Auth\Credentia
 ```php
 $fManager = new \Fakturoid\FakturoidManager(
     new ClientInterface(), // PSR-18 client
-    '{fakturoid-account-slug}',
     '{fakturoid-client-id}',
     '{fakturoid-client-secret}',
     'PHPlib <your@email.cz>'
+    '{fakturoid-account-slug}',
 );
 $fManager->authClientCredentials();
 $fManager->getBankAccountsProvider()->list();
