@@ -109,13 +109,11 @@ class AuthProvider
     public function oauth2Refresh(): ?Credentials
     {
         if ($this->credentials !== null) {
+            $refreshToken = $this->credentials->getRefreshToken();
             try {
                 $json = $this->makeRequest([
                     'grant_type' => 'refresh_token',
-                    'client_id' => $this->clientId,
-                    'client_secret' => $this->clientSecret,
-                    'refresh_token' => $this->credentials->getRefreshToken(),
-                    'redirect_uri' => $this->redirectUri,
+                    'refresh_token' => $refreshToken
                 ]);
             } catch (InvalidDataException | ConnectionFailedException $exception) {
                 throw new AuthorizationFailedException(
@@ -133,9 +131,9 @@ class AuthProvider
 
             $authType = AuthTypeEnum::AUTHORIZATION_CODE_FLOW;
             $this->checkResponseWithAccessToken($json, $authType);
-            /** @var array{'refresh_token'?: string|null, 'access_token': string, 'expires_in': int} $json */
+            /** @var array{'access_token': string, 'token_type': string, 'expires_in': int} $json */
             $this->credentials = new Credentials(
-                $json['refresh_token'] ?? null,
+                $refreshToken,
                 $json['access_token'],
                 (new \DateTimeImmutable())->modify('+ ' . ($json['expires_in'] - 10) . ' seconds'),
                 $authType
