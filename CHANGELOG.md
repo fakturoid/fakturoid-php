@@ -1,3 +1,6 @@
+## 2.0.1
+- Fix refreshing oauth access token
+
 ## 2.0.0
 - Add support for OAuth 2.0 authentication.
 - Require PHP 8.1 or higher.
