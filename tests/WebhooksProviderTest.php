@@ -3,10 +3,10 @@
 namespace Fakturoid\Tests;
 
 use Fakturoid\Dispatcher;
-use Fakturoid\Provider\WebhookProvider;
+use Fakturoid\Provider\WebhooksProvider;
 use Fakturoid\Response;
 
-class WebhookProviderTest extends \Fakturoid\Tests\TestCase
+class WebhooksProviderTest extends \Fakturoid\Tests\TestCase
 {
     public function testList(): void
     {
@@ -18,7 +18,7 @@ class WebhookProviderTest extends \Fakturoid\Tests\TestCase
             ->with('/accounts/{accountSlug}/webhooks.json', ['page' => 1])
             ->willReturn(new Response($responseInterface));
 
-        $provider = new WebhookProvider($dispatcher);
+        $provider = new WebhooksProvider($dispatcher);
         $response = $provider->list(['page' => 1]);
         $this->assertEquals([], $response->getBody(true));
     }
@@ -34,7 +34,7 @@ class WebhookProviderTest extends \Fakturoid\Tests\TestCase
             ->with(sprintf('/accounts/{accountSlug}/webhooks/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new WebhookProvider($dispatcher);
+        $provider = new WebhooksProvider($dispatcher);
         $response = $provider->get($id);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -50,7 +50,7 @@ class WebhookProviderTest extends \Fakturoid\Tests\TestCase
             ->with(sprintf('/accounts/{accountSlug}/webhooks/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new WebhookProvider($dispatcher);
+        $provider = new WebhooksProvider($dispatcher);
         $response = $provider->delete($id);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -66,7 +66,7 @@ class WebhookProviderTest extends \Fakturoid\Tests\TestCase
             ->with(sprintf('/accounts/{accountSlug}/webhooks/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new WebhookProvider($dispatcher);
+        $provider = new WebhooksProvider($dispatcher);
         $response = $provider->update($id, ['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -81,7 +81,7 @@ class WebhookProviderTest extends \Fakturoid\Tests\TestCase
             ->with('/accounts/{accountSlug}/webhooks.json')
             ->willReturn(new Response($responseInterface));
 
-        $provider = new WebhookProvider($dispatcher);
+        $provider = new WebhooksProvider($dispatcher);
         $response = $provider->create(['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
