@@ -1,3 +1,6 @@
+## 2.1.0
+- Add support for [Webhooks](https://www.fakturoid.cz/api/v3/webhooks)
+
 ## 2.0.1
 - Fix refreshing oauth access token
 

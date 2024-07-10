@@ -21,6 +21,7 @@ use Fakturoid\Provider\RecurringGeneratorsProvider;
 use Fakturoid\Provider\SubjectsProvider;
 use Fakturoid\Provider\TodosProvider;
 use Fakturoid\Provider\UsersProvider;
+use Fakturoid\Provider\WebhookProvider;
 use Psr\Http\Client\ClientInterface;
 
 class FakturoidManager
@@ -41,6 +42,7 @@ class FakturoidManager
     private readonly SubjectsProvider $subjectsProvider;
     private readonly TodosProvider $todosProvider;
     private readonly UsersProvider $usersProvider;
+    private readonly WebhookProvider $webhookProvider;
 
     public function __construct(
         ClientInterface $client,
@@ -67,6 +69,7 @@ class FakturoidManager
         $this->subjectsProvider = new SubjectsProvider($this->dispatcher);
         $this->todosProvider = new TodosProvider($this->dispatcher);
         $this->usersProvider = new UsersProvider($this->dispatcher);
+        $this->webhookProvider = new WebhookProvider($this->dispatcher);
     }
 
     public function setAccountSlug(string $companySlug): void
@@ -189,5 +192,10 @@ class FakturoidManager
     public function getUsersProvider(): UsersProvider
     {
         return $this->usersProvider;
+    }
+
+    public function getWebhookProvider(): WebhookProvider
+    {
+        return $this->webhookProvider;
     }
 }
