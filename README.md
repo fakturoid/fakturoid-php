@@ -123,7 +123,7 @@ $credentials = new \Fakturoid\Auth\Credentials(
     (new DateTimeImmutable())->modify('-2 minutes'),
     \Fakturoid\Enum\AuthTypeEnum::AUTHORIZATION_CODE_FLOW // or \Fakturoid\Enum\AuthTypeEnum:CLIENT_CREDENTIALS_CODE_FLOW
 );
-    
+
 $fManager->getAuthProvider()->setCredentials($credentials);
 $fManager->setCredentialsCallback(new class implements \Fakturoid\Auth\CredentialCallback {
     public function __invoke(?\Fakturoid\Auth\Credentials $credentials = null): void
@@ -146,7 +146,7 @@ $fManager = new \Fakturoid\FakturoidManager(
 $fManager->authClientCredentials();
 $fManager->getBankAccountsProvider()->list();
 
-// switch account and company    
+// switch account and company
 $fManager->setAccountSlug('{fakturoid-account-slug-another}');
 $fManager->getBankAccountsProvider()->list();
 ```
@@ -177,15 +177,14 @@ $lines    = [['name' => 'Big sale', 'quantity' => 1, 'unit_price' => 1000]];
 $response = $fManager->getInvoicesProvider()->create(['subject_id' => $subject->id, 'lines' => $lines]);
 $invoice  = $response->getBody();
 
-// send created invoice
-$fManager->getInvoicesProvider()->fireAction($invoice->id, 'deliver');
-
 // send by mail
 $fManager->getInvoicesProvider()->createMessage($invoice->id, ['email' => 'aloha@pokus.cz']);
 
 // to mark invoice as paid and send thank you email
 $fManager->getInvoicesProvider()->createPayment($invoice->id, ['paid_on' => (new \DateTime())->format('Y-m-d'), 'send_thank_you_email' => true]);
 
+// lock invoice (other fire actions are described in the API documentation)
+$fManager->getInvoicesProvider()->fireAction($invoice->id, 'lock');
 ```
 
 ### Downloading an invoice PDF
