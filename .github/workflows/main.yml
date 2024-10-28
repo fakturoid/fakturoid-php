@@ -54,10 +54,9 @@ jobs:
           php-version: ${{ env.minimal-php-version }}
           coverage: none
 
-      - uses: php-actions/composer@v6
-        with:
-          php_version: ${{ env.minimal-php-version }}
-          args: "${{ env.composer-install-args }}"
+      - name: Composer install
+        run: composer install ${{ env.composer-install-args }}
+
       - run: composer check:cs
 
   rector:
@@ -71,10 +70,9 @@ jobs:
           php-version: ${{ env.minimal-php-version }}
           coverage: none
 
-      - uses: php-actions/composer@v6
-        with:
-          php_version: ${{ env.minimal-php-version }}
-          args: "${{ env.composer-install-args }}"
+      - name: Composer install
+        run: composer install ${{ env.composer-install-args }}
+
       - run: composer check:rector
 
   check:
@@ -93,10 +91,8 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           coverage: none
 
-      - uses: php-actions/composer@v6
-        with:
-          php_version: ${{ matrix.php-versions }}
-          args: "${{ env.composer-install-args }}"
+      - name: Composer install
+        run: composer install ${{ env.composer-install-args }}
 
       - name: PHPStan Static Analysis
         run: composer check:phpstan
