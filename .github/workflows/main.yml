@@ -9,6 +9,7 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
+      - .github/workflows/main.yml
       - src/**/*
       - tests/**/*
       - composer.json
@@ -17,6 +18,7 @@ on:
       - rector.php
   push:
     paths:
+      - .github/workflows/main.yml
       - src/**/*
       - tests/**/*
       - composer.json
