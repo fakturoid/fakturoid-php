@@ -114,7 +114,7 @@ class SubjectsProviderTest extends TestCase
 
             $this->assertEquals(['data' => 'test@fakturoid.cz'], $response->getBody(true));
         } finally {
-            restore_error_handler(); // Odstranění chybového handleru
+            restore_error_handler();
         }
     }
 

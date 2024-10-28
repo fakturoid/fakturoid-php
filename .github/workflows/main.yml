@@ -27,7 +27,7 @@ on:
       - rector.php
 
 env:
-  minimal-php-version: "8.1"
+  minimal-php-version: "8.2"
   extensions: "curl json"
   composer-install-args: "--no-progress --no-interaction --prefer-dist --no-scripts"
 
@@ -82,7 +82,7 @@ jobs:
     needs: composer
     strategy:
       matrix:
-        php-versions: [ '8.1', '8.2', '8.3', '8.4', '8.5' ]
+        php-versions: [ '8.2', '8.3', '8.4', '8.5' ]
       fail-fast: false
     name: "Check by PHP version"
 

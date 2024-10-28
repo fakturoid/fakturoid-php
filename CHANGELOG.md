@@ -1,3 +1,6 @@
+## 3.0.0
+- Remove support of PHP 8.1
+
 ## 2.1.0
 - Add support for [Webhooks](https://www.fakturoid.cz/api/v3/webhooks)
 
