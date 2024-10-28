@@ -31,7 +31,7 @@ class AuthProvider
 
     public function auth(
         AuthTypeEnum $authType = AuthTypeEnum::AUTHORIZATION_CODE_FLOW,
-        Credentials $credentials = null
+        ?Credentials $credentials = null
     ): ?Credentials {
         $this->credentials = $credentials;
         return match ($authType) {
