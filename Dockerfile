@@ -1,4 +1,4 @@
-ARG PHP_VERSION=8.1
+ARG PHP_VERSION=8.2
 FROM composer:2 AS composer
 
 FROM php:${PHP_VERSION}

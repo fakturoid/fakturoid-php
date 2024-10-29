@@ -41,6 +41,7 @@ New account just for testing API and using separate user (created via "Settings 
 
 | Lib. version | Fakturoid API | PHP       |
 |--------------|---------------|-----------|
+| `3.x`        | `v3`          | `>=8.2`   |
 | `2.x`        | `v3`          | `>=8.1`   |
 | `1.x`        | `v2`          | `>=5.3.0` |
 
@@ -51,7 +52,7 @@ The recommended way to install is through Composer:
 composer require fakturoid/fakturoid-php
 ```
 
-Library requires PHP 8.1 (or later) and `ext-json`, `nyholm/psr7` and `psr/http-client` extensions.
+Library requires PHP 8.2 (or later) and `ext-json`, `nyholm/psr7` and `psr/http-client` extensions.
 
 ## Authorization by OAuth 2.0
 
