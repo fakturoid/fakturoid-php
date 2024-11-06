@@ -4,6 +4,8 @@ namespace Fakturoid;
 
 interface DispatcherInterface
 {
+    public function setAccountSlug(string $accountSlug): void;
+
     /**
      * @param array<string, string> $queryParams
      */
