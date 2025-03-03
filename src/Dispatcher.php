@@ -17,14 +17,23 @@ use Psr\Http\Client\ClientInterface;
 
 class Dispatcher implements DispatcherInterface
 {
-    final public const BASE_URL = 'https://app.fakturoid.cz/api/v3';
+    public const BASE_URL = 'https://app.fakturoid.cz/api/v3';
+
+    private string $userAgent;
+    private AuthProvider $authorization;
+    private ClientInterface $client;
+    private ?string $accountSlug;
 
     public function __construct(
-        private readonly string $userAgent,
-        private readonly AuthProvider $authorization,
-        private readonly ClientInterface $client,
-        private ?string $accountSlug = null
+        string $userAgent,
+        AuthProvider $authorization,
+        ClientInterface $client,
+        ?string $accountSlug = null
     ) {
+        $this->userAgent = $userAgent;
+        $this->authorization = $authorization;
+        $this->client = $client;
+        $this->accountSlug = $accountSlug;
     }
 
     public function setAccountSlug(string $accountSlug): void
@@ -67,7 +76,7 @@ class Dispatcher implements DispatcherInterface
      */
     private function dispatch(string $path, array $options): Response
     {
-        if (str_contains($path, '{accountSlug}') && $this->accountSlug === null) {
+        if (strpos($path, '{accountSlug}') !== false && $this->accountSlug === null) {
             throw new Exception('Account slug is not set. You must set it before calling this method.');
         }
         $this->authorization->reAuth();

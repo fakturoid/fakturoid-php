@@ -8,10 +8,10 @@ use Psr\Http\Message\ResponseInterface;
 
 class Response
 {
-    private readonly int $statusCode;
+    private int $statusCode;
     /** @var array<string, mixed> */
-    private readonly array $headers;
-    private readonly string $body;
+    private array $headers;
+    private string $body;
 
     public function __construct(ResponseInterface $response)
     {
@@ -76,6 +76,6 @@ class Response
     private function isJson(): bool
     {
         $contentType = $this->getHeader('Content-Type');
-        return $contentType !== null && str_contains($contentType, 'application/json');
+        return $contentType !== null && (strpos($contentType, 'application/json') !== false);
     }
 }

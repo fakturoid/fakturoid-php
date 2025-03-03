@@ -7,9 +7,12 @@ use Fakturoid\Response;
 
 final class WebhooksProvider extends Provider
 {
+    private DispatcherInterface $dispatcher;
+
     public function __construct(
-        private readonly DispatcherInterface $dispatcher
+        DispatcherInterface $dispatcher
     ) {
+        $this->dispatcher = $dispatcher;
     }
 
     /** @param array{'page'?: int} $params */

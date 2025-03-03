@@ -9,11 +9,16 @@ use Throwable;
 
 class RequestException extends Exception implements RequestExceptionInterface
 {
+    private RequestInterface $request;
+    private ResponseInterface $response;
+
     public function __construct(
-        private readonly RequestInterface $request,
-        private readonly ResponseInterface $response,
+        RequestInterface $request,
+        ResponseInterface $response,
         ?Throwable $previous = null
     ) {
+        $this->request = $request;
+        $this->response = $response;
         parent::__construct($response->getReasonPhrase(), $response->getStatusCode(), $previous);
     }
 

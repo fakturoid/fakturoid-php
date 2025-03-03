@@ -7,9 +7,12 @@ use Fakturoid\Response;
 
 final class InventoryItemsProvider extends Provider
 {
+    private DispatcherInterface $dispatcher;
+
     public function __construct(
-        private readonly DispatcherInterface $dispatcher
+        DispatcherInterface $dispatcher
     ) {
+        $this->dispatcher = $dispatcher;
     }
 
     /**

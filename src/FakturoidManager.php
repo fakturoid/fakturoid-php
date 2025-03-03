@@ -26,28 +26,28 @@ use Psr\Http\Client\ClientInterface;
 
 class FakturoidManager
 {
-    private readonly AuthProvider $authProvider;
-    private readonly Dispatcher $dispatcher;
-    private readonly AccountProvider $accountProvider;
-    private readonly BankAccountsProvider $bankAccountsProvider;
-    private readonly EventsProvider $eventsProvider;
-    private readonly ExpensesProvider $expensesProvider;
-    private readonly GeneratorsProvider $generatorsProvider;
-    private readonly InboxFilesProvider $inboxFilesProvider;
-    private readonly InventoryItemsProvider $inventoryItemsProvider;
-    private readonly InventoryMovesProvider $inventoryMovesProvider;
-    private readonly InvoicesProvider $invoicesProvider;
-    private readonly NumberFormatsProvider $numberFormatsProvider;
-    private readonly RecurringGeneratorsProvider $recurringGeneratorsProvider;
-    private readonly SubjectsProvider $subjectsProvider;
-    private readonly TodosProvider $todosProvider;
-    private readonly UsersProvider $usersProvider;
-    private readonly WebhooksProvider $webhooksProvider;
+    private AuthProvider $authProvider;
+    private Dispatcher $dispatcher;
+    private AccountProvider $accountProvider;
+    private BankAccountsProvider $bankAccountsProvider;
+    private EventsProvider $eventsProvider;
+    private ExpensesProvider $expensesProvider;
+    private GeneratorsProvider $generatorsProvider;
+    private InboxFilesProvider $inboxFilesProvider;
+    private InventoryItemsProvider $inventoryItemsProvider;
+    private InventoryMovesProvider $inventoryMovesProvider;
+    private InvoicesProvider $invoicesProvider;
+    private NumberFormatsProvider $numberFormatsProvider;
+    private RecurringGeneratorsProvider $recurringGeneratorsProvider;
+    private SubjectsProvider $subjectsProvider;
+    private TodosProvider $todosProvider;
+    private UsersProvider $usersProvider;
+    private WebhooksProvider $webhooksProvider;
 
     public function __construct(
         ClientInterface $client,
-        #[\SensitiveParameter] string $clientId,
-        #[\SensitiveParameter] string $clientSecret,
+        string $clientId,
+        string $clientSecret,
         string $userAgent,
         ?string $accountSlug = null,
         ?string $redirectUri = null

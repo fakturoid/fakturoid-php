@@ -2,8 +2,8 @@
 
 namespace Fakturoid\Enum;
 
-enum AuthTypeEnum: string
+class AuthTypeEnum
 {
-    case AUTHORIZATION_CODE_FLOW = 'authorization_code';
-    case CLIENT_CREDENTIALS_CODE_FLOW = 'client_credentials';
+    public const AUTHORIZATION_CODE_FLOW = 'authorization_code';
+    public const CLIENT_CREDENTIALS_CODE_FLOW = 'client_credentials';
 }
