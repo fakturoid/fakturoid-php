@@ -78,7 +78,7 @@ Authorization using OAuth takes place in several steps. We use data obtained fro
 First, we offer the user a URL address where he enters his login information. We obtain this using the following method:
 ```php
 $fManager = new \Fakturoid\FakturoidManager(
-    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client above
     '{fakturoid-client-id}',
     '{fakturoid-client-secret}',
     null,
@@ -100,7 +100,7 @@ echo $credentials->toJson();
 
 ```php
 $fManager = new \Fakturoid\FakturoidManager(
-    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client above
     '{fakturoid-client-id}',
     '{fakturoid-client-secret}'
 );
@@ -125,7 +125,7 @@ $fManager->setCredentialsCallback(new class implements \Fakturoid\Auth\Credentia
 If you run a multi-tenant application or an application that processes documents in parallel, you need to set Credentials correctly. Each time a new access token is obtained, the previous one is invalidated. For these needs there is `AuthProvider::setCredentials()` and also `CredentialCallback`.
 ```php
 $fManager = new \Fakturoid\FakturoidManager(
-    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client above
     '{fakturoid-client-id}',
     '{fakturoid-client-secret}'
 );
@@ -151,7 +151,7 @@ $fManager->setCredentialsCallback(new class implements \Fakturoid\Auth\Credentia
 ```php
 
 $fManager = new \Fakturoid\FakturoidManager(
-    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client above
     '{fakturoid-client-id}',
     '{fakturoid-client-secret}',
     '{fakturoid-account-slug}',
@@ -168,7 +168,7 @@ $fManager->getBankAccountsProvider()->list();
 ```php
 require __DIR__ . '/vendor/autoload.php';
 $fManager = new \Fakturoid\FakturoidManager(
-    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client above
     '{fakturoid-client-id}',
     '{fakturoid-client-secret}'
 );
