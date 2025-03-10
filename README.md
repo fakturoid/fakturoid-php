@@ -41,6 +41,7 @@ New account just for testing API and using separate user (created via "Settings 
 
 | Lib. version | Fakturoid API | PHP       |
 |--------------|---------------|-----------|
+| `4.x`        | `v3`          | `>=8.2`   |
 | `3.x`        | `v3`          | `>=8.2`   |
 | `2.x`        | `v3`          | `>=8.1`   |
 | `1.x`        | `v2`          | `>=5.3.0` |
@@ -54,6 +55,20 @@ composer require fakturoid/fakturoid-php
 
 Library requires PHP 8.2 (or later) and `ext-json`, `nyholm/psr7` and `psr/http-client` extensions.
 
+## User agent and HTTP client
+You need to create your own client that implements [`Psr\Http\Client\ClientInterface`](https://www.php-fig.org/psr/psr-18/) or you can use `symfony/http-client`, `guzzlehttp/guzzle` or [other](https://packagist.org/providers/psr/http-client-implementation). And you also need to set a default header value for this client, where you need to [specify User-Agent](https://www.fakturoid.cz/api/v3#identification).
+
+### Creating a client using Guzzle
+```php
+new \GuzzleHttp\Client(['headers' => ['User-Agent' => 'Bar']])
+```
+
+### Create a client using Symfony
+In Symfony app you can define in [configuration](https://symfony.com/doc/current/http_client.html#headers)
+```php
+(new \Symfony\Component\HttpClient\Psr18Client())->withOptions([['headers' => ['User-Agent' => 'Bar']]))
+```
+
 ## Authorization by OAuth 2.0
 
 ### Authorization Code Flow
@@ -63,10 +78,9 @@ Authorization using OAuth takes place in several steps. We use data obtained fro
 First, we offer the user a URL address where he enters his login information. We obtain this using the following method:
 ```php
 $fManager = new \Fakturoid\FakturoidManager(
-    new ClientInterface(), // PSR-18 client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client above
     '{fakturoid-client-id}',
     '{fakturoid-client-secret}',
-    'PHPlib <your@email.cz>',
     null,
     '{your-redirect-uri}'
 );
@@ -86,10 +100,9 @@ echo $credentials->toJson();
 
 ```php
 $fManager = new \Fakturoid\FakturoidManager(
-    new ClientInterface(), // PSR-18 client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client above
     '{fakturoid-client-id}',
-    '{fakturoid-client-secret}',
-    'PHPlib <your@email.cz>'
+    '{fakturoid-client-secret}'
 );
 $fManager->authClientCredentials();
 ```
@@ -112,10 +125,9 @@ $fManager->setCredentialsCallback(new class implements \Fakturoid\Auth\Credentia
 If you run a multi-tenant application or an application that processes documents in parallel, you need to set Credentials correctly. Each time a new access token is obtained, the previous one is invalidated. For these needs there is `AuthProvider::setCredentials()` and also `CredentialCallback`.
 ```php
 $fManager = new \Fakturoid\FakturoidManager(
-    new ClientInterface(), // PSR-18 client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client above
     '{fakturoid-client-id}',
-    '{fakturoid-client-secret}',
-    'PHPlib <your@email.cz>'
+    '{fakturoid-client-secret}'
 );
 // restore credentials from storage
 $credentials = new \Fakturoid\Auth\Credentials(
@@ -137,11 +149,11 @@ $fManager->setCredentialsCallback(new class implements \Fakturoid\Auth\Credentia
 ### Switch account
 
 ```php
+
 $fManager = new \Fakturoid\FakturoidManager(
-    new ClientInterface(), // PSR-18 client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client above
     '{fakturoid-client-id}',
     '{fakturoid-client-secret}',
-    'PHPlib <your@email.cz>'
     '{fakturoid-account-slug}',
 );
 $fManager->authClientCredentials();
@@ -156,10 +168,9 @@ $fManager->getBankAccountsProvider()->list();
 ```php
 require __DIR__ . '/vendor/autoload.php';
 $fManager = new \Fakturoid\FakturoidManager(
-    new ClientInterface(), // PSR-18 client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client above
     '{fakturoid-client-id}',
-    '{fakturoid-client-secret}',
-    'PHPlib <your@email.cz>'
+    '{fakturoid-client-secret}'
 );
 $fManager->authClientCredentials();
 

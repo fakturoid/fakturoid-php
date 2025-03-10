@@ -28,7 +28,7 @@ class RequestExceptionTest extends TestCase
             ->method('getCredentials')
             ->willReturn($credentials);
 
-        $dispatcher = new Dispatcher('test', $authProvider, $client);
+        $dispatcher = new Dispatcher($authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
         $this->expectExceptionCode(404);
@@ -52,7 +52,7 @@ class RequestExceptionTest extends TestCase
             ->method('getCredentials')
             ->willReturn($credentials);
 
-        $dispatcher = new Dispatcher('test', $authProvider, $client);
+        $dispatcher = new Dispatcher($authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
         $this->expectExceptionCode(400);
@@ -76,7 +76,7 @@ class RequestExceptionTest extends TestCase
             ->method('getCredentials')
             ->willReturn($credentials);
 
-        $dispatcher = new Dispatcher('test', $authProvider, $client);
+        $dispatcher = new Dispatcher($authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
         $this->expectExceptionCode(401);
@@ -100,7 +100,7 @@ class RequestExceptionTest extends TestCase
             ->method('getCredentials')
             ->willReturn($credentials);
 
-        $dispatcher = new Dispatcher('test', $authProvider, $client);
+        $dispatcher = new Dispatcher($authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
         $this->expectExceptionCode(402);
@@ -124,7 +124,7 @@ class RequestExceptionTest extends TestCase
             ->method('getCredentials')
             ->willReturn($credentials);
 
-        $dispatcher = new Dispatcher('test', $authProvider, $client);
+        $dispatcher = new Dispatcher($authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
         $this->expectExceptionCode(403);
@@ -148,7 +148,7 @@ class RequestExceptionTest extends TestCase
             ->method('getCredentials')
             ->willReturn($credentials);
 
-        $dispatcher = new Dispatcher('test', $authProvider, $client);
+        $dispatcher = new Dispatcher($authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
         $this->expectExceptionCode(415);
@@ -172,7 +172,7 @@ class RequestExceptionTest extends TestCase
             ->method('getCredentials')
             ->willReturn($credentials);
 
-        $dispatcher = new Dispatcher('test', $authProvider, $client);
+        $dispatcher = new Dispatcher($authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
         $this->expectExceptionCode(422);
@@ -196,7 +196,7 @@ class RequestExceptionTest extends TestCase
             ->method('getCredentials')
             ->willReturn($credentials);
 
-        $dispatcher = new Dispatcher('test', $authProvider, $client);
+        $dispatcher = new Dispatcher($authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
         $this->expectExceptionCode(429);
@@ -220,7 +220,7 @@ class RequestExceptionTest extends TestCase
             ->method('getCredentials')
             ->willReturn($credentials);
 
-        $dispatcher = new Dispatcher('test', $authProvider, $client);
+        $dispatcher = new Dispatcher($authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ClientErrorException::class);
         $this->expectExceptionCode(499);
@@ -244,7 +244,7 @@ class RequestExceptionTest extends TestCase
             ->method('getCredentials')
             ->willReturn($credentials);
 
-        $dispatcher = new Dispatcher('test', $authProvider, $client);
+        $dispatcher = new Dispatcher($authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ServerErrorException::class);
         $this->expectExceptionCode(599);
@@ -268,7 +268,7 @@ class RequestExceptionTest extends TestCase
             ->method('getCredentials')
             ->willReturn($credentials);
 
-        $dispatcher = new Dispatcher('test', $authProvider, $client);
+        $dispatcher = new Dispatcher($authProvider, $client);
         $dispatcher->setAccountSlug('account-slug');
         $this->expectException(ServerErrorException::class);
         $this->expectExceptionCode(503);

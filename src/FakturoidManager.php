@@ -48,12 +48,11 @@ class FakturoidManager
         ClientInterface $client,
         #[\SensitiveParameter] string $clientId,
         #[\SensitiveParameter] string $clientSecret,
-        string $userAgent,
         ?string $accountSlug = null,
         ?string $redirectUri = null
     ) {
         $this->authProvider = new AuthProvider($clientId, $clientSecret, $redirectUri, $client);
-        $this->dispatcher = new Dispatcher($userAgent, $this->authProvider, $client, $accountSlug);
+        $this->dispatcher = new Dispatcher($this->authProvider, $client, $accountSlug);
 
         $this->accountProvider = new AccountProvider($this->dispatcher);
         $this->bankAccountsProvider = new BankAccountsProvider($this->dispatcher);
