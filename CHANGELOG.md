@@ -1,3 +1,6 @@
+## 3.0.1
+- Add user agent for `Fakturoid\Auth\AuthProvider` #43
+
 ## 3.0.0
 - Remove support of PHP 8.1
 

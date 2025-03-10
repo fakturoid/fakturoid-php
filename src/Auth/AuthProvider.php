@@ -25,7 +25,8 @@ class AuthProvider
         #[\SensitiveParameter] private readonly string $clientId,
         #[\SensitiveParameter] private readonly string $clientSecret,
         private readonly ?string $redirectUri,
-        private readonly ClientInterface $client
+        private readonly ClientInterface $client,
+        private readonly ?string $userAgent = null
     ) {
     }
 
@@ -243,6 +244,22 @@ class AuthProvider
     }
 
     /**
+     * @return array<string, string>
+     */
+    private function getHeaders(): array
+    {
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode(sprintf('%s:%s', $this->clientId, $this->clientSecret))
+        ];
+        if ($this->userAgent !== null) {
+            $headers['User-Agent'] = $this->userAgent;
+        }
+        return $headers;
+    }
+
+    /**
      * @param array<string, mixed> $body
      * @return array{'refresh_token'?: string|null, 'access_token': string, 'expires_in': int}|array{'error'?:string}
      * @throws ConnectionFailedException|InvalidDataException|RequestException
@@ -253,11 +270,7 @@ class AuthProvider
             $request = new Request(
                 'POST',
                 sprintf('%s/oauth/token', Dispatcher::BASE_URL),
-                [
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Basic ' . base64_encode(sprintf('%s:%s', $this->clientId, $this->clientSecret))
-                ],
+                $this->getHeaders(),
                 json_encode($body, JSON_THROW_ON_ERROR)
             );
             $response = $this->client->sendRequest($request);

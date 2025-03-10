@@ -18,7 +18,7 @@ class AuthProviderTest extends TestCase
     public function testAuthenticationUrl(): void
     {
         $requester = $this->createMock(ClientInterface::class);
-        $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $requester);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $requester, 'Tester');
 
         $baseUrl = 'https://app.fakturoid.cz/api/v3/oauth';
         $expectedUrl = $baseUrl . '?client_id=clientId&redirect_uri=redirectUri&response_type=code&state=c';
@@ -31,7 +31,7 @@ class AuthProviderTest extends TestCase
     public function testAuthenticationUrlWithoutState(): void
     {
         $requester = $this->createMock(ClientInterface::class);
-        $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $requester);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $requester, 'Tester');
 
         $this->assertEquals(
             'https://app.fakturoid.cz/api/v3/oauth?client_id=clientId&redirect_uri=redirectUri&response_type=code',
@@ -51,7 +51,7 @@ class AuthProviderTest extends TestCase
         $credentials->method('getRefreshToken')
             ->willReturn(null);
 
-        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $requester);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $requester, 'Tester');
         $authProvider->setCredentials($credentials);
         $this->expectException(AuthorizationFailedException::class);
         $this->expectExceptionMessage('Invalid credentials');
@@ -62,7 +62,7 @@ class AuthProviderTest extends TestCase
     {
         $requester = $this->createMock(ClientInterface::class);
 
-        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $requester);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $requester, 'Tester');
         $this->expectException(AuthorizationFailedException::class);
         $this->expectExceptionMessage('Invalid credentials');
         $authProvider->reAuth();
@@ -97,7 +97,7 @@ class AuthProviderTest extends TestCase
             ->method('isExpired')
             ->willReturn(true);
 
-        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client, 'Tester');
 
         $credentialCallback = $this->createMock(CredentialCallback::class);
         $credentialCallback->expects($this->once())
@@ -136,7 +136,7 @@ class AuthProviderTest extends TestCase
             ->method('isExpired')
             ->willReturn(true);
 
-        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client, 'Tester');
 
         $credentialCallback = $this->createMock(CredentialCallback::class);
         $credentialCallback->expects($this->once())
@@ -175,7 +175,7 @@ class AuthProviderTest extends TestCase
             ->method('isExpired')
             ->willReturn(true);
 
-        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client, 'Tester');
         $this->expectException(AuthorizationFailedException::class);
         $this->expectExceptionMessage('An error occurred while authorization_code flow. Message:');
         $authProvider->setCredentials($credentials);
@@ -211,7 +211,7 @@ class AuthProviderTest extends TestCase
             ->method('isExpired')
             ->willReturn(true);
 
-        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client, 'Tester');
         $this->expectException(AuthorizationFailedException::class);
         $this->expectExceptionMessage('An error occurred while authorization_code flow. Message:');
         $authProvider->setCredentials($credentials);
@@ -230,7 +230,7 @@ class AuthProviderTest extends TestCase
         $client->expects($this->once())
             ->method('sendRequest')
             ->willReturn($responseInterface);
-        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client, 'Tester');
 
         $credentialCallback = $this->createMock(CredentialCallback::class);
         $credentialCallback->expects($this->once())
@@ -255,7 +255,7 @@ class AuthProviderTest extends TestCase
         $client->expects($this->once())
             ->method('sendRequest')
             ->willReturn($responseInterface);
-        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client, 'Tester');
 
         $this->expectException(AuthorizationFailedException::class);
         $this->expectExceptionMessage('An error occurred while client_credentials flow. Message: invalid response');
@@ -265,7 +265,7 @@ class AuthProviderTest extends TestCase
     public function testAuthorizationCodeWithoutCode(): void
     {
         $client = $this->createMock(ClientInterface::class);
-        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client, 'Tester');
 
         $this->expectException(AuthorizationFailedException::class);
         $this->expectExceptionMessage('Load authentication screen first.');
@@ -296,7 +296,7 @@ class AuthProviderTest extends TestCase
             ->method('getRefreshToken')
             ->willReturn('refresh_token');
 
-        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client, 'Tester');
 
         $authProvider->setCredentials($credentials);
         $this->assertTrue($authProvider->revoke());
@@ -325,7 +325,7 @@ class AuthProviderTest extends TestCase
             ->method('getRefreshToken')
             ->willReturn('refresh_token');
 
-        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client, 'Tester');
 
         $authProvider->setCredentials($credentials);
         $this->expectException(ServerErrorException::class);
@@ -355,7 +355,7 @@ class AuthProviderTest extends TestCase
             ->method('getRefreshToken')
             ->willReturn('refresh_token');
 
-        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client, 'Tester');
 
         $authProvider->setCredentials($credentials);
         $this->expectException(ClientErrorException::class);
@@ -369,7 +369,7 @@ class AuthProviderTest extends TestCase
         $credentials = $this->createMock(Credentials::class);
         $credentials->method('getAuthType')
             ->willReturn(AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW);
-        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client, 'Tester');
 
         $authProvider->setCredentials($credentials);
         $this->expectException(AuthorizationFailedException::class);
@@ -380,7 +380,7 @@ class AuthProviderTest extends TestCase
     public function testRevokeWithoutCredentials(): void
     {
         $client = $this->createMock(ClientInterface::class);
-        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client, 'Tester');
 
         $this->expectException(AuthorizationFailedException::class);
         $this->expectExceptionMessage('Load authentication screen first.');
@@ -404,7 +404,7 @@ class AuthProviderTest extends TestCase
             ->expects($this->once())
             ->method('sendRequest')
             ->willReturn($responseInterface);
-        $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $client, 'Tester');
 
         $credentialCallback = $this->createMock(CredentialCallback::class);
         $credentialCallback->expects($this->once())
@@ -433,7 +433,7 @@ class AuthProviderTest extends TestCase
             ->expects($this->once())
             ->method('sendRequest')
             ->willReturn($responseInterface);
-        $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $client, 'Tester');
         $this->expectException(AuthorizationFailedException::class);
         $this->expectExceptionMessage('An error occurred while authorization_code flow. Message:');
         $authProvider->requestCredentials('CODE');
@@ -449,7 +449,7 @@ class AuthProviderTest extends TestCase
             ->expects($this->once())
             ->method('sendRequest')
             ->willThrowException($exception);
-        $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $client, 'Tester');
         $this->expectException(AuthorizationFailedException::class);
         $this->expectExceptionMessage('An error occurred while authorization code flow. Message: ');
         $authProvider->requestCredentials('CODE');
@@ -472,7 +472,7 @@ class AuthProviderTest extends TestCase
             ->expects($this->once())
             ->method('sendRequest')
             ->willReturn($responseInterface);
-        $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $client);
+        $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $client, 'Tester');
         $authProvider->loadCode('CODE');
 
         $credentialCallback = $this->createMock(CredentialCallback::class);

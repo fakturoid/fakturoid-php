@@ -20,7 +20,7 @@ class Dispatcher implements DispatcherInterface
     final public const BASE_URL = 'https://app.fakturoid.cz/api/v3';
 
     public function __construct(
-        private readonly string $userAgent,
+        private readonly ?string $userAgent,
         private readonly AuthProvider $authorization,
         private readonly ClientInterface $client,
         private ?string $accountSlug = null
@@ -93,11 +93,7 @@ class Dispatcher implements DispatcherInterface
             $request = new Request(
                 $options['method'],
                 $url,
-                [
-                    'User-Agent' => $this->userAgent,
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $this->authorization->getCredentials()->getAccessToken()
-                ],
+                $this->getHeaders(),
                 $body
             );
             $response = $this->client->sendRequest($request);
@@ -112,5 +108,20 @@ class Dispatcher implements DispatcherInterface
             throw new ServerErrorException($request, $response);
         }
         return new Response($response);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function getHeaders(): array
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        if ($this->authorization->getCredentials() !== null) {
+            $headers['Authorization'] = 'Bearer ' . $this->authorization->getCredentials()->getAccessToken();
+        }
+        if ($this->userAgent !== null) {
+            $headers['User-Agent'] = $this->userAgent;
+        }
+        return $headers;
     }
 }

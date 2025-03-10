@@ -24,7 +24,7 @@ class RequestExceptionTest extends TestCase
         $credentials->expects($this->once())
             ->method('getAccessToken')
             ->willReturn('test');
-        $authProvider->expects($this->exactly(2))
+        $authProvider->expects($this->exactly(3))
             ->method('getCredentials')
             ->willReturn($credentials);
 
@@ -48,7 +48,7 @@ class RequestExceptionTest extends TestCase
         $credentials->expects($this->once())
             ->method('getAccessToken')
             ->willReturn('test');
-        $authProvider->expects($this->exactly(2))
+        $authProvider->expects($this->exactly(3))
             ->method('getCredentials')
             ->willReturn($credentials);
 
@@ -72,7 +72,7 @@ class RequestExceptionTest extends TestCase
         $credentials->expects($this->once())
             ->method('getAccessToken')
             ->willReturn('test');
-        $authProvider->expects($this->exactly(2))
+        $authProvider->expects($this->exactly(3))
             ->method('getCredentials')
             ->willReturn($credentials);
 
@@ -96,7 +96,7 @@ class RequestExceptionTest extends TestCase
         $credentials->expects($this->once())
             ->method('getAccessToken')
             ->willReturn('test');
-        $authProvider->expects($this->exactly(2))
+        $authProvider->expects($this->exactly(3))
             ->method('getCredentials')
             ->willReturn($credentials);
 
@@ -120,7 +120,7 @@ class RequestExceptionTest extends TestCase
         $credentials->expects($this->once())
             ->method('getAccessToken')
             ->willReturn('test');
-        $authProvider->expects($this->exactly(2))
+        $authProvider->expects($this->exactly(3))
             ->method('getCredentials')
             ->willReturn($credentials);
 
@@ -144,7 +144,7 @@ class RequestExceptionTest extends TestCase
         $credentials->expects($this->once())
             ->method('getAccessToken')
             ->willReturn('test');
-        $authProvider->expects($this->exactly(2))
+        $authProvider->expects($this->exactly(3))
             ->method('getCredentials')
             ->willReturn($credentials);
 
@@ -168,7 +168,7 @@ class RequestExceptionTest extends TestCase
         $credentials->expects($this->once())
             ->method('getAccessToken')
             ->willReturn('test');
-        $authProvider->expects($this->exactly(2))
+        $authProvider->expects($this->exactly(3))
             ->method('getCredentials')
             ->willReturn($credentials);
 
@@ -192,7 +192,7 @@ class RequestExceptionTest extends TestCase
         $credentials->expects($this->once())
             ->method('getAccessToken')
             ->willReturn('test');
-        $authProvider->expects($this->exactly(2))
+        $authProvider->expects($this->exactly(3))
             ->method('getCredentials')
             ->willReturn($credentials);
 
@@ -216,7 +216,7 @@ class RequestExceptionTest extends TestCase
         $credentials->expects($this->once())
             ->method('getAccessToken')
             ->willReturn('test');
-        $authProvider->expects($this->exactly(2))
+        $authProvider->expects($this->exactly(3))
             ->method('getCredentials')
             ->willReturn($credentials);
 
@@ -240,7 +240,7 @@ class RequestExceptionTest extends TestCase
         $credentials->expects($this->once())
             ->method('getAccessToken')
             ->willReturn('test');
-        $authProvider->expects($this->exactly(2))
+        $authProvider->expects($this->exactly(3))
             ->method('getCredentials')
             ->willReturn($credentials);
 
@@ -264,7 +264,7 @@ class RequestExceptionTest extends TestCase
         $credentials->expects($this->once())
             ->method('getAccessToken')
             ->willReturn('test');
-        $authProvider->expects($this->exactly(2))
+        $authProvider->expects($this->exactly(3))
             ->method('getCredentials')
             ->willReturn($credentials);
 
