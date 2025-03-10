@@ -56,7 +56,7 @@ composer require fakturoid/fakturoid-php
 Library requires PHP 8.2 (or later) and `ext-json`, `nyholm/psr7` and `psr/http-client` extensions.
 
 ## User agent and HTTP client
-You need to create your own client that implements `Psr\Http\Client\ClientInterface` or you can use `symfony/http-client` or `guzzlehttp/guzzle`. And you also need to set a default header value for this client, where you need to specify User-Agent.
+You need to create your own client that implements [`Psr\Http\Client\ClientInterface`](https://www.php-fig.org/psr/psr-18/) or you can use `symfony/http-client`, `guzzlehttp/guzzle` or [other](https://packagist.org/providers/psr/http-client-implementation). And you also need to set a default header value for this client, where you need to [specify User-Agent](https://www.fakturoid.cz/api/v3#identification).
 
 ### Creating a client using Guzzle
 ```php
@@ -78,7 +78,7 @@ Authorization using OAuth takes place in several steps. We use data obtained fro
 First, we offer the user a URL address where he enters his login information. We obtain this using the following method:
 ```php
 $fManager = new \Fakturoid\FakturoidManager(
-    \Psr\Http\Client\ClientInterface, //see User agent and HTTP client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client
     '{fakturoid-client-id}',
     '{fakturoid-client-secret}',
     null,
@@ -100,7 +100,7 @@ echo $credentials->toJson();
 
 ```php
 $fManager = new \Fakturoid\FakturoidManager(
-    \Psr\Http\Client\ClientInterface, //see User agent and HTTP client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client
     '{fakturoid-client-id}',
     '{fakturoid-client-secret}'
 );
@@ -125,7 +125,7 @@ $fManager->setCredentialsCallback(new class implements \Fakturoid\Auth\Credentia
 If you run a multi-tenant application or an application that processes documents in parallel, you need to set Credentials correctly. Each time a new access token is obtained, the previous one is invalidated. For these needs there is `AuthProvider::setCredentials()` and also `CredentialCallback`.
 ```php
 $fManager = new \Fakturoid\FakturoidManager(
-    \Psr\Http\Client\ClientInterface, //see User agent and HTTP client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client
     '{fakturoid-client-id}',
     '{fakturoid-client-secret}'
 );
@@ -151,7 +151,7 @@ $fManager->setCredentialsCallback(new class implements \Fakturoid\Auth\Credentia
 ```php
 
 $fManager = new \Fakturoid\FakturoidManager(
-    \Psr\Http\Client\ClientInterface, //see User agent and HTTP client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client
     '{fakturoid-client-id}',
     '{fakturoid-client-secret}',
     '{fakturoid-account-slug}',
@@ -168,7 +168,7 @@ $fManager->getBankAccountsProvider()->list();
 ```php
 require __DIR__ . '/vendor/autoload.php';
 $fManager = new \Fakturoid\FakturoidManager(
-    \Psr\Http\Client\ClientInterface, //see User agent and HTTP client
+    \Psr\Http\Client\ClientInterface, // see User agent and HTTP client
     '{fakturoid-client-id}',
     '{fakturoid-client-secret}'
 );
