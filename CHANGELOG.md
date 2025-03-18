@@ -1,5 +1,5 @@
 ## 4.0.0
-- Remove support of user agent and add better documentation for ClientInterface.
+- Remove user agent in favor of PSR-18 client configuration and add better documentation for ClientInterface.
 
 ## 3.0.0
 - Remove support of PHP 8.1
