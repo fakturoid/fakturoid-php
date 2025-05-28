@@ -8,6 +8,8 @@ concurrency:
 on:
   workflow_dispatch:
   pull_request:
+    branches-ignore:
+      - php74
     paths:
       - .github/workflows/main.yml
       - src/**/*
@@ -17,6 +19,8 @@ on:
       - phpunit.xml
       - rector.php
   push:
+    branches-ignore:
+      - php74
     paths:
       - .github/workflows/main.yml
       - src/**/*
