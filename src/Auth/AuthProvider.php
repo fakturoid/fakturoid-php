@@ -17,27 +17,52 @@ use Psr\Http\Client\ClientInterface;
 
 class AuthProvider
 {
+    /**
+     * @readonly
+     */
+    private string $clientId;
+    /**
+     * @readonly
+     */
+    private string $clientSecret;
+    /**
+     * @readonly
+     */
+    private ?string $redirectUri;
+    /**
+     * @readonly
+     */
+    private ClientInterface $client;
     private ?string $code = null;
     private ?Credentials $credentials = null;
     private ?CredentialCallback $credentialsCallback = null;
 
     public function __construct(
-        #[\SensitiveParameter] private readonly string $clientId,
-        #[\SensitiveParameter] private readonly string $clientSecret,
-        private readonly ?string $redirectUri,
-        private readonly ClientInterface $client
+        #[\SensitiveParameter]
+        string $clientId,
+        #[\SensitiveParameter]
+        string $clientSecret,
+        ?string $redirectUri,
+        ClientInterface $client
     ) {
+        $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
+        $this->redirectUri = $redirectUri;
+        $this->client = $client;
     }
 
+    /**
+     * @param mixed $authType
+     */
     public function auth(
-        AuthTypeEnum $authType = AuthTypeEnum::AUTHORIZATION_CODE_FLOW,
+        $authType = AuthTypeEnum::AUTHORIZATION_CODE_FLOW,
         ?Credentials $credentials = null
     ): ?Credentials {
         $this->credentials = $credentials;
-        return match ($authType) {
-            AuthTypeEnum::AUTHORIZATION_CODE_FLOW => $this->authorizationCode(),
-            AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW => $this->clientCredentials()
-        };
+        if ($authType === AuthTypeEnum::AUTHORIZATION_CODE_FLOW) {
+            return $this->authorizationCode();
+        }
+        return $this->clientCredentials();
     }
 
     /**
@@ -86,19 +111,20 @@ class AuthProvider
 
     /**
      * @param array<string, mixed> $json
+     * @param mixed $authType
      * @return void
      * @throws AuthorizationFailedException
      */
-    private function checkResponseWithAccessToken(array $json, AuthTypeEnum $authType): void
+    private function checkResponseWithAccessToken(array $json, $authType): void
     {
         if (!empty($json['error'])) {
             throw new AuthorizationFailedException(
-                sprintf('An error occurred while %s flow. Message: %s', $authType->value, $json['error'])
+                sprintf('An error occurred while %s flow. Message: %s', $authType, $json['error'])
             );
         }
         if (empty($json['access_token']) || empty($json['expires_in'])) {
             throw new AuthorizationFailedException(
-                sprintf('An error occurred while %s flow. Message: invalid response', $authType->value)
+                sprintf('An error occurred while %s flow. Message: invalid response', $authType)
             );
         }
     }
@@ -155,7 +181,7 @@ class AuthProvider
         if ($this->credentials === null) {
             throw new AuthorizationFailedException('Load authentication screen first.');
         }
-        if ($this->credentials->getAuthType()->value !== AuthTypeEnum::AUTHORIZATION_CODE_FLOW->value) {
+        if ($this->credentials->getAuthType() !== AuthTypeEnum::AUTHORIZATION_CODE_FLOW) {
             throw new AuthorizationFailedException('Revoke is only available for authorization code flow');
         }
         try {
@@ -193,18 +219,20 @@ class AuthProvider
         if (
             $credentials === null
             || empty($credentials->getAccessToken())
-            || (empty($credentials->getRefreshToken()) && $credentials->getAuthType(
-            ) === AuthTypeEnum::AUTHORIZATION_CODE_FLOW)
+            || (
+                empty($credentials->getRefreshToken())
+                && $credentials->getAuthType() === AuthTypeEnum::AUTHORIZATION_CODE_FLOW
+            )
         ) {
             throw new AuthorizationFailedException('Invalid credentials');
         }
         if (!$credentials->isExpired()) {
             return $this->getCredentials();
         }
-        return match ($credentials->getAuthType()) {
-            AuthTypeEnum::AUTHORIZATION_CODE_FLOW => $this->oauth2Refresh(),
-            AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW => $this->auth(AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW)
-        };
+        if ($credentials->getAuthType() === AuthTypeEnum::AUTHORIZATION_CODE_FLOW) {
+            return $this->oauth2Refresh();
+        }
+        return $this->auth(AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW);
     }
 
     /**

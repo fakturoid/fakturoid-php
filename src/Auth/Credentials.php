@@ -10,12 +10,35 @@ use JsonException;
 
 class Credentials
 {
+    /**
+     * @readonly
+     */
+    private ?string $refreshToken;
+    /**
+     * @readonly
+     */
+    private ?string $accessToken;
+    /**
+     * @readonly
+     */
+    private DateTimeImmutable $expireAt;
+    private string $authType;
+
+    /**
+     * @param 'authorization_code'|'client_credentials' $authType
+     */
     public function __construct(
-        #[\SensitiveParameter] private readonly ?string $refreshToken,
-        #[\SensitiveParameter] private readonly ?string $accessToken,
-        private readonly DateTimeImmutable $expireAt,
-        private AuthTypeEnum $authType
+        #[\SensitiveParameter]
+        ?string $refreshToken,
+        #[\SensitiveParameter]
+        ?string $accessToken,
+        DateTimeImmutable $expireAt,
+        string $authType
     ) {
+        $this->refreshToken = $refreshToken;
+        $this->accessToken = $accessToken;
+        $this->expireAt = $expireAt;
+        $this->authType = $authType;
     }
 
     public function getRefreshToken(): ?string
@@ -33,12 +56,15 @@ class Credentials
         return (new DateTimeImmutable()) > $this->expireAt;
     }
 
-    public function getAuthType(): AuthTypeEnum
+    public function getAuthType(): string
     {
         return $this->authType;
     }
 
-    public function setAuthType(AuthTypeEnum $type): void
+    /**
+     * @param mixed $type
+     */
+    public function setAuthType($type): void
     {
         $this->authType = $type;
     }

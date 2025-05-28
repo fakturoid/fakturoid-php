@@ -7,9 +7,14 @@ use Fakturoid\Response;
 
 final class UsersProvider extends Provider
 {
-    public function __construct(
-        private readonly DispatcherInterface $dispatcher
-    ) {
+    /**
+     * @readonly
+     */
+    private DispatcherInterface $dispatcher;
+
+    public function __construct(DispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
     }
 
     public function getCurrentUser(): Response

@@ -30,9 +30,14 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         return new class ($content) implements StreamInterface
         {
-            public function __construct(
-                private readonly string $content
-            ) {
+            /**
+             * @readonly
+             */
+            private string $content;
+
+            public function __construct(string $content)
+            {
+                $this->content = $content;
             }
 
             public function __toString(): string

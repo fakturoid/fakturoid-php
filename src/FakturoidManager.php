@@ -26,28 +26,79 @@ use Psr\Http\Client\ClientInterface;
 
 class FakturoidManager
 {
-    private readonly AuthProvider $authProvider;
-    private readonly Dispatcher $dispatcher;
-    private readonly AccountProvider $accountProvider;
-    private readonly BankAccountsProvider $bankAccountsProvider;
-    private readonly EventsProvider $eventsProvider;
-    private readonly ExpensesProvider $expensesProvider;
-    private readonly GeneratorsProvider $generatorsProvider;
-    private readonly InboxFilesProvider $inboxFilesProvider;
-    private readonly InventoryItemsProvider $inventoryItemsProvider;
-    private readonly InventoryMovesProvider $inventoryMovesProvider;
-    private readonly InvoicesProvider $invoicesProvider;
-    private readonly NumberFormatsProvider $numberFormatsProvider;
-    private readonly RecurringGeneratorsProvider $recurringGeneratorsProvider;
-    private readonly SubjectsProvider $subjectsProvider;
-    private readonly TodosProvider $todosProvider;
-    private readonly UsersProvider $usersProvider;
-    private readonly WebhooksProvider $webhooksProvider;
+    /**
+     * @readonly
+     */
+    private AuthProvider $authProvider;
+    /**
+     * @readonly
+     */
+    private Dispatcher $dispatcher;
+    /**
+     * @readonly
+     */
+    private AccountProvider $accountProvider;
+    /**
+     * @readonly
+     */
+    private BankAccountsProvider $bankAccountsProvider;
+    /**
+     * @readonly
+     */
+    private EventsProvider $eventsProvider;
+    /**
+     * @readonly
+     */
+    private ExpensesProvider $expensesProvider;
+    /**
+     * @readonly
+     */
+    private GeneratorsProvider $generatorsProvider;
+    /**
+     * @readonly
+     */
+    private InboxFilesProvider $inboxFilesProvider;
+    /**
+     * @readonly
+     */
+    private InventoryItemsProvider $inventoryItemsProvider;
+    /**
+     * @readonly
+     */
+    private InventoryMovesProvider $inventoryMovesProvider;
+    /**
+     * @readonly
+     */
+    private InvoicesProvider $invoicesProvider;
+    /**
+     * @readonly
+     */
+    private NumberFormatsProvider $numberFormatsProvider;
+    /**
+     * @readonly
+     */
+    private RecurringGeneratorsProvider $recurringGeneratorsProvider;
+    /**
+     * @readonly
+     */
+    private SubjectsProvider $subjectsProvider;
+    /**
+     * @readonly
+     */
+    private TodosProvider $todosProvider;
+    /**
+     * @readonly
+     */
+    private UsersProvider $usersProvider;
+    /**
+     * @readonly
+     */
+    private WebhooksProvider $webhooksProvider;
 
     public function __construct(
         ClientInterface $client,
-        #[\SensitiveParameter] string $clientId,
-        #[\SensitiveParameter] string $clientSecret,
+        string $clientId,
+        string $clientSecret,
         ?string $accountSlug = null,
         ?string $redirectUri = null
     ) {

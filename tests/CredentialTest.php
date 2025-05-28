@@ -22,7 +22,7 @@ class CredentialTest extends TestCase
 
         $this->assertEquals('access_token', $credentials->getAccessToken());
         $this->assertEquals('refresh_token', $credentials->getRefreshToken());
-        $this->assertEquals(AuthTypeEnum::AUTHORIZATION_CODE_FLOW->value, $credentials->getAuthType()->value);
+        $this->assertEquals(AuthTypeEnum::AUTHORIZATION_CODE_FLOW, $credentials->getAuthType());
 
         $this->assertTrue($credentials->isExpired());
         $this->assertEquals(
@@ -35,7 +35,7 @@ class CredentialTest extends TestCase
         );
 
         $credentials->setAuthType(AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW);
-        $this->assertEquals(AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW->value, $credentials->getAuthType()->value);
+        $this->assertEquals(AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW, $credentials->getAuthType());
     }
 
     public function testSwitchAuthType(): void
@@ -47,7 +47,7 @@ class CredentialTest extends TestCase
             AuthTypeEnum::AUTHORIZATION_CODE_FLOW
         );
         $credentials->setAuthType(AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW);
-        $this->assertEquals(AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW->value, $credentials->getAuthType()->value);
+        $this->assertEquals(AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW, $credentials->getAuthType());
     }
 
     public function testExpiration(): void

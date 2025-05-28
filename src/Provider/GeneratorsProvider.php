@@ -7,9 +7,14 @@ use Fakturoid\Response;
 
 final class GeneratorsProvider extends Provider
 {
-    public function __construct(
-        private readonly DispatcherInterface $dispatcher
-    ) {
+    /**
+     * @readonly
+     */
+    private DispatcherInterface $dispatcher;
+
+    public function __construct(DispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
     }
 
     /**

@@ -103,7 +103,7 @@ class SubjectsProviderTest extends TestCase
         $querySearch = ['query' => 'test@fakturoid.cz', 'page' => 2];
         $provider = new SubjectsProvider($dispatcher);
 
-        set_error_handler(static function (int $errno, string $errstr): never {
+        set_error_handler(static function (int $errno, string $errstr) {
             throw new \Exception($errstr, $errno);
         }, E_ALL);
 
