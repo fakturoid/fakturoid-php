@@ -1,4 +1,4 @@
-name: 'Checks for PHP 7.4'
+name: 'Checks for PHP >= 7.4 <= 8.1'
 run-name: ${{ github.actor }} running php checks
 
 concurrency:
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
   pull_request:
     branches:
-      - php74
+      - v1.4
     paths:
       - .github/workflows/main.yml
       - src/**/*
@@ -20,7 +20,7 @@ on:
       - rector.php
   push:
     branches:
-      - php74
+      - v1.4
     paths:
       - .github/workflows/main.yml
       - src/**/*
