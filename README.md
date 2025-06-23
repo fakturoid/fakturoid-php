@@ -39,12 +39,13 @@ New account just for testing API and using separate user (created via "Settings 
 
 ## Versions
 
-| Lib. version | Fakturoid API | PHP       |
-|--------------|---------------|-----------|
-| `4.x`        | `v3`          | `>=8.2`   |
-| `3.x`        | `v3`          | `>=8.2`   |
-| `2.x`        | `v3`          | `>=8.1`   |
-| `1.x`        | `v2`          | `>=5.3.0` |
+| Lib. version  | Fakturoid API | PHP            |
+|---------------|---------------|----------------|
+| `4.x`         | `v3`          | `>=8.2`        |
+| `3.x`         | `v3`          | `>=8.2`        |
+| `2.x`         | `v3`          | `>=8.1`        |
+| `>1.4.x`      | `v3`          | `>=7.4 <= 8.2` |
+| `1.x < 1.4.x` | `v2`          | `>=5.3.0`      |
 
 ## Installation
 The recommended way to install is through Composer:
