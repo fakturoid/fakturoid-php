@@ -78,4 +78,19 @@ class Response
         $contentType = $this->getHeader('Content-Type');
         return $contentType !== null && str_contains($contentType, 'application/json');
     }
+
+    /**
+     * @throws InvalidResponseException
+     */
+    public function count(): int
+    {
+        $body = $this->getBody();
+        if (is_array($body)) {
+            return count($body);
+        }
+        if ($body instanceof \Countable) {
+            return count($body);
+        }
+        return 0;
+    }
 }
