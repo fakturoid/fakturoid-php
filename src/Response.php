@@ -6,7 +6,7 @@ use Fakturoid\Exception\InvalidResponseException;
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
 
-class Response
+class Response implements \Countable
 {
     private readonly int $statusCode;
     /** @var array<string, mixed> */
