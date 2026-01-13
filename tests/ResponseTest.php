@@ -78,4 +78,98 @@ class ResponseTest extends TestCase
         $this->assertNull($response->getHeader('Content-Type'));
         $this->assertEquals('Test', $response->getBody());
     }
+
+    public function testRateLimitHeaders(): void
+    {
+        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface
+            ->expects($this->once())
+            ->method('getStatusCode')
+            ->willReturn(200);
+        $responseInterface
+            ->expects($this->once())
+            ->method('getHeaders')
+            ->willReturn([
+                'X-RateLimit-Policy' => ['default;q=400;w=60'],
+                'X-RateLimit' => ['default;r=398;t=55']
+            ]);
+        $responseInterface
+            ->expects($this->exactly(2))
+            ->method('getHeaderLine')
+            ->willReturnMap([
+                ['X-RateLimit-Policy', 'default;q=400;w=60'],
+                ['X-RateLimit', 'default;r=398;t=55']
+            ]);
+        $responseInterface
+            ->expects($this->once())
+            ->method('getBody')
+            ->willReturn($this->getStreamMock(''));
+
+        $response = new Response($responseInterface);
+
+        $this->assertEquals(400, $response->getRateLimitQuota());
+        $this->assertEquals(60, $response->getRateLimitWindow());
+        $this->assertEquals(398, $response->getRateLimitRemaining());
+        $this->assertEquals(55, $response->getRateLimitReset());
+        $this->assertFalse($response->isRateLimitExceeded());
+    }
+
+    public function testRateLimitExceeded(): void
+    {
+        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface
+            ->expects($this->once())
+            ->method('getStatusCode')
+            ->willReturn(429);
+        $responseInterface
+            ->expects($this->once())
+            ->method('getHeaders')
+            ->willReturn([
+                'X-RateLimit-Policy' => ['default;q=400;w=60'],
+                'X-RateLimit' => ['default;r=0;t=45']
+            ]);
+        $responseInterface
+            ->expects($this->exactly(2))
+            ->method('getHeaderLine')
+            ->willReturnMap([
+                ['X-RateLimit-Policy', 'default;q=400;w=60'],
+                ['X-RateLimit', 'default;r=0;t=45']
+            ]);
+        $responseInterface
+            ->expects($this->once())
+            ->method('getBody')
+            ->willReturn($this->getStreamMock(''));
+
+        $response = new Response($responseInterface);
+
+        $this->assertEquals(429, $response->getStatusCode());
+        $this->assertEquals(0, $response->getRateLimitRemaining());
+        $this->assertEquals(45, $response->getRateLimitReset());
+        $this->assertTrue($response->isRateLimitExceeded());
+    }
+
+    public function testRateLimitHeadersNotPresent(): void
+    {
+        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface
+            ->expects($this->once())
+            ->method('getStatusCode')
+            ->willReturn(200);
+        $responseInterface
+            ->expects($this->once())
+            ->method('getHeaders')
+            ->willReturn([]);
+        $responseInterface
+            ->expects($this->once())
+            ->method('getBody')
+            ->willReturn($this->getStreamMock(''));
+
+        $response = new Response($responseInterface);
+
+        $this->assertNull($response->getRateLimitQuota());
+        $this->assertNull($response->getRateLimitWindow());
+        $this->assertNull($response->getRateLimitRemaining());
+        $this->assertNull($response->getRateLimitReset());
+        $this->assertFalse($response->isRateLimitExceeded());
+    }
 }
