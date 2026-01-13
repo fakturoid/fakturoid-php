@@ -1,4 +1,5 @@
 ## next
+- Add support for actions on recurring invoices.
 - Add support for rate limit headers
 
 ## 4.0.0
