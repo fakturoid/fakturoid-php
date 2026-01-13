@@ -1,3 +1,6 @@
+## next
+- Add support for rate limit headers
+
 ## 4.0.0
 - Remove user agent in favor of PSR-18 client configuration and add better documentation for ClientInterface.
 

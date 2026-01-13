@@ -29,6 +29,7 @@ New account just for testing API and using separate user (created via "Settings 
   - [Downloading an invoice PDF](#downloading-an-invoice-pdf)
   - [Using `custom_id`](#using-custom_id)
   - [InventoryItem resource](#inventoryitem-resource)
+- [Rate Limiting](#rate-limiting)
 - [Handling errors](#handling-errors)
   - [Common problems](#common-problems)
 - [Development](#development)
@@ -384,6 +385,34 @@ To delete an inventory move:
 ```php
 $fManager->getInventoryMovesProvider()->update($inventoryItemId, $inventoryMoveId);
 ```
+
+## Rate Limiting
+
+Fakturoid implements rate limiting based on RFC Draft. The library provides methods to check rate limit status from the response object:
+
+```php
+$response = $fManager->getInvoicesProvider()->list();
+
+// Get maximum number of requests allowed in the time window
+$quota = $response->getRateLimitQuota(); // e.g., 400
+
+// Get time window in seconds
+$window = $response->getRateLimitWindow(); // e.g., 60
+
+// Get remaining number of requests
+$remaining = $response->getRateLimitRemaining(); // e.g., 398
+
+// Get remaining time in seconds until the rate limit resets
+$resetTime = $response->getRateLimitReset(); // e.g., 55
+
+// Check if rate limit was exceeded (status code 429)
+if ($response->isRateLimitExceeded()) {
+    // Wait until the rate limit resets
+    sleep($response->getRateLimitReset());
+}
+```
+
+When the rate limit is exceeded, the server responds with status code `429 Too Many Requests`. Wait until the rate limit resets (using the value from `getRateLimitReset()`) and then retry the request.
 
 ## Handling errors
 
