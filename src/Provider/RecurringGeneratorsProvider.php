@@ -54,4 +54,20 @@ final class RecurringGeneratorsProvider extends Provider
     {
         return $this->dispatcher->delete(sprintf('/accounts/{accountSlug}/recurring_generators/%d.json', $id));
     }
+
+    public function pause(int $id): Response
+    {
+        return $this->dispatcher->patch(sprintf('/accounts/{accountSlug}/recurring_generators/%d/pause.json', $id), []);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function activate(int $id, array $data = []): Response
+    {
+        return $this->dispatcher->patch(
+            sprintf('/accounts/{accountSlug}/recurring_generators/%d/activate.json', $id),
+            $data
+        );
+    }
 }

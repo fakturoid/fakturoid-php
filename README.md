@@ -29,6 +29,7 @@ New account just for testing API and using separate user (created via "Settings 
   - [Downloading an invoice PDF](#downloading-an-invoice-pdf)
   - [Using `custom_id`](#using-custom_id)
   - [InventoryItem resource](#inventoryitem-resource)
+  - [Recurring Generators](#recurring-generators)
 - [Handling errors](#handling-errors)
   - [Common problems](#common-problems)
 - [Development](#development)
@@ -383,6 +384,28 @@ To delete an inventory move:
 
 ```php
 $fManager->getInventoryMovesProvider()->update($inventoryItemId, $inventoryMoveId);
+```
+
+### Recurring Generators
+
+To pause a recurring generator:
+
+```php
+$fManager->getRecurringGeneratorsProvider()->pause($generatorId);
+```
+
+To activate a paused recurring generator:
+
+```php
+$fManager->getRecurringGeneratorsProvider()->activate($generatorId);
+```
+
+To activate with a specific next occurrence date:
+
+```php
+$fManager->getRecurringGeneratorsProvider()->activate($generatorId, [
+    'next_occurrence_on' => '2025-02-15'
+]);
 ```
 
 ## Handling errors
