@@ -409,7 +409,6 @@ $fManager->getRecurringGeneratorsProvider()->activate($generatorId, [
 ]);
 ```
 
-=======
 ## Rate Limiting
 
 Fakturoid implements rate limiting based on RFC Draft. The library provides methods to check rate limit status from the response object:
