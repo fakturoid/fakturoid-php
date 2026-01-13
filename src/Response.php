@@ -78,4 +78,57 @@ class Response
         $contentType = $this->getHeader('Content-Type');
         return $contentType !== null && str_contains($contentType, 'application/json');
     }
+
+    public function getRateLimitQuota(): ?int
+    {
+        $policy = $this->getHeader('X-RateLimit-Policy');
+        if ($policy === null) {
+            return null;
+        }
+        if (preg_match('/q=(\d+)/', $policy, $matches)) {
+            return (int) $matches[1];
+        }
+        return null;
+    }
+
+    public function getRateLimitWindow(): ?int
+    {
+        $policy = $this->getHeader('X-RateLimit-Policy');
+        if ($policy === null) {
+            return null;
+        }
+        if (preg_match('/w=(\d+)/', $policy, $matches)) {
+            return (int) $matches[1];
+        }
+        return null;
+    }
+
+    public function getRateLimitRemaining(): ?int
+    {
+        $rateLimit = $this->getHeader('X-RateLimit');
+        if ($rateLimit === null) {
+            return null;
+        }
+        if (preg_match('/r=(\d+)/', $rateLimit, $matches)) {
+            return (int) $matches[1];
+        }
+        return null;
+    }
+
+    public function getRateLimitReset(): ?int
+    {
+        $rateLimit = $this->getHeader('X-RateLimit');
+        if ($rateLimit === null) {
+            return null;
+        }
+        if (preg_match('/t=(\d+)/', $rateLimit, $matches)) {
+            return (int) $matches[1];
+        }
+        return null;
+    }
+
+    public function isRateLimitExceeded(): bool
+    {
+        return $this->statusCode === 429;
+    }
 }
