@@ -17,6 +17,21 @@ use Nyholm\Psr7\Request;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 
+/**
+ * @phpstan-type ClientCodeRequest array{
+ *     grant_type: 'client_credentials'
+ * }
+ * @phpstan-type AuthorizationFlowRefresh array{
+ *     grant_type: 'refresh_token',
+ *     refresh_token: string|null
+ * }
+ * @phpstan-type AuthorizationFlowRequest array{
+ *     grant_type: 'authorization_code',
+ *     code: string|null,
+ *     redirect_uri: string|null
+ * }
+ * @phpstan-type AuthTokenErrorResponse array{error: string}
+ */
 class AuthProvider
 {
     private ?string $code = null;
@@ -31,6 +46,9 @@ class AuthProvider
     ) {
     }
 
+    /**
+     * @throws AuthorizationFailedException
+     */
     public function auth(
         AuthTypeEnum $authType = AuthTypeEnum::AUTHORIZATION_CODE_FLOW,
         ?Credentials $credentials = null
@@ -53,14 +71,14 @@ class AuthProvider
         if (empty($this->code)) {
             throw new AuthorizationFailedException('Load authentication screen first.');
         }
-
         try {
-            /** @var array{'access_token': string, 'expires_in': int, 'refresh_token': string, 'token_type': string, 'error'?:string} $json */
-            $json = $this->makeRequest([
-                'grant_type' => 'authorization_code',
-                'code' => $this->code,
-                'redirect_uri' => $this->redirectUri,
-            ]);
+            $accessToken = $this->makeRequest(
+                [
+                    'grant_type' => 'authorization_code',
+                    'code' => $this->code,
+                    'redirect_uri' => $this->redirectUri,
+                ]
+            );
         } catch (InvalidDataException | ConnectionFailedException $exception) {
             throw new AuthorizationFailedException(
                 sprintf('An error occurred while authorization code flow. Message: %s', $exception->getMessage()),
@@ -77,12 +95,10 @@ class AuthProvider
                 $exception
             );
         }
-        $this->checkResponseWithAccessToken($json, AuthTypeEnum::AUTHORIZATION_CODE_FLOW);
-        /** @var array{'refresh_token': string, 'access_token': string, 'expires_in': int} $json */
         $this->credentials = new Credentials(
-            $json['refresh_token'],
-            $json['access_token'],
-            (new \DateTimeImmutable())->modify('+ ' . ($json['expires_in'] - 10) . ' seconds'),
+            $accessToken->refreshToken,
+            $accessToken->accessToken,
+            (new \DateTimeImmutable())->modify('+ ' . ($accessToken->expiresIn - 10) . ' seconds'),
             AuthTypeEnum::AUTHORIZATION_CODE_FLOW
         );
         $this->callCredentialsCallback();
@@ -91,21 +107,11 @@ class AuthProvider
 
     /**
      * @param array<string, mixed> $json
-     * @return void
-     * @throws AuthorizationFailedException
+     * @phpstan-assert-if-true AuthTokenErrorResponse $json
      */
-    private function checkResponseWithAccessToken(array $json, AuthTypeEnum $authType): void
+    private function assertResponseIsError(array $json): bool
     {
-        if (!empty($json['error'])) {
-            throw new AuthorizationFailedException(
-                sprintf('An error occurred while %s flow. Message: %s', $authType->value, $json['error'])
-            );
-        }
-        if (empty($json['access_token']) || empty($json['expires_in'])) {
-            throw new AuthorizationFailedException(
-                sprintf('An error occurred while %s flow. Message: invalid response', $authType->value)
-            );
-        }
+        return is_string($json['error'] ?? null);
     }
 
     /**
@@ -116,10 +122,12 @@ class AuthProvider
         if ($this->credentials !== null) {
             $refreshToken = $this->credentials->getRefreshToken();
             try {
-                $json = $this->makeRequest([
-                    'grant_type' => 'refresh_token',
-                    'refresh_token' => $refreshToken
-                ]);
+                $accessToken = $this->makeRequest(
+                    [
+                        'grant_type' => 'refresh_token',
+                        'refresh_token' => $refreshToken,
+                    ]
+                );
             } catch (InvalidDataException | ConnectionFailedException $exception) {
                 throw new AuthorizationFailedException(
                     sprintf('Error occurred while refreshing token. Message: %s', $exception->getMessage()),
@@ -137,14 +145,11 @@ class AuthProvider
                 );
             }
 
-            $authType = AuthTypeEnum::AUTHORIZATION_CODE_FLOW;
-            $this->checkResponseWithAccessToken($json, $authType);
-            /** @var array{'access_token': string, 'token_type': string, 'expires_in': int} $json */
             $this->credentials = new Credentials(
-                $refreshToken,
-                $json['access_token'],
-                (new \DateTimeImmutable())->modify('+ ' . ($json['expires_in'] - 10) . ' seconds'),
-                $authType
+                $accessToken->refreshToken ?? $refreshToken,
+                $accessToken->accessToken,
+                (new \DateTimeImmutable())->modify('+ ' . ($accessToken->expiresIn - 10) . ' seconds'),
+                $this->credentials->getAuthType()
             );
             $this->callCredentialsCallback();
             return $this->credentials;
@@ -180,6 +185,8 @@ class AuthProvider
             $response = $this->client->sendRequest($request);
         } catch (ClientExceptionInterface $exception) {
             throw $exception;
+        } catch (JsonException $exception) {
+            throw new AuthorizationFailedException('Failed to encode data to JSON', $exception->getCode(), $exception);
         }
         $wrappedResponse = new Response($response);
         $responseStatusCode = $wrappedResponse->getStatusCode();
@@ -200,10 +207,12 @@ class AuthProvider
     {
         $credentials = $this->getCredentials();
         if (
-            $credentials === null
-            || empty($credentials->getAccessToken())
-            || (empty($credentials->getRefreshToken()) && $credentials->getAuthType(
-            ) === AuthTypeEnum::AUTHORIZATION_CODE_FLOW)
+            $credentials === null ||
+            empty($credentials->getAccessToken()) ||
+            (
+                empty($credentials->getRefreshToken()) &&
+                $credentials->getAuthType() === AuthTypeEnum::AUTHORIZATION_CODE_FLOW
+            )
         ) {
             throw new AuthorizationFailedException('Invalid credentials');
         }
@@ -222,9 +231,7 @@ class AuthProvider
     private function clientCredentials(): ?Credentials
     {
         try {
-            $json = $this->makeRequest([
-                'grant_type' => 'client_credentials',
-            ]);
+            $accessToken = $this->makeRequest(['grant_type' => 'client_credentials']);
         } catch (InvalidDataException | ConnectionFailedException $exception) {
             throw new AuthorizationFailedException(
                 sprintf('An error occurred while client credentials flow. Message: %s', $exception->getMessage()),
@@ -241,12 +248,10 @@ class AuthProvider
                 $exception
             );
         }
-        $this->checkResponseWithAccessToken($json, AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW);
-        /** @var array{'refresh_token'?: string|null, 'access_token': string, 'expires_in': int} $json */
         $this->credentials = new Credentials(
-            $json['refresh_token'] ?? null,
-            $json['access_token'],
-            (new \DateTimeImmutable())->modify('+ ' . ($json['expires_in'] - 10) . ' seconds'),
+            $accessToken->refreshToken,
+            $accessToken->accessToken,
+            (new \DateTimeImmutable())->modify('+ ' . ($accessToken->expiresIn - 10) . ' seconds'),
             AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW
         );
         $this->callCredentialsCallback();
@@ -255,11 +260,10 @@ class AuthProvider
     }
 
     /**
-     * @param array<string, mixed> $body
-     * @return array{'refresh_token'?: string|null, 'access_token': string, 'expires_in': int}|array{'error'?:string}
+     * @param ClientCodeRequest|AuthorizationFlowRefresh|AuthorizationFlowRequest $body
      * @throws ConnectionFailedException|InvalidDataException|RequestException
      */
-    private function makeRequest(array $body): array
+    private function makeRequest(array $body): AccessToken
     {
         try {
             $request = new Request(
@@ -295,6 +299,7 @@ class AuthProvider
             throw new ServerErrorException($request, $wrappedResponse);
         }
         try {
+            /** @var array<string, mixed> $responseData */
             $responseData = $wrappedResponse->getBody(true);
         } catch (InvalidResponseException $exception) {
             throw new InvalidDataException(
@@ -303,25 +308,37 @@ class AuthProvider
                 $exception
             );
         }
-        if (
-            is_array($responseData) &&
-            array_key_exists('access_token', $responseData) &&
-            array_key_exists('expires_in', $responseData)
-        ) {
-            return $responseData;
+        if ($this->assertResponseIsError($responseData)) {
+            throw new InvalidDataException(sprintf('Error: %s', $responseData['error']));
         }
-
-        return ['error' => $responseData['error'] ?? 'invalid response'];
+        $authType = match ($body['grant_type']) {
+            'client_credentials', 'refresh_token' => AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW,
+            'authorization_code' => AuthTypeEnum::AUTHORIZATION_CODE_FLOW,
+        };
+        try {
+            return AccessToken::create($responseData, $authType);
+        } catch (\InvalidArgumentException $argumentException) {
+            throw new AuthorizationFailedException(
+                sprintf('Error occurred while processing response. Message: %s', $argumentException->getMessage()),
+                $argumentException->getCode(),
+                $argumentException
+            );
+        }
     }
 
     public function getAuthenticationUrl(?string $state = null): string
     {
-        return sprintf(
-            '%s?client_id=%s&redirect_uri=%s&response_type=code',
-            sprintf('%s/oauth', Dispatcher::BASE_URL),
-            $this->clientId,
-            $this->redirectUri
-        ) . ($state !== null ? '&state=' . $state : null);
+        $params = [
+            'client_id' => $this->clientId,
+            'redirect_uri' => $this->redirectUri,
+            'response_type' => 'code',
+        ];
+
+        if ($state !== null) {
+            $params['state'] = $state;
+        }
+
+        return sprintf('%s/oauth?%s', Dispatcher::BASE_URL, http_build_query($params));
     }
 
     public function loadCode(string $code): void
