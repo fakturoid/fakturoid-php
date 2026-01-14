@@ -31,25 +31,16 @@ class Dispatcher implements DispatcherInterface
         $this->accountSlug = $accountSlug;
     }
 
-    /**
-     * @param array<string, string> $queryParams
-     */
     public function get(string $path, array $queryParams = []): Response
     {
         return $this->dispatch($path, ['method' => 'GET', 'params' => $queryParams]);
     }
 
-    /**
-     * @param array<string, mixed> $data
-     */
     public function post(string $path, array $data = []): Response
     {
         return $this->dispatch($path, ['method' => 'POST', 'data' => $data]);
     }
 
-    /**
-     * @param array<string, mixed> $data
-     */
     public function patch(string $path, array $data): Response
     {
         return $this->dispatch($path, ['method' => 'PATCH', 'data' => $data]);
@@ -62,11 +53,11 @@ class Dispatcher implements DispatcherInterface
 
     /**
      * @param array{'method': string, 'params'?: array<string, mixed>, 'data'?: array<string, mixed>} $options
-     * @throws ConnectionFailedException|InvalidDataException|AuthorizationFailedException|RequestException
+     * @throws ConnectionFailedException|InvalidDataException|AuthorizationFailedException|RequestException|Exception
      */
     private function dispatch(string $path, array $options): Response
     {
-        if (str_contains($path, '{accountSlug}') && $this->accountSlug === null) {
+        if ($this->accountSlug === null && str_contains($path, '{accountSlug}')) {
             throw new Exception('Account slug is not set. You must set it before calling this method.');
         }
         $this->authorization->reAuth();

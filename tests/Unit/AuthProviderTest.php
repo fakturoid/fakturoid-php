@@ -114,7 +114,9 @@ class AuthProviderTest extends UnitTestCase
         $responseInterface
             ->expects($this->once())
             ->method('getBody')
-            ->willReturn($this->getStreamMock('{"refresh_token":"","access_token":"access_token","expires_in":7200}'));
+            ->willReturn(
+                $this->getStreamMock('{"access_token":"access_token","expires_in":7200,"token_type":"bearer"}')
+            );
 
         $client = $this->createMock(ClientInterface::class);
         $client->expects($this->once())
@@ -178,7 +180,7 @@ class AuthProviderTest extends UnitTestCase
 
         $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
         $this->expectException(AuthorizationFailedException::class);
-        $this->expectExceptionMessage('An error occurred while authorization_code flow. Message:');
+        $this->expectExceptionMessage('Error occurred while refreshing token. Message: Error: invalid_grant');
         $authProvider->setCredentials($credentials);
         $authProvider->reAuth();
     }
@@ -214,7 +216,7 @@ class AuthProviderTest extends UnitTestCase
 
         $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
         $this->expectException(AuthorizationFailedException::class);
-        $this->expectExceptionMessage('An error occurred while authorization_code flow. Message:');
+        $this->expectExceptionMessage('Invalid or missing "access_token". Expected string, got null.');
         $authProvider->setCredentials($credentials);
         $authProvider->reAuth();
     }
@@ -259,7 +261,7 @@ class AuthProviderTest extends UnitTestCase
         $authProvider = new AuthProvider('clientId', 'clientSecret', null, $client);
 
         $this->expectException(AuthorizationFailedException::class);
-        $this->expectExceptionMessage('An error occurred while client_credentials flow. Message: invalid response');
+        $this->expectExceptionMessage('Error occurred while processing response.');
         $authProvider->auth(AuthTypeEnum::CLIENT_CREDENTIALS_CODE_FLOW);
     }
 
@@ -436,7 +438,7 @@ class AuthProviderTest extends UnitTestCase
             ->willReturn($responseInterface);
         $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $client);
         $this->expectException(AuthorizationFailedException::class);
-        $this->expectExceptionMessage('An error occurred while authorization_code flow. Message:');
+        $this->expectExceptionMessage('Error occurred while processing response.');
         $authProvider->requestCredentials('CODE');
     }
 
@@ -451,7 +453,7 @@ class AuthProviderTest extends UnitTestCase
             ->willThrowException($exception);
         $authProvider = new AuthProvider('clientId', 'clientSecret', 'redirectUri', $client);
         $this->expectException(AuthorizationFailedException::class);
-        $this->expectExceptionMessage('An error occurred while authorization code flow. Message: ');
+        $this->expectExceptionMessage('An error occurred while authorization code flow.');
         $authProvider->requestCredentials('CODE');
     }
 
