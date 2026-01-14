@@ -101,3 +101,21 @@ jobs:
 
       - name: Unit tests
         run: composer test:unit
+
+  integration:
+    runs-on: ubuntu-latest
+    needs: composer
+    name: "Integration tests"
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.minimal-php-version }}
+          coverage: none
+
+      - name: Composer install
+        run: composer install ${{ env.composer-install-args }}
+
+      - name: Integration tests
+        run: composer test:integration
