@@ -12,16 +12,18 @@ class Response
     /** @var array<string, mixed> */
     private readonly array $headers;
     private readonly string $body;
+    private readonly ResponseInterface $originalResponse;
 
-    public function __construct(ResponseInterface $response)
+    public function __construct(ResponseInterface $originalResponse)
     {
         $headers = [];
-        foreach ($response->getHeaders() as $headerName => $value) {
-            $headers[$headerName] = $response->getHeaderLine($headerName);
+        foreach ($originalResponse->getHeaders() as $headerName => $value) {
+            $headers[$headerName] = $originalResponse->getHeaderLine($headerName);
         }
-        $this->statusCode = $response->getStatusCode();
+        $this->statusCode = $originalResponse->getStatusCode();
         $this->headers = $headers;
-        $this->body = $response->getBody()->getContents();
+        $this->body = $originalResponse->getBody()->getContents();
+        $this->originalResponse = $originalResponse;
     }
 
     public function getStatusCode(): int
@@ -32,7 +34,7 @@ class Response
     public function getHeader(string $name): ?string
     {
         foreach ($this->headers as $headerName => $value) {
-            if (strtolower($headerName) == strtolower($name)) {
+            if (strtolower($headerName) === strtolower($name)) {
                 return $value;
             }
         }
@@ -127,8 +129,8 @@ class Response
         return null;
     }
 
-    public function isRateLimitExceeded(): bool
+    public function getOriginalResponse(): ResponseInterface
     {
-        return $this->statusCode === 429;
+        return $this->originalResponse;
     }
 }

@@ -7,18 +7,40 @@ use Psr\Http\Message\StreamInterface;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    protected function createPsrResponseMock(int $statusCode, string $contentType, string $body): ResponseInterface
-    {
+    /**
+     * @param array<string, array<string>> $headers
+     */
+    protected function createPsrResponseMock(
+        int $statusCode,
+        string $contentType,
+        string $body,
+        array $headers = []
+    ): ResponseInterface {
         $responseInterface = $this->createMock(ResponseInterface::class);
         $responseInterface
             ->method('getStatusCode')
             ->willReturn($statusCode);
+
+        // Merge content-type with custom headers
+        $allHeaders = array_merge(['content-type' => [$contentType]], $headers);
+
         $responseInterface
             ->method('getHeaders')
-            ->willReturn(['content-type' => [$contentType]]);
+            ->willReturn($allHeaders);
+
+        // Configure getHeaderLine to return proper values
         $responseInterface
             ->method('getHeaderLine')
-            ->willReturn($contentType);
+            ->willReturnCallback(function (string $name) use ($allHeaders, $contentType): string {
+                $lowerName = strtolower($name);
+                foreach ($allHeaders as $headerName => $values) {
+                    if (strtolower($headerName) === $lowerName) {
+                        return implode(', ', $values);
+                    }
+                }
+                return $lowerName === 'content-type' ? $contentType : '';
+            });
+
         $responseInterface
             ->method('getBody')
             ->willReturn($this->getStreamMock($body));

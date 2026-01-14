@@ -98,7 +98,7 @@ class Dispatcher implements DispatcherInterface
                 ],
                 $body
             );
-            $response = $this->client->sendRequest($request);
+            $response = new Response($this->client->sendRequest($request));
         } catch (ClientExceptionInterface $e) {
             throw new ConnectionFailedException($e->getMessage(), $e->getCode(), $e);
         }
@@ -109,6 +109,6 @@ class Dispatcher implements DispatcherInterface
         if ($responseStatusCode >= 500 && $responseStatusCode < 600) {
             throw new ServerErrorException($request, $response);
         }
-        return new Response($response);
+        return $response;
     }
 }
