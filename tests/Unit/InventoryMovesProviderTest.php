@@ -1,12 +1,12 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use Fakturoid\Dispatcher;
-use Fakturoid\Provider\WebhooksProvider;
+use Fakturoid\Provider\InventoryMovesProvider;
 use Fakturoid\Response;
 
-class WebhooksProviderTest extends \Fakturoid\Tests\TestCase
+class InventoryMovesProviderTest extends UnitTestCase
 {
     public function testList(): void
     {
@@ -15,10 +15,10 @@ class WebhooksProviderTest extends \Fakturoid\Tests\TestCase
 
         $dispatcher->expects($this->once())
             ->method('get')
-            ->with('/accounts/{accountSlug}/webhooks.json', ['page' => 1])
+            ->with('/accounts/{accountSlug}/inventory_moves.json', ['page' => 1])
             ->willReturn(new Response($responseInterface));
 
-        $provider = new WebhooksProvider($dispatcher);
+        $provider = new InventoryMovesProvider($dispatcher);
         $response = $provider->list(['page' => 1]);
         $this->assertEquals([], $response->getBody(true));
     }
@@ -26,32 +26,34 @@ class WebhooksProviderTest extends \Fakturoid\Tests\TestCase
     public function testGet(): void
     {
         $dispatcher = $this->createMock(Dispatcher::class);
+        $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{}');
 
-        $id = 6;
-        $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
+        $itemId = 8;
+        $moveId = 60;
         $dispatcher->expects($this->once())
             ->method('get')
-            ->with(sprintf('/accounts/{accountSlug}/webhooks/%d.json', $id))
+            ->with(sprintf('/accounts/{accountSlug}/inventory_items/%d/inventory_moves/%d.json', $itemId, $moveId))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new WebhooksProvider($dispatcher);
-        $response = $provider->get($id);
-        $this->assertEquals(['page' => 2], $response->getBody(true));
+        $provider = new InventoryMovesProvider($dispatcher);
+        $response = $provider->get($itemId, $moveId);
+        $this->assertEquals([], $response->getBody(true));
     }
 
     public function testDelete(): void
     {
         $dispatcher = $this->createMock(Dispatcher::class);
 
-        $id = 6;
+        $itemId = 8;
+        $moveId = 60;
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('delete')
-            ->with(sprintf('/accounts/{accountSlug}/webhooks/%d.json', $id))
+            ->with(sprintf('/accounts/{accountSlug}/inventory_items/%d/inventory_moves/%d.json', $itemId, $moveId))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new WebhooksProvider($dispatcher);
-        $response = $provider->delete($id);
+        $provider = new InventoryMovesProvider($dispatcher);
+        $response = $provider->delete($itemId, $moveId);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
 
@@ -59,15 +61,16 @@ class WebhooksProviderTest extends \Fakturoid\Tests\TestCase
     {
         $dispatcher = $this->createMock(Dispatcher::class);
 
-        $id = 6;
+        $itemId = 8;
+        $moveId = 60;
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('patch')
-            ->with(sprintf('/accounts/{accountSlug}/webhooks/%d.json', $id))
+            ->with(sprintf('/accounts/{accountSlug}/inventory_items/%d/inventory_moves/%d.json', $itemId, $moveId))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new WebhooksProvider($dispatcher);
-        $response = $provider->update($id, ['page' => 2]);
+        $provider = new InventoryMovesProvider($dispatcher);
+        $response = $provider->update($itemId, $moveId, ['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
 
@@ -75,14 +78,15 @@ class WebhooksProviderTest extends \Fakturoid\Tests\TestCase
     {
         $dispatcher = $this->createMock(Dispatcher::class);
 
+        $itemId = 8;
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('post')
-            ->with('/accounts/{accountSlug}/webhooks.json')
+            ->with(sprintf('/accounts/{accountSlug}/inventory_items/%d/inventory_moves.json', $itemId))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new WebhooksProvider($dispatcher);
-        $response = $provider->create(['page' => 2]);
+        $provider = new InventoryMovesProvider($dispatcher);
+        $response = $provider->create($itemId, ['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
 }

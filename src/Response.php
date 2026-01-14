@@ -34,7 +34,7 @@ class Response
     public function getHeader(string $name): ?string
     {
         foreach ($this->headers as $headerName => $value) {
-            if (strtolower($headerName) === strtolower($name)) {
+            if (strtolower((string) $headerName) === strtolower($name)) {
                 return $value;
             }
         }

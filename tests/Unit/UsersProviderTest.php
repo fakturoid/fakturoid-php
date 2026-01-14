@@ -1,12 +1,12 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use Fakturoid\Dispatcher;
 use Fakturoid\Provider\UsersProvider;
 use Fakturoid\Response;
 
-class UsersProviderTest extends \Fakturoid\Tests\TestCase
+class UsersProviderTest extends UnitTestCase
 {
     public function testGetCurrentUser(): void
     {

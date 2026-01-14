@@ -1,6 +1,6 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use Fakturoid\Auth\AuthProvider;
 use Fakturoid\Auth\CredentialCallback;
@@ -14,7 +14,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class AuthProviderTest extends TestCase
+class AuthProviderTest extends UnitTestCase
 {
     public function testAuthenticationUrl(): void
     {

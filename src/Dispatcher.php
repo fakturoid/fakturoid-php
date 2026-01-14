@@ -84,7 +84,7 @@ class Dispatcher implements DispatcherInterface
 
         $url = str_replace('{accountSlug}', $this->accountSlug ?? '', sprintf('%s%s', self::BASE_URL, $path));
 
-        if (array_key_exists('params', $options) && is_array($options['params']) && $options['params'] !== []) {
+        if (array_key_exists('params', $options) && $options['params'] !== []) {
             $url .= '?' . http_build_query($options['params']);
         }
 

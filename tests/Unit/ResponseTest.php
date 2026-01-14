@@ -1,11 +1,11 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use Fakturoid\Response;
 use Psr\Http\Message\ResponseInterface;
 
-class ResponseTest extends TestCase
+class ResponseTest extends UnitTestCase
 {
     public function testJson(): void
     {

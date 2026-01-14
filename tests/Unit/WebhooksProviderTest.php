@@ -1,12 +1,12 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use Fakturoid\Dispatcher;
-use Fakturoid\Provider\GeneratorsProvider;
+use Fakturoid\Provider\WebhooksProvider;
 use Fakturoid\Response;
 
-class GeneratorsProviderTest extends TestCase
+class WebhooksProviderTest extends UnitTestCase
 {
     public function testList(): void
     {
@@ -15,10 +15,10 @@ class GeneratorsProviderTest extends TestCase
 
         $dispatcher->expects($this->once())
             ->method('get')
-            ->with('/accounts/{accountSlug}/generators.json', ['page' => 1])
+            ->with('/accounts/{accountSlug}/webhooks.json', ['page' => 1])
             ->willReturn(new Response($responseInterface));
 
-        $provider = new GeneratorsProvider($dispatcher);
+        $provider = new WebhooksProvider($dispatcher);
         $response = $provider->list(['page' => 1]);
         $this->assertEquals([], $response->getBody(true));
     }
@@ -31,10 +31,10 @@ class GeneratorsProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('get')
-            ->with(sprintf('/accounts/{accountSlug}/generators/%d.json', $id))
+            ->with(sprintf('/accounts/{accountSlug}/webhooks/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new GeneratorsProvider($dispatcher);
+        $provider = new WebhooksProvider($dispatcher);
         $response = $provider->get($id);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -47,10 +47,10 @@ class GeneratorsProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('delete')
-            ->with(sprintf('/accounts/{accountSlug}/generators/%d.json', $id))
+            ->with(sprintf('/accounts/{accountSlug}/webhooks/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new GeneratorsProvider($dispatcher);
+        $provider = new WebhooksProvider($dispatcher);
         $response = $provider->delete($id);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -63,10 +63,10 @@ class GeneratorsProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('patch')
-            ->with(sprintf('/accounts/{accountSlug}/generators/%d.json', $id))
+            ->with(sprintf('/accounts/{accountSlug}/webhooks/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new GeneratorsProvider($dispatcher);
+        $provider = new WebhooksProvider($dispatcher);
         $response = $provider->update($id, ['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -78,10 +78,10 @@ class GeneratorsProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('post')
-            ->with('/accounts/{accountSlug}/generators.json')
+            ->with('/accounts/{accountSlug}/webhooks.json')
             ->willReturn(new Response($responseInterface));
 
-        $provider = new GeneratorsProvider($dispatcher);
+        $provider = new WebhooksProvider($dispatcher);
         $response = $provider->create(['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }

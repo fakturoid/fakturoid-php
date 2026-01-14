@@ -1,6 +1,6 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use Fakturoid\Auth\AuthProvider;
 use Fakturoid\Auth\Credentials;
@@ -11,7 +11,7 @@ use Fakturoid\Exception\ServerErrorException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class DispatcherTest extends TestCase
+class DispatcherTest extends UnitTestCase
 {
     public function testRequiredAccountSlugMissing(): void
     {

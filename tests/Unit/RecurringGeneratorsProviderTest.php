@@ -1,12 +1,12 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use Fakturoid\Dispatcher;
 use Fakturoid\Provider\RecurringGeneratorsProvider;
 use Fakturoid\Response;
 
-class RecurringGeneratorsProviderTest extends \Fakturoid\Tests\TestCase
+class RecurringGeneratorsProviderTest extends UnitTestCase
 {
     public function testList(): void
     {
