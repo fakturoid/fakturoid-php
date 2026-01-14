@@ -27,11 +27,13 @@
   "require-dev": {
     "ext-dom": "*",
     "ext-mbstring": "*",
-    "phpstan/phpstan": "^1.11",
+    "phpstan/phpstan": "^2.1",
+    "phpstan/phpstan-phpunit": "^2.0",
     "phpunit/phpunit": "^11.4",
-    "rector/rector": "^1.2",
+    "rector/rector": "^2.3",
     "squizlabs/php_codesniffer": "^3.10",
-    "guzzlehttp/guzzle": "^7.9"
+    "guzzlehttp/guzzle": "^7.9",
+    "symfony/dotenv": "^7.4"
   },
   "suggest": {
     "guzzlehttp/guzzle": "for usage with guzzle",
@@ -49,6 +51,7 @@
   },
   "scripts": {
     "test:phpunit": "php -d xdebug.mode=off vendor/phpunit/phpunit/phpunit",
+    "test:unit": "php -d xdebug.mode=off vendor/phpunit/phpunit/phpunit tests/Unit",
     "coverage:phpunit": "php -d xdebug.mode=coverage -d memory_limit=512M vendor/phpunit/phpunit/phpunit --coverage-html=coverage --path-coverage",
     "check:phpstan": "php -d memory_limit=256M vendor/bin/phpstan analyse -c phpstan.neon",
     "check:rector": "php vendor/bin/rector process src tests --dry-run",
