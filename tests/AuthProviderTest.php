@@ -9,6 +9,7 @@ use Fakturoid\Enum\AuthTypeEnum;
 use Fakturoid\Exception\AuthorizationFailedException;
 use Fakturoid\Exception\ClientErrorException;
 use Fakturoid\Exception\ServerErrorException;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -70,7 +71,7 @@ class AuthProviderTest extends TestCase
 
     public function testAuthorizationCodeReAuth(): void
     {
-        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface = $this->getResponseJsonMock();
         $responseInterface
             ->expects($this->once())
             ->method('getBody')
@@ -109,7 +110,7 @@ class AuthProviderTest extends TestCase
 
     public function testClientCredentialReAuth(): void
     {
-        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface = $this->getResponseJsonMock();
         $responseInterface
             ->expects($this->once())
             ->method('getBody')
@@ -148,7 +149,7 @@ class AuthProviderTest extends TestCase
 
     public function testClientCredentialReAuthWithError(): void
     {
-        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface = $this->getResponseJsonMock();
         $responseInterface
             ->expects($this->once())
             ->method('getBody')
@@ -184,7 +185,7 @@ class AuthProviderTest extends TestCase
 
     public function testClientCredentialReAuthWithoutResponse(): void
     {
-        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface = $this->getResponseJsonMock();
         $responseInterface
             ->expects($this->once())
             ->method('getBody')
@@ -220,7 +221,7 @@ class AuthProviderTest extends TestCase
 
     public function testClientCredential(): void
     {
-        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface = $this->getResponseJsonMock();
         $responseInterface
             ->expects($this->once())
             ->method('getBody')
@@ -245,7 +246,7 @@ class AuthProviderTest extends TestCase
 
     public function testClientCredentialWithEmptyResponse(): void
     {
-        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface = $this->getResponseJsonMock();
         $responseInterface
             ->expects($this->once())
             ->method('getBody')
@@ -274,7 +275,7 @@ class AuthProviderTest extends TestCase
 
     public function testRevoke(): void
     {
-        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface = $this->getResponseJsonMock();
         $responseInterface
             ->method('getBody')
             ->willReturn($this->getStreamMock('{}'));
@@ -304,7 +305,7 @@ class AuthProviderTest extends TestCase
 
     public function testRevoke500(): void
     {
-        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface = $this->getResponseJsonMock();
         $responseInterface
             ->method('getBody')
             ->willReturn($this->getStreamMock('{}'));
@@ -334,7 +335,7 @@ class AuthProviderTest extends TestCase
 
     public function testRevoke400(): void
     {
-        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface = $this->getResponseJsonMock();
         $responseInterface
             ->method('getBody')
             ->willReturn($this->getStreamMock('{}'));
@@ -389,7 +390,7 @@ class AuthProviderTest extends TestCase
 
     public function testAuthorizationCodeSimple(): void
     {
-        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface = $this->getResponseJsonMock();
         $responseInterface
             ->expects($this->once())
             ->method('getBody')
@@ -420,7 +421,7 @@ class AuthProviderTest extends TestCase
 
     public function testAuthorizationInvalidResponse(): void
     {
-        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface = $this->getResponseJsonMock();
         $responseInterface
             ->expects($this->once())
             ->method('getBody')
@@ -441,8 +442,7 @@ class AuthProviderTest extends TestCase
 
     public function testAuthorizationInvalidResponse2(): void
     {
-        $exception = new class ('test') extends \Exception implements ClientExceptionInterface
-        {
+        $exception = new class ('test') extends \Exception implements ClientExceptionInterface {
         };
         $client = $this->createMock(ClientInterface::class);
         $client
@@ -457,7 +457,7 @@ class AuthProviderTest extends TestCase
 
     public function testAuthorizationCode(): void
     {
-        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface = $this->getResponseJsonMock();
         $responseInterface
             ->expects($this->once())
             ->method('getBody')
@@ -485,5 +485,20 @@ class AuthProviderTest extends TestCase
         $this->assertEquals('access_token', $credentials->getAccessToken());
         $this->assertEquals('refresh_token', $credentials->getRefreshToken());
         $this->assertEquals(AuthTypeEnum::AUTHORIZATION_CODE_FLOW, $credentials->getAuthType());
+    }
+
+    private function getResponseJsonMock(): MockObject& ResponseInterface
+    {
+        $responseInterface = $this->createMock(ResponseInterface::class);
+        $responseInterface->expects($this->once())
+            ->method('getHeaders')
+            ->willReturn(['Content-Type' => ['application/json']]);
+        $responseInterface
+            ->expects($this->once())
+            ->method('getHeaderLine')
+            ->with('Content-Type')
+            ->willReturn('application/json');
+
+        return $responseInterface;
     }
 }

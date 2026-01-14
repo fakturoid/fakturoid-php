@@ -50,7 +50,7 @@
   "scripts": {
     "test:phpunit": "php -d xdebug.mode=off vendor/phpunit/phpunit/phpunit",
     "coverage:phpunit": "php -d xdebug.mode=coverage -d memory_limit=512M vendor/phpunit/phpunit/phpunit --coverage-html=coverage --path-coverage",
-    "check:phpstan": "php vendor/bin/phpstan analyse -c phpstan.neon",
+    "check:phpstan": "php -d memory_limit=256M vendor/bin/phpstan analyse -c phpstan.neon",
     "check:rector": "php vendor/bin/rector process src tests --dry-run",
     "check:cs": "phpcs --standard=phpcs.xml",
     "fix:cs": "phpcbf --standard=phpcs.xml",

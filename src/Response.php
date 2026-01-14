@@ -50,7 +50,7 @@ class Response
     }
 
     /**
-     * @return string|array<string, mixed>|\stdClass|null
+     * @return ($returnJsonAsArray is true ? array<string, mixed> : \stdClass)|string|null
      * @throws InvalidResponseException
      */
     public function getBody(bool $returnJsonAsArray = false)

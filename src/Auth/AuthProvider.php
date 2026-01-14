@@ -8,6 +8,7 @@ use Fakturoid\Exception\AuthorizationFailedException;
 use Fakturoid\Exception\ClientErrorException;
 use Fakturoid\Exception\ConnectionFailedException;
 use Fakturoid\Exception\InvalidDataException;
+use Fakturoid\Exception\InvalidResponseException;
 use Fakturoid\Exception\RequestException;
 use Fakturoid\Exception\ServerErrorException;
 use Fakturoid\Response;
@@ -293,8 +294,24 @@ class AuthProvider
         if ($responseStatusCode >= 500 && $responseStatusCode < 600) {
             throw new ServerErrorException($request, $wrappedResponse);
         }
-        $body = $wrappedResponse->getBody();
-        return is_string($body) ? json_decode($body, true, 512, JSON_THROW_ON_ERROR) : $body;
+        try {
+            $responseData = $wrappedResponse->getBody(true);
+        } catch (InvalidResponseException $exception) {
+            throw new InvalidDataException(
+                sprintf('Error occurred while decoding response. Message: %s', $exception->getMessage()),
+                $exception->getCode(),
+                $exception
+            );
+        }
+        if (
+            is_array($responseData) &&
+            array_key_exists('access_token', $responseData) &&
+            array_key_exists('expires_in', $responseData)
+        ) {
+            return $responseData;
+        }
+
+        return ['error' => $responseData['error'] ?? 'invalid response'];
     }
 
     public function getAuthenticationUrl(?string $state = null): string

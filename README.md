@@ -449,7 +449,7 @@ When the rate limit is exceeded, the server responds with status code `429 Too M
 
 ## Handling errors
 
-Library raises `Fakturoid\Exception\ClientErrorException` for `4xx` and `Fakturoid\Exception\ServerErrorException` for `5xx` status. You can get response code and response body by calling `getCode()` or `getResponse()->getBody()`.
+Library raises `Fakturoid\Exception\ClientErrorException` for `4xx` and `Fakturoid\Exception\ServerErrorException` for `5xx` status. You can get response code and response body by calling `getCode()` or `getResponse()->getBody()` or `getResponse()->getBody()` or `getResponse()->getBody()`.
 
 ```php
 try {
@@ -458,7 +458,7 @@ try {
 } catch (\Fakturoid\Exception\ClientErrorException $e) {
     $e->getCode(); // 422
     $e->getMessage(); // Unprocessable entity
-    $e->getResponse()->getBody()->getContents(); // '{"errors":{"name":["je povinná položka","je příliš krátký/á/é (min. 2 znaků)"]}}'
+    $e->getResponse()->getBody(); // '{"errors":{"name":["je povinná položka","je příliš krátký/á/é (min. 2 znaků)"]}}'
 } catch (\Fakturoid\Exception\ServerErrorException $e) {
     $e->getCode(); // 503
     $e->getMessage(); // Fakturoid is in read only state

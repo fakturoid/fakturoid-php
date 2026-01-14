@@ -83,6 +83,6 @@ class InboxFilesProviderTest extends TestCase
 
         $provider = new InboxFilesProvider($dispatcher);
         $response = $provider->download($id);
-        $this->assertEquals('binary file', $response->getBody(true));
+        $this->assertEquals('binary file', $response->getBody());
     }
 }
