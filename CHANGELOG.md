@@ -1,6 +1,10 @@
-## next
-- Add support for actions on recurring invoices.
-- Add support for rate limit headers
+## 5.0.0
+- Add support for actions on recurring invoices (`pause()`, `activate()`).
+- Add support for rate limit headers.
+- **BREAKING CHANGE**: `RequestException::getResponse()` now returns `Fakturoid\Response` instead of `Psr\Http\Message\ResponseInterface`.
+  - This change allows for easier access to rate limiting information from exceptions.
+  - If you were type-hinting `ResponseInterface` when catching exceptions, you need to update your code.
+  - See [UPGRADE.md](UPGRADE.md) for migration guide.
 
 ## 4.0.0
 - Remove user agent in favor of PSR-18 client configuration and add better documentation for ClientInterface.

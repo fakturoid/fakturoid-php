@@ -13,6 +13,7 @@
 PHP library for [Fakturoid.cz](https://www.fakturoid.cz/). Please see [API](https://www.fakturoid.cz/api/v3) for more documentation.
 New account just for testing API and using separate user (created via "Settings > User account") for production usage is highly recommended.
 
+> **⚠️ Upgrading?** See [UPGRADE.md](UPGRADE.md) for breaking changes and migration guide.
 
 ## Content
 
@@ -43,6 +44,7 @@ New account just for testing API and using separate user (created via "Settings 
 
 | Lib. version  | Fakturoid API | PHP            |
 |---------------|---------------|----------------|
+| `5.x`         | `v3`          | `>=8.2`        |
 | `4.x`         | `v3`          | `>=8.2`        |
 | `3.x`         | `v3`          | `>=8.2`        |
 | `2.x`         | `v3`          | `>=8.1`        |
@@ -414,32 +416,40 @@ $fManager->getRecurringGeneratorsProvider()->activate($generatorId, [
 Fakturoid implements rate limiting based on RFC Draft. The library provides methods to check rate limit status from the response object:
 
 ```php
-$response = $fManager->getInvoicesProvider()->list();
-
-// Get maximum number of requests allowed in the time window
-$quota = $response->getRateLimitQuota(); // e.g., 400
-
-// Get time window in seconds
-$window = $response->getRateLimitWindow(); // e.g., 60
-
-// Get remaining number of requests
-$remaining = $response->getRateLimitRemaining(); // e.g., 398
-
-// Get remaining time in seconds until the rate limit resets
-$resetTime = $response->getRateLimitReset(); // e.g., 55
-
-// Check if rate limit was exceeded (status code 429)
-if ($response->isRateLimitExceeded()) {
-    // Wait until the rate limit resets
-    sleep($response->getRateLimitReset());
+try {
+    $response = $fManager->getInvoicesProvider()->list();
+    
+    // Get maximum number of requests allowed in the time window
+    $quota = $response->getRateLimitQuota(); // e.g., 400
+    
+    // Get time window in seconds
+    $window = $response->getRateLimitWindow(); // e.g., 60
+    
+    // Get remaining number of requests
+    $remaining = $response->getRateLimitRemaining(); // e.g., 398
+    
+    // Get remaining time in seconds until the rate limit resets
+    $resetTime = $response->getRateLimitReset(); // e.g., 55
+    
+} catch (\Fakturoid\Exception\ClientErrorException $exception) {
+    // Check if rate limit was exceeded (status code 429)
+    if ($exception->isRateLimitExceeded()) {
+        // Access rate limit info from the exception's response
+        $response = $exception->getResponse();
+        $resetTime = $response->getRateLimitReset();
+        
+        // Wait until the rate limit resets and retry
+        sleep($resetTime);
+        // retry the request...
+    }
 }
 ```
 
-When the rate limit is exceeded, the server responds with status code `429 Too Many Requests`. Wait until the rate limit resets (using the value from `getRateLimitReset()`) and then retry the request.
+When the rate limit is exceeded, the server responds with status code `429 Too Many Requests` and throws a `ClientErrorException`. You can check if the exception is due to rate limiting using `isRateLimitExceeded()` method and get rate limit details from the response object.
 
 ## Handling errors
 
-Library raises `Fakturoid\Exception\ClientErrorException` for `4xx` and `Fakturoid\Exception\ServerErrorException` for `5xx` status. You can get response code and response body by calling `getCode()` or `getResponse()->getBody()`.
+Library raises `Fakturoid\Exception\ClientErrorException` for `4xx` and `Fakturoid\Exception\ServerErrorException` for `5xx` status. You can get response code and response body by calling `getCode()` or `getResponse()->getBody()` or `getResponse()->getBody()` or `getResponse()->getBody()`.
 
 ```php
 try {
@@ -448,7 +458,7 @@ try {
 } catch (\Fakturoid\Exception\ClientErrorException $e) {
     $e->getCode(); // 422
     $e->getMessage(); // Unprocessable entity
-    $e->getResponse()->getBody()->getContents(); // '{"errors":{"name":["je povinná položka","je příliš krátký/á/é (min. 2 znaků)"]}}'
+    $e->getResponse()->getBody(); // '{"errors":{"name":["je povinná položka","je příliš krátký/á/é (min. 2 znaků)"]}}'
 } catch (\Fakturoid\Exception\ServerErrorException $e) {
     $e->getCode(); // 503
     $e->getMessage(); // Fakturoid is in read only state

@@ -8,8 +8,10 @@ use Fakturoid\Exception\AuthorizationFailedException;
 use Fakturoid\Exception\ClientErrorException;
 use Fakturoid\Exception\ConnectionFailedException;
 use Fakturoid\Exception\InvalidDataException;
+use Fakturoid\Exception\InvalidResponseException;
 use Fakturoid\Exception\RequestException;
 use Fakturoid\Exception\ServerErrorException;
+use Fakturoid\Response;
 use JsonException;
 use Nyholm\Psr7\Request;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -67,7 +69,10 @@ class AuthProvider
             );
         } catch (RequestException $exception) {
             throw new AuthorizationFailedException(
-                sprintf('Error occurred. Message: %s', $exception->getResponse()->getReasonPhrase()),
+                sprintf(
+                    'Error occurred. Message: %s',
+                    $exception->getResponse()->getOriginalResponse()->getReasonPhrase()
+                ),
                 $exception->getCode(),
                 $exception
             );
@@ -123,7 +128,10 @@ class AuthProvider
                 );
             } catch (RequestException $exception) {
                 throw new AuthorizationFailedException(
-                    sprintf('Error occurred. Message: %s', $exception->getResponse()->getReasonPhrase()),
+                    sprintf(
+                        'Error occurred. Message: %s',
+                        $exception->getResponse()->getOriginalResponse()->getReasonPhrase()
+                    ),
                     $exception->getCode(),
                     $exception
                 );
@@ -173,12 +181,13 @@ class AuthProvider
         } catch (ClientExceptionInterface $exception) {
             throw $exception;
         }
-        $responseStatusCode = $response->getStatusCode();
+        $wrappedResponse = new Response($response);
+        $responseStatusCode = $wrappedResponse->getStatusCode();
         if ($responseStatusCode >= 400 && $responseStatusCode < 500) {
-            throw new ClientErrorException($request, $response);
+            throw new ClientErrorException($request, $wrappedResponse);
         }
         if ($responseStatusCode >= 500 && $responseStatusCode < 600) {
-            throw new ServerErrorException($request, $response);
+            throw new ServerErrorException($request, $wrappedResponse);
         }
 
         return $responseStatusCode === 200;
@@ -224,7 +233,10 @@ class AuthProvider
             );
         } catch (RequestException $exception) {
             throw new AuthorizationFailedException(
-                sprintf('Error occurred. Message: %s', $exception->getResponse()->getReasonPhrase()),
+                sprintf(
+                    'Error occurred. Message: %s',
+                    $exception->getResponse()->getOriginalResponse()->getReasonPhrase()
+                ),
                 $exception->getCode(),
                 $exception
             );
@@ -274,14 +286,32 @@ class AuthProvider
                 $exception
             );
         }
-        $responseStatusCode = $response->getStatusCode();
+        $wrappedResponse = new Response($response);
+        $responseStatusCode = $wrappedResponse->getStatusCode();
         if ($responseStatusCode >= 400 && $responseStatusCode < 500) {
-            throw new ClientErrorException($request, $response);
+            throw new ClientErrorException($request, $wrappedResponse);
         }
         if ($responseStatusCode >= 500 && $responseStatusCode < 600) {
-            throw new ServerErrorException($request, $response);
+            throw new ServerErrorException($request, $wrappedResponse);
         }
-        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        try {
+            $responseData = $wrappedResponse->getBody(true);
+        } catch (InvalidResponseException $exception) {
+            throw new InvalidDataException(
+                sprintf('Error occurred while decoding response. Message: %s', $exception->getMessage()),
+                $exception->getCode(),
+                $exception
+            );
+        }
+        if (
+            is_array($responseData) &&
+            array_key_exists('access_token', $responseData) &&
+            array_key_exists('expires_in', $responseData)
+        ) {
+            return $responseData;
+        }
+
+        return ['error' => $responseData['error'] ?? 'invalid response'];
     }
 
     public function getAuthenticationUrl(?string $state = null): string
