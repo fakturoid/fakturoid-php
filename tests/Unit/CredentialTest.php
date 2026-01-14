@@ -1,13 +1,13 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use DateTimeImmutable;
 use DateTimeInterface;
 use Fakturoid\Auth\Credentials;
 use Fakturoid\Enum\AuthTypeEnum;
 
-class CredentialTest extends TestCase
+class CredentialTest extends UnitTestCase
 {
     public function testCredentials(): void
     {

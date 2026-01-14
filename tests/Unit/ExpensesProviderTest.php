@@ -1,12 +1,12 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use Fakturoid\Dispatcher;
-use Fakturoid\Provider\InventoryItemsProvider;
+use Fakturoid\Provider\ExpensesProvider;
 use Fakturoid\Response;
 
-class InventoryItemsProviderTest extends TestCase
+class ExpensesProviderTest extends UnitTestCase
 {
     public function testList(): void
     {
@@ -15,41 +15,11 @@ class InventoryItemsProviderTest extends TestCase
 
         $dispatcher->expects($this->once())
             ->method('get')
-            ->with('/accounts/{accountSlug}/inventory_items.json', ['page' => 1])
+            ->with('/accounts/{accountSlug}/expenses.json', ['page' => 1])
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InventoryItemsProvider($dispatcher);
+        $provider = new ExpensesProvider($dispatcher);
         $response = $provider->list(['page' => 1]);
-        $this->assertEquals([], $response->getBody(true));
-    }
-
-    public function testListArchived(): void
-    {
-        $dispatcher = $this->createMock(Dispatcher::class);
-        $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{}');
-
-        $dispatcher->expects($this->once())
-            ->method('get')
-            ->with('/accounts/{accountSlug}/inventory_items/archived.json', ['page' => 1])
-            ->willReturn(new Response($responseInterface));
-
-        $provider = new InventoryItemsProvider($dispatcher);
-        $response = $provider->listArchived(['page' => 1]);
-        $this->assertEquals([], $response->getBody(true));
-    }
-
-    public function testListLowQuantity(): void
-    {
-        $dispatcher = $this->createMock(Dispatcher::class);
-        $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{}');
-
-        $dispatcher->expects($this->once())
-            ->method('get')
-            ->with('/accounts/{accountSlug}/inventory_items/low_quantity.json', ['page' => 1])
-            ->willReturn(new Response($responseInterface));
-
-        $provider = new InventoryItemsProvider($dispatcher);
-        $response = $provider->listLowQuantity(['page' => 1]);
         $this->assertEquals([], $response->getBody(true));
     }
 
@@ -60,10 +30,10 @@ class InventoryItemsProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('get')
-            ->with('/accounts/{accountSlug}/inventory_items/search.json', ['page' => 2])
+            ->with('/accounts/{accountSlug}/expenses/search.json', ['page' => 2])
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InventoryItemsProvider($dispatcher);
+        $provider = new ExpensesProvider($dispatcher);
         $response = $provider->search(['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -76,10 +46,10 @@ class InventoryItemsProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('get')
-            ->with(sprintf('/accounts/{accountSlug}/inventory_items/%d.json', $id))
+            ->with(sprintf('/accounts/{accountSlug}/expenses/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InventoryItemsProvider($dispatcher);
+        $provider = new ExpensesProvider($dispatcher);
         $response = $provider->get($id);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -92,10 +62,10 @@ class InventoryItemsProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('delete')
-            ->with(sprintf('/accounts/{accountSlug}/inventory_items/%d.json', $id))
+            ->with(sprintf('/accounts/{accountSlug}/expenses/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InventoryItemsProvider($dispatcher);
+        $provider = new ExpensesProvider($dispatcher);
         $response = $provider->delete($id);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -108,10 +78,10 @@ class InventoryItemsProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('patch')
-            ->with(sprintf('/accounts/{accountSlug}/inventory_items/%d.json', $id))
+            ->with(sprintf('/accounts/{accountSlug}/expenses/%d.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InventoryItemsProvider($dispatcher);
+        $provider = new ExpensesProvider($dispatcher);
         $response = $provider->update($id, ['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
@@ -123,15 +93,15 @@ class InventoryItemsProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('post')
-            ->with('/accounts/{accountSlug}/inventory_items.json')
+            ->with('/accounts/{accountSlug}/expenses.json')
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InventoryItemsProvider($dispatcher);
+        $provider = new ExpensesProvider($dispatcher);
         $response = $provider->create(['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
 
-    public function testArchive(): void
+    public function testCreatePayment(): void
     {
         $dispatcher = $this->createMock(Dispatcher::class);
 
@@ -139,15 +109,49 @@ class InventoryItemsProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('post')
-            ->with(sprintf('/accounts/{accountSlug}/inventory_items/%d/archive.json', $id))
+            ->with(sprintf('/accounts/{accountSlug}/expenses/%d/payments.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InventoryItemsProvider($dispatcher);
-        $response = $provider->archive($id);
+        $provider = new ExpensesProvider($dispatcher);
+        $response = $provider->createPayment($id, ['page' => 2]);
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
 
-    public function testUnArchive(): void
+    public function testDeletePayment(): void
+    {
+        $dispatcher = $this->createMock(Dispatcher::class);
+
+        $id = 6;
+        $paymentId = 8;
+        $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
+        $dispatcher->expects($this->once())
+            ->method('delete')
+            ->with(sprintf('/accounts/{accountSlug}/expenses/%d/payments/%d.json', $id, $paymentId))
+            ->willReturn(new Response($responseInterface));
+
+        $provider = new ExpensesProvider($dispatcher);
+        $response = $provider->deletePayment($id, $paymentId);
+        $this->assertEquals(['page' => 2], $response->getBody(true));
+    }
+
+    public function testGetAttachment(): void
+    {
+        $dispatcher = $this->createMock(Dispatcher::class);
+
+        $id = 6;
+        $paymentId = 8;
+        $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
+        $dispatcher->expects($this->once())
+            ->method('get')
+            ->with(sprintf('/accounts/{accountSlug}/expenses/%d/attachments/%d/download', $id, $paymentId))
+            ->willReturn(new Response($responseInterface));
+
+        $provider = new ExpensesProvider($dispatcher);
+        $response = $provider->getAttachment($id, $paymentId);
+        $this->assertEquals(['page' => 2], $response->getBody(true));
+    }
+
+    public function testFireAction(): void
     {
         $dispatcher = $this->createMock(Dispatcher::class);
 
@@ -155,11 +159,11 @@ class InventoryItemsProviderTest extends TestCase
         $responseInterface = $this->createPsrResponseMock(200, 'application/json', '{"page": 2}');
         $dispatcher->expects($this->once())
             ->method('post')
-            ->with(sprintf('/accounts/{accountSlug}/inventory_items/%d/unarchive.json', $id))
+            ->with(sprintf('/accounts/{accountSlug}/expenses/%d/fire.json', $id))
             ->willReturn(new Response($responseInterface));
 
-        $provider = new InventoryItemsProvider($dispatcher);
-        $response = $provider->unArchive($id);
+        $provider = new ExpensesProvider($dispatcher);
+        $response = $provider->fireAction($id, 'pay');
         $this->assertEquals(['page' => 2], $response->getBody(true));
     }
 }

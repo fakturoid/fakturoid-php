@@ -1,12 +1,12 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use Fakturoid\Dispatcher;
 use Fakturoid\Provider\EventsProvider;
 use Fakturoid\Response;
 
-class EventsProviderTest extends TestCase
+class EventsProviderTest extends UnitTestCase
 {
     public function testList(): void
     {

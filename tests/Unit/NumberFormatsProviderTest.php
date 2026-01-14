@@ -1,12 +1,12 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use Fakturoid\Dispatcher;
 use Fakturoid\Provider\NumberFormatsProvider;
 use Fakturoid\Response;
 
-class NumberFormatsProviderTest extends \Fakturoid\Tests\TestCase
+class NumberFormatsProviderTest extends UnitTestCase
 {
     public function testListNumberFormat(): void
     {

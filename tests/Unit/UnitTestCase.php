@@ -1,11 +1,11 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-abstract class TestCase extends \PHPUnit\Framework\TestCase
+abstract class UnitTestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param array<string, array<string>> $headers
@@ -71,7 +71,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                 return null;
             }
 
-            public function getSize(): ?int
+            public function getSize(): int
             {
                 return 0;
             }

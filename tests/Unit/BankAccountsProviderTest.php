@@ -1,12 +1,12 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use Fakturoid\Dispatcher;
 use Fakturoid\Provider\BankAccountsProvider;
 use Fakturoid\Response;
 
-class BankAccountsProviderTest extends \Fakturoid\Tests\TestCase
+class BankAccountsProviderTest extends UnitTestCase
 {
     public function testListBankAccount(): void
     {

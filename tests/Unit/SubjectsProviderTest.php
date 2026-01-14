@@ -1,12 +1,12 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use Fakturoid\Dispatcher;
 use Fakturoid\Provider\SubjectsProvider;
 use Fakturoid\Response;
 
-class SubjectsProviderTest extends TestCase
+class SubjectsProviderTest extends UnitTestCase
 {
     public function testList(): void
     {

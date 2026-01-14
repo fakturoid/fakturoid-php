@@ -1,6 +1,6 @@
 <?php
 
-namespace Fakturoid\Tests;
+namespace Fakturoid\Tests\Unit;
 
 use Fakturoid\Auth\AuthProvider;
 use Fakturoid\Auth\Credentials;
@@ -9,7 +9,7 @@ use Fakturoid\Exception\ClientErrorException;
 use Fakturoid\Exception\ServerErrorException;
 use Psr\Http\Client\ClientInterface;
 
-class RequestExceptionTest extends TestCase
+class RequestExceptionTest extends UnitTestCase
 {
     public function test404(): void
     {
