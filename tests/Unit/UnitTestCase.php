@@ -2,6 +2,7 @@
 
 namespace Fakturoid\Tests\Unit;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -15,7 +16,7 @@ abstract class UnitTestCase extends \PHPUnit\Framework\TestCase
         string $contentType,
         string $body,
         array $headers = []
-    ): ResponseInterface {
+    ): MockObject&ResponseInterface {
         $responseInterface = $this->createMock(ResponseInterface::class);
         $responseInterface
             ->method('getStatusCode')
@@ -42,6 +43,7 @@ abstract class UnitTestCase extends \PHPUnit\Framework\TestCase
             });
 
         $responseInterface
+            ->expects($this->once())
             ->method('getBody')
             ->willReturn($this->getStreamMock($body));
 

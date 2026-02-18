@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 class Response
 {
     private readonly int $statusCode;
-    /** @var array<string, mixed> */
+    /** @var array<string, string> */
     private readonly array $headers;
     private readonly string $body;
     private readonly ResponseInterface $originalResponse;
@@ -18,7 +18,7 @@ class Response
     {
         $headers = [];
         foreach ($originalResponse->getHeaders() as $headerName => $value) {
-            $headers[$headerName] = $originalResponse->getHeaderLine($headerName);
+            $headers[(string) $headerName] = $originalResponse->getHeaderLine($headerName);
         }
         $this->statusCode = $originalResponse->getStatusCode();
         $this->headers = $headers;
@@ -50,10 +50,10 @@ class Response
     }
 
     /**
-     * @return ($returnJsonAsArray is true ? array<string, mixed> : \stdClass)|string|null
+     * @return ($returnJsonAsArray is true ? (array<string, mixed>|array<array<string, mixed>>) : \stdClass)|string|null
      * @throws InvalidResponseException
      */
-    public function getBody(bool $returnJsonAsArray = false)
+    public function getBody(bool $returnJsonAsArray = false): array|\stdClass|string|null
     {
         // Typically in 304 Not Modified.
         if ($this->body === '') {
@@ -69,6 +69,7 @@ class Response
             if ($json === false) {
                 throw new InvalidResponseException('Invalid JSON response');
             }
+            assert($json === null || is_string($json) || is_array($json) || $json instanceof \stdClass);
             return $json;
         } catch (JsonException $exception) {
             throw new InvalidResponseException('Invalid JSON response', $exception->getCode(), $exception);

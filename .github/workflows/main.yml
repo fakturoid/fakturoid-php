@@ -99,5 +99,5 @@ jobs:
       - name: PHPStan Static Analysis
         run: composer check:phpstan
 
-      - name: PHPUnit
-        run: composer test:phpunit
+      - name: Unit tests
+        run: composer test:unit

@@ -7,7 +7,7 @@ interface DispatcherInterface
     public function setAccountSlug(string $accountSlug): void;
 
     /**
-     * @param array<string, string> $queryParams
+     * @param array<string, scalar|scalar[]> $queryParams
      */
     public function get(string $path, array $queryParams = []): Response;
 

@@ -16,8 +16,10 @@ class DispatcherTest extends UnitTestCase
     public function testRequiredAccountSlugMissing(): void
     {
         $client = $this->createMock(ClientInterface::class);
+        $client->expects($this->never())->method('sendRequest');
 
         $authProvider = $this->createMock(AuthProvider::class);
+        $authProvider->expects($this->never())->method('getCredentials');
 
         $dispatcher = new Dispatcher($authProvider, $client);
         $this->expectException(Exception::class);
@@ -28,6 +30,7 @@ class DispatcherTest extends UnitTestCase
     public function testRequiredAccountSlug(): void
     {
         $client = $this->createMock(ClientInterface::class);
+        $client->expects($this->once())->method('sendRequest');
 
         $authProvider = $this->createMock(AuthProvider::class);
         $credentials = $this->createMock(Credentials::class);
@@ -45,6 +48,7 @@ class DispatcherTest extends UnitTestCase
     public function testNotRequiredAccountSlugMissing(): void
     {
         $client = $this->createMock(ClientInterface::class);
+        $client->expects($this->once())->method('sendRequest');
 
         $authProvider = $this->createMock(AuthProvider::class);
         $credentials = $this->createMock(Credentials::class);
@@ -62,6 +66,7 @@ class DispatcherTest extends UnitTestCase
     public function testNotRequiredAccountSlug(): void
     {
         $client = $this->createMock(ClientInterface::class);
+        $client->expects($this->once())->method('sendRequest');
 
         $authProvider = $this->createMock(AuthProvider::class);
         $credentials = $this->createMock(Credentials::class);
@@ -79,6 +84,7 @@ class DispatcherTest extends UnitTestCase
     public function testGet(): void
     {
         $client = $this->createMock(ClientInterface::class);
+        $client->expects($this->once())->method('sendRequest');
 
         $authProvider = $this->createMock(AuthProvider::class);
         $credentials = $this->createMock(Credentials::class);
@@ -96,6 +102,7 @@ class DispatcherTest extends UnitTestCase
     public function testDelete(): void
     {
         $client = $this->createMock(ClientInterface::class);
+        $client->expects($this->once())->method('sendRequest');
 
         $authProvider = $this->createMock(AuthProvider::class);
         $credentials = $this->createMock(Credentials::class);
@@ -113,6 +120,7 @@ class DispatcherTest extends UnitTestCase
     public function testPost(): void
     {
         $client = $this->createMock(ClientInterface::class);
+        $client->expects($this->once())->method('sendRequest');
 
         $authProvider = $this->createMock(AuthProvider::class);
         $credentials = $this->createMock(Credentials::class);

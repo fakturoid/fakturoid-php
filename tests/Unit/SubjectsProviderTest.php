@@ -99,6 +99,7 @@ class SubjectsProviderTest extends UnitTestCase
     public function testSearchWithUnsupportedQuery(): void
     {
         $dispatcher = $this->createMock(Dispatcher::class);
+        $dispatcher->expects($this->never())->method('get');
 
         $querySearch = ['query' => 'test@fakturoid.cz', 'page' => 2];
         $provider = new SubjectsProvider($dispatcher);
